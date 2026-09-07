@@ -7,7 +7,7 @@
 <meta name="description" content="A colorful classroom vocabulary competition game about People &amp; Nature — forests, wildlife, and the environment." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --forest-1:#0b4a33;
@@ -165,6 +165,12 @@
     color:#fff; font-weight:800; font-size:1.1rem; text-shadow:0 2px 0 rgba(0,0,0,.3);
   }
   .clue{font-size:5rem; margin:6px 0; line-height:1;}
+  .word-display{
+    font-family:'Baloo 2', sans-serif; font-weight:800; color:var(--forest-1);
+    font-size:clamp(1.8rem,5vw,3rem); background:#eefbe4; border:3px dashed var(--leaf-dark);
+    border-radius:20px; padding:18px 20px; margin:0 0 8px; word-break:break-word;
+  }
+  .word-display.ar{font-family:'Tajawal', 'Baloo 2', sans-serif; background:#fff7e6; border-color:var(--sun-dark); color:#7a4a00;}
   .q-text{font-size:clamp(1.15rem,2.6vw,1.6rem); font-weight:800; color:var(--ink); margin:8px 0 18px; line-height:1.5;}
   .options-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; width:100%;}
   .opt-btn{
@@ -178,7 +184,8 @@
   .opt-btn.wrong{background:var(--danger); border-color:var(--danger-dark); color:#fff; box-shadow:0 6px 0 var(--danger-dark);}
   .opt-btn:disabled{cursor:default;}
   .opt-btn:disabled:not(.correct):not(.wrong){opacity:.55;}
-  .ar-tag{display:block; font-size:.8em; font-weight:700; opacity:.85; margin-top:2px;}
+  .opt-btn.ar{font-family:'Tajawal','Baloo 2',sans-serif;}
+  .ar-tag{display:block; font-size:.8em; font-weight:700; opacity:.85; margin-top:2px; font-family:'Tajawal','Baloo 2',sans-serif;}
 
   .actions-row{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:6px;}
 
@@ -279,107 +286,94 @@ const WORDS = [
 ];
 
 /* ================= QUESTION BANK ================= */
-/* type: mc | guess | sentence | match | tf | def | odd | challenge */
+/* dir: "en2ar" — English word shown, choose the correct Arabic meaning
+        "ar2en" — Arabic word shown, choose the correct English meaning   */
 const ROUNDS = [
   {
     key:"r1", label:"ROUND 1", name:"EASY START", emoji:"🌱", cls:"r1", points:10,
     questions:[
-      {type:"mc", q:"Which word means: “Large areas of land covered with many trees”?",
-        options:["forests","storehouses","biodiversity","extinction"], correct:0},
-      {type:"sentence", q:"Cutting down trees to clear land for farming is a form of ______.",
-        options:["deforestation","extinction","biodiversity","emissions"], correct:0},
-      {type:"tf", q:"True or False: Trees absorb carbon from the air and help clean it.",
-        options:["True ✅","False ❌"], correct:0},
-      {type:"mc", q:"Which word means: “Gases and substances released into the air, often by cars and factories”?",
-        options:["emissions","storehouses","biodiversity","thriving"], correct:0},
-      {type:"match", q:"Choose the correct Arabic meaning of: “forests”",
-        options:["غابات","وحيد القرن","الانقراض","مخازن"], correct:0},
-      {type:"sentence", q:"Scientists say ______ 20% of the Amazon rainforest has already been destroyed.",
-        options:["roughly","increasingly","thriving","extinction"], correct:0, bonus:true},
-      {type:"tf", q:"True or False: “Destroyed” means something was built and greatly improved.",
-        options:["True ✅","False ❌"], correct:1},
-      {type:"mc", q:"Which phrase means: “The release of carbon dioxide gas into the atmosphere”?",
-        options:["carbon emissions","biodiversity","storehouses","sustain life"], correct:0},
-      {type:"sentence", q:"Rainforests are often called ______ of biodiversity because they hold so many species.",
-        options:["storehouses","emissions","extinction","roughly"], correct:0},
-      {type:"match", q:"Choose the correct Arabic meaning of: “global climate”",
-        options:["المناخ العالمي","الانقراض","تمتص الكربون","مخلوقات نادرة"], correct:0}
+      {dir:"en2ar", word:"emissions",
+        options:["انبعاثات","غابات","الانقراض","مخازن"], correct:0},
+      {dir:"en2ar", word:"deforestation",
+        options:["إزالة الغابات","التنوع الحيوي","وحيد القرن","بشكل متزايد"], correct:0},
+      {dir:"en2ar", word:"forests",
+        options:["غابات","مخازن","مخلوقات نادرة","مهدد"], correct:0},
+      {dir:"en2ar", word:"absorb carbon",
+        options:["تمتص الكربون","تحافظ على الحياة","انبعاثات الكربون","تقريبًا"], correct:0, bonus:true},
+      {dir:"en2ar", word:"global climate",
+        options:["المناخ العالمي","الغابات الاستوائية","إنسان الغاب","دُمِّر"], correct:0},
+      {dir:"en2ar", word:"destroyed",
+        options:["دُمِّر","مزدهر","مخازن","الانقراض"], correct:0},
+      {dir:"en2ar", word:"roughly",
+        options:["تقريبًا","بشكل متزايد","بعبارة أخرى","مهدد"], correct:0},
+      {dir:"en2ar", word:"biodiversity",
+        options:["التنوع الحيوي","مخلوقات نادرة","اليغور","انبعاثات"], correct:0},
+      {dir:"en2ar", word:"orang-utans",
+        options:["إنسان الغاب","اليغور","وحيد القرن","مزدهر"], correct:0},
+      {dir:"en2ar", word:"jaguars",
+        options:["اليغور","وحيد القرن","إنسان الغاب","مخازن"], correct:0}
     ]
   },
   {
     key:"r2", label:"ROUND 2", name:"WILD CHALLENGE", emoji:"🦜", cls:"r2", points:20,
     questions:[
-      {type:"guess", q:"Which word is this?", clue:"🦧🌴🍃",
-        hint:"I am a large orange-haired ape that lives in the rainforests of Borneo and Sumatra.",
-        options:["orang-utans","jaguars","rhinos","rare creatures"], correct:0, bonus:true},
-      {type:"guess", q:"Which word is this?", clue:"🐆🌳",
-        hint:"I am a powerful wild cat with a spotted coat, found in the jungles of the Americas.",
-        options:["jaguars","orang-utans","rhinos","thriving"], correct:0},
-      {type:"guess", q:"Which word is this?", clue:"🦏",
-        hint:"I am a huge animal with thick skin and a horn on my nose.",
-        options:["rhinos","jaguars","orang-utans","biodiversity"], correct:0},
-      {type:"odd", q:"Which word does NOT belong with the others?",
-        options:["orang-utans","jaguars","rhinos","deforestation"], correct:3},
-      {type:"def", q:"Choose the correct definition of: “biodiversity” (التنوع الحيوي)",
-        options:[
-          "The variety of different plants and animals living in a place",
-          "The process of cutting down and clearing forests",
-          "Gases released into the air by cars and factories",
-          "A place where large amounts of something are stored"
-        ], correct:0},
-      {type:"sentence", q:"Tropical forests are ______ ecosystems, full of life and constantly growing.",
+      {dir:"ar2en", word:"انبعاثات الكربون",
+        options:["carbon emissions","emissions","absorb carbon","sustain life"], correct:0},
+      {dir:"ar2en", word:"مزدهر",
         options:["thriving","destroyed","extinction","roughly"], correct:0},
-      {type:"tf", q:"True or False: “Sustain life” means to destroy living things.",
-        options:["True ✅","False ❌"], correct:1},
-      {type:"mc", q:"Which phrase means: “Animals or plants that are uncommon and hard to find”?",
-        options:["rare creatures","biodiversity","storehouses","emissions"], correct:0},
-      {type:"odd", q:"Which word does NOT belong with the others?",
-        options:["emissions","carbon emissions","absorb carbon","jaguars"], correct:3},
-      {type:"sentence", q:"Many species of animals are becoming ______ endangered as their habitats disappear.",
-        options:["increasingly","roughly","thriving","destroyed"], correct:0}
+      {dir:"ar2en", word:"تحافظ على الحياة",
+        options:["sustain life","absorb carbon","storehouses","threatened"], correct:0},
+      {dir:"ar2en", word:"الغابات الاستوائية",
+        options:["tropical forests","forests","deforestation","rare creatures"], correct:0},
+      {dir:"ar2en", word:"مخازن",
+        options:["storehouses","biodiversity","extinction","forests"], correct:0},
+      {dir:"ar2en", word:"مخلوقات نادرة",
+        options:["rare creatures","biodiversity","thriving","rhinos"], correct:0, bonus:true},
+      {dir:"ar2en", word:"وحيد القرن",
+        options:["rhinos","jaguars","orang-utans","rare creatures"], correct:0},
+      {dir:"ar2en", word:"بشكل متزايد",
+        options:["increasingly","roughly","thriving","threatened"], correct:0},
+      {dir:"ar2en", word:"مهدد",
+        options:["threatened","extinction","destroyed","thriving"], correct:0},
+      {dir:"ar2en", word:"الانقراض",
+        options:["extinction","threatened","destroyed","deforestation"], correct:0}
     ]
   },
   {
     key:"r3", label:"ROUND 3", name:"THINK FAST", emoji:"🌍", cls:"r3", points:30,
     questions:[
-      {type:"def", q:"Choose the correct definition of: “threatened” (مهدد)",
-        options:[
-          "Completely safe from any danger",
-          "In danger of being harmed or of disappearing forever",
-          "Growing and developing very successfully",
-          "Kept or stored in large amounts"
-        ], correct:1},
-      {type:"sentence", q:"Without enough forests to ______, many species could disappear forever.",
-        options:["sustain life","absorb carbon","put it another way","roughly"], correct:0},
-      {type:"odd", q:"Which word does NOT belong with the others?",
-        options:["thriving","threatened","extinction","forests"], correct:3, bonus:true},
-      {type:"tf", q:"True or False: “To put it another way” is used when you want to explain an idea differently.",
-        options:["True ✅","False ❌"], correct:0},
-      {type:"match", q:"Choose the correct Arabic meaning of: “extinction”",
-        options:["الانقراض","التنوع الحيوي","مزدهر","تقريبًا"], correct:0}
+      {dir:"en2ar", word:"To put it another way",
+        options:["بعبارة أخرى","تقريبًا","بشكل متزايد","مهدد"], correct:0, bonus:true},
+      {dir:"ar2en", word:"انبعاثات الكربون",
+        options:["carbon emissions","emissions","absorb carbon","global climate"], correct:0},
+      {dir:"en2ar", word:"storehouses",
+        options:["مخازن","التنوع الحيوي","مخلوقات نادرة","غابات"], correct:0},
+      {dir:"ar2en", word:"وحيد القرن",
+        options:["rhinos","jaguars","orang-utans","rare creatures"], correct:0},
+      {dir:"en2ar", word:"threatened",
+        options:["مهدد","الانقراض","مزدهر","دُمِّر"], correct:0}
     ]
   },
   {
     key:"cr", label:"CHALLENGE ROUND", name:"FINAL CHALLENGE", emoji:"🔥", cls:"rc", points:50,
     questions:[
-      {type:"challenge", q:"Read: “Roughly half of the world's tropical forests have already been destroyed, mainly through deforestation.” What does ‘roughly’ mean here?",
-        options:["Exactly","Approximately","Never","Completely"], correct:1},
-      {type:"challenge", q:"A scientist says: “To put it another way, if we lose our forests, we lose the animals that depend on them.” What is she doing?",
-        options:["Giving an exact number","Explaining her idea in a different way","Asking a question","Making a joke"], correct:1, bonus:true},
-      {type:"sentence", q:"Because forests ______, cutting them down increases the amount of carbon dioxide in the air.",
-        options:["absorb carbon","sustain life","put it another way","roughly"], correct:0},
-      {type:"odd", q:"Which word does NOT belong with the others?",
-        options:["orang-utans","jaguars","rhinos","thriving"], correct:3},
-      {type:"challenge", q:"Read: “Increasingly, rare creatures like rhinos and jaguars are becoming threatened with extinction due to deforestation.” True or False: this sentence suggests these animals are becoming safer.",
-        options:["True ✅","False ❌"], correct:1}
+      {dir:"ar2en", word:"غابات",
+        options:["forests","tropical forests","deforestation","biodiversity"], correct:0},
+      {dir:"ar2en", word:"التنوع الحيوي",
+        options:["biodiversity","rare creatures","tropical forests","sustain life"], correct:0, bonus:true},
+      {dir:"ar2en", word:"إنسان الغاب",
+        options:["orang-utans","jaguars","rhinos","rare creatures"], correct:0},
+      {dir:"ar2en", word:"اليغور",
+        options:["jaguars","rhinos","orang-utans","threatened"], correct:0},
+      {dir:"en2ar", word:"deforestation",
+        options:["إزالة الغابات","التنوع الحيوي","الانقراض","تقريبًا"], correct:0}
     ]
   }
 ];
 
 const TYPE_LABELS = {
-  mc:"MULTIPLE CHOICE", guess:"GUESS THE WORD", sentence:"COMPLETE THE SENTENCE",
-  match:"MATCH THE MEANING", tf:"TRUE OR FALSE", def:"CHOOSE THE DEFINITION",
-  odd:"ODD ONE OUT", challenge:"CHALLENGE ROUND"
+  en2ar:"MATCH THE MEANING — EN ➜ AR",
+  ar2en:"MATCH THE MEANING — AR ➜ EN"
 };
 
 const DEFAULT_TEAMS = [
@@ -434,13 +428,10 @@ function totalPossiblePoints(){
 }
 function shuffleCopy(arr){ return arr; } // keep fixed order (answer key stays predictable for teacher)
 
-function wordArabic(w){
-  const found = WORDS.find(x => x.en.toLowerCase() === String(w).toLowerCase().trim());
-  return found ? found.ar : null;
-}
-function withAr(w){
-  const ar = wordArabic(w);
-  return ar ? `${w}<span class="ar-tag" lang="ar" dir="rtl">(${ar})</span>` : w;
+function pairLabel(q){
+  const en = q.dir === "en2ar" ? q.word : q.options[q.correct];
+  const ar = q.dir === "en2ar" ? q.options[q.correct] : q.word;
+  return `${en}<span class="ar-tag" lang="ar" dir="rtl">(${ar})</span>`;
 }
 
 function scoreStripHTML(highlightTurn){
@@ -596,19 +587,24 @@ function showQuestion(){
   const team = state.teams[state.currentTeamIndex];
   const pts = q.bonus ? r.points*2 : r.points;
 
+  const wordIsArabic = q.dir === "ar2en";
+  const optionsAreArabic = q.dir === "en2ar";
+  const subtitle = q.dir === "en2ar"
+    ? "Choose the correct Arabic meaning ⬇"
+    : "اختر المعنى الإنجليزي الصحيح ⬇";
+
   render(`
     <div class="q-topinfo">
-      <span class="type-badge">${TYPE_LABELS[q.type]}</span>
+      <span class="type-badge">${TYPE_LABELS[q.dir]}</span>
       <span class="pts-badge">+${pts} points</span>
       ${q.bonus ? `<span class="bonus-badge">🌟 BONUS!</span>` : ""}
     </div>
     <div class="turn-banner">${team.emoji} ${team.name}'s turn — Question ${state.qIndex+1} of ${r.questions.length}</div>
     <div class="panel">
-      ${q.clue ? `<div class="clue">${q.clue}</div>` : ""}
-      ${q.hint ? `<p style="font-style:italic; color:#3a3a3a;">"${q.hint}"</p>` : ""}
-      <div class="q-text">${q.q}</div>
+      <div class="word-display ${wordIsArabic ? 'ar' : ''}" ${wordIsArabic ? 'dir="rtl" lang="ar"' : ''}>${q.word}</div>
+      <div class="q-text">${subtitle}</div>
       <div class="options-grid" id="optionsGrid">
-        ${q.options.map((opt,i)=>`<button class="opt-btn" id="opt${i}" onclick="selectAnswer(${i})">${withAr(opt)}</button>`).join("")}
+        ${q.options.map((opt,i)=>`<button class="opt-btn ${optionsAreArabic ? 'ar' : ''}" ${optionsAreArabic ? 'dir="rtl" lang="ar"' : ''} id="opt${i}" onclick="selectAnswer(${i})">${opt}</button>`).join("")}
       </div>
       <div class="actions-row">
         <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
@@ -668,7 +664,7 @@ function showFeedback(correct){
     body = `<p style="font-size:1.2rem; font-weight:700;">${team.emoji} ${team.name} earns <strong>+${pts} points</strong>! ${q.bonus ? "🌟 Bonus doubled it!" : ""}</p>`;
   } else if(correct===false){
     head = `<div class="feedback-icon">😬❌</div><div class="feedback-title bad">TRY AGAIN!</div>`;
-    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer was: <strong>${withAr(q.options[q.correct])}</strong></p>
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer was: <strong>${pairLabel(q)}</strong></p>
       <p style="font-weight:800; margin-top:10px;">🎯 Want another team to STEAL THE POINT?</p>
       <div class="steal-row">
         ${state.teams.map((t,i)=> i===state.currentTeamIndex ? "" : `<button class="btn small" style="background:${t.color}" onclick="stealPoint(${i})">${t.emoji} ${t.name} steals!</button>`).join("")}
@@ -676,7 +672,7 @@ function showFeedback(correct){
       </div>`;
   } else {
     head = `<div class="feedback-icon">👁️</div><div class="feedback-title" style="color:var(--forest-1)">ANSWER REVEALED</div>`;
-    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer is: <strong>${withAr(q.options[q.correct])}</strong></p>`;
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer is: <strong>${pairLabel(q)}</strong></p>`;
   }
 
   render(`
