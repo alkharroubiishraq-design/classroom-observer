@@ -178,6 +178,7 @@
   .opt-btn.wrong{background:var(--danger); border-color:var(--danger-dark); color:#fff; box-shadow:0 6px 0 var(--danger-dark);}
   .opt-btn:disabled{cursor:default;}
   .opt-btn:disabled:not(.correct):not(.wrong){opacity:.55;}
+  .ar-tag{display:block; font-size:.8em; font-weight:700; opacity:.85; margin-top:2px;}
 
   .actions-row{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:6px;}
 
@@ -319,7 +320,7 @@ const ROUNDS = [
         options:["rhinos","jaguars","orang-utans","biodiversity"], correct:0},
       {type:"odd", q:"Which word does NOT belong with the others?",
         options:["orang-utans","jaguars","rhinos","deforestation"], correct:3},
-      {type:"def", q:"Choose the correct definition of: “biodiversity”",
+      {type:"def", q:"Choose the correct definition of: “biodiversity” (التنوع الحيوي)",
         options:[
           "The variety of different plants and animals living in a place",
           "The process of cutting down and clearing forests",
@@ -341,7 +342,7 @@ const ROUNDS = [
   {
     key:"r3", label:"ROUND 3", name:"THINK FAST", emoji:"🌍", cls:"r3", points:30,
     questions:[
-      {type:"def", q:"Choose the correct definition of: “threatened”",
+      {type:"def", q:"Choose the correct definition of: “threatened” (مهدد)",
         options:[
           "Completely safe from any danger",
           "In danger of being harmed or of disappearing forever",
@@ -432,6 +433,15 @@ function totalPossiblePoints(){
   return ROUNDS.reduce((sum,r)=> sum + r.questions.reduce((s,q)=> s + (q.bonus? r.points*2 : r.points), 0), 0);
 }
 function shuffleCopy(arr){ return arr; } // keep fixed order (answer key stays predictable for teacher)
+
+function wordArabic(w){
+  const found = WORDS.find(x => x.en.toLowerCase() === String(w).toLowerCase().trim());
+  return found ? found.ar : null;
+}
+function withAr(w){
+  const ar = wordArabic(w);
+  return ar ? `${w}<span class="ar-tag" lang="ar" dir="rtl">(${ar})</span>` : w;
+}
 
 function scoreStripHTML(highlightTurn){
   return `<div class="score-strip">` + state.teams.map((t,i)=>`
@@ -598,7 +608,7 @@ function showQuestion(){
       ${q.hint ? `<p style="font-style:italic; color:#3a3a3a;">"${q.hint}"</p>` : ""}
       <div class="q-text">${q.q}</div>
       <div class="options-grid" id="optionsGrid">
-        ${q.options.map((opt,i)=>`<button class="opt-btn" id="opt${i}" onclick="selectAnswer(${i})">${opt}</button>`).join("")}
+        ${q.options.map((opt,i)=>`<button class="opt-btn" id="opt${i}" onclick="selectAnswer(${i})">${withAr(opt)}</button>`).join("")}
       </div>
       <div class="actions-row">
         <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
@@ -658,7 +668,7 @@ function showFeedback(correct){
     body = `<p style="font-size:1.2rem; font-weight:700;">${team.emoji} ${team.name} earns <strong>+${pts} points</strong>! ${q.bonus ? "🌟 Bonus doubled it!" : ""}</p>`;
   } else if(correct===false){
     head = `<div class="feedback-icon">😬❌</div><div class="feedback-title bad">TRY AGAIN!</div>`;
-    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer was: <strong>${q.options[q.correct]}</strong></p>
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer was: <strong>${withAr(q.options[q.correct])}</strong></p>
       <p style="font-weight:800; margin-top:10px;">🎯 Want another team to STEAL THE POINT?</p>
       <div class="steal-row">
         ${state.teams.map((t,i)=> i===state.currentTeamIndex ? "" : `<button class="btn small" style="background:${t.color}" onclick="stealPoint(${i})">${t.emoji} ${t.name} steals!</button>`).join("")}
@@ -666,7 +676,7 @@ function showFeedback(correct){
       </div>`;
   } else {
     head = `<div class="feedback-icon">👁️</div><div class="feedback-title" style="color:var(--forest-1)">ANSWER REVEALED</div>`;
-    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer is: <strong>${q.options[q.correct]}</strong></p>`;
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer is: <strong>${withAr(q.options[q.correct])}</strong></p>`;
   }
 
   render(`
