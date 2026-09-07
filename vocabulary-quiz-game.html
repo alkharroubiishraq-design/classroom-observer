@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🌍 People &amp; Nature – Vocabulary Challenge 🌿</title>
+<meta name="description" content="A colorful classroom vocabulary competition game about People &amp; Nature — forests, wildlife, and the environment." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest-1:#0b4a33;
+    --forest-2:#146b47;
+    --forest-3:#1e8f5c;
+    --leaf:#8bd23c;
+    --leaf-dark:#5aa62a;
+    --sun:#ffc93c;
+    --sun-dark:#f5a300;
+    --sky:#4fc3f7;
+    --earth:#8a5a34;
+    --card:#fffef7;
+    --ink:#123524;
+    --danger:#e2483a;
+    --danger-dark:#b8362b;
+    --success:#2f9e44;
+    --success-dark:#1e7a34;
+    --shadow: 0 8px 0 rgba(0,0,0,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;min-height:100vh;
+    font-family:'Nunito', Tahoma, Arial, sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,0.08), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(255,255,255,0.06), transparent 45%),
+      linear-gradient(180deg, var(--forest-1) 0%, var(--forest-2) 45%, var(--forest-3) 100%);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.title-font{font-family:'Baloo 2', 'Nunito', sans-serif;}
+
+  /* ---------- floating decorations ---------- */
+  .sky-decor{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
+  .leaf-fall{position:absolute; top:-60px; font-size:2rem; opacity:0.85; animation:fall linear infinite;}
+  .cloud-float{position:absolute; font-size:2.6rem; opacity:0.5; animation:drift linear infinite;}
+  @keyframes fall{
+    0%{transform:translateY(-10vh) rotate(0deg); opacity:0.9;}
+    100%{transform:translateY(110vh) rotate(360deg); opacity:0.7;}
+  }
+  @keyframes drift{
+    0%{transform:translateX(-10vw);}
+    100%{transform:translateX(110vw);}
+  }
+
+  #app{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:18px 14px 40px;}
+
+  /* ---------- top nav ---------- */
+  .topbar{
+    width:100%; max-width:1100px; display:flex; flex-wrap:wrap; gap:8px;
+    align-items:center; justify-content:space-between; margin-bottom:18px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; color:#fff; text-shadow:0 3px 0 rgba(0,0,0,0.25);
+  }
+  .brand .emoji{font-size:2rem;}
+  .brand span.small{font-size:.8rem; display:block; font-weight:700; letter-spacing:.5px; color:var(--sun);}
+  .nav-btns{display:flex; flex-wrap:wrap; gap:8px;}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    font-family:'Baloo 2', sans-serif;
+    border:none; border-radius:16px; cursor:pointer;
+    font-weight:700; letter-spacing:.3px;
+    padding:12px 20px; font-size:1rem;
+    color:#fff; background:var(--forest-3);
+    box-shadow: var(--shadow);
+    transition:transform .08s ease, box-shadow .08s ease, filter .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn:active{transform:translateY(6px); box-shadow:0 2px 0 rgba(0,0,0,0.18);}
+  .btn.small{padding:8px 14px; font-size:.85rem; border-radius:12px; box-shadow:0 5px 0 rgba(0,0,0,0.18);}
+  .btn.small:active{transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,0.18);}
+  .btn.leaf{background:var(--leaf-dark);}
+  .btn.sun{background:var(--sun-dark); color:#3a2600;}
+  .btn.sky{background:#0288b8;}
+  .btn.earth{background:var(--earth);}
+  .btn.danger{background:var(--danger-dark);}
+  .btn.ghost{background:#ffffffee; color:var(--forest-1); border:3px solid var(--forest-3); box-shadow:0 5px 0 rgba(0,0,0,0.15);}
+  .btn.ghost:hover{background:#fff;}
+  .btn.ghost:active{box-shadow:0 1px 0 rgba(0,0,0,0.15);}
+  .btn.big{padding:20px 34px; font-size:1.4rem; border-radius:22px;}
+  .btn:disabled{opacity:.45; cursor:not-allowed; filter:none;}
+  .btn:disabled:active{transform:none;}
+
+  /* ---------- screens & cards ---------- */
+  .screen{width:100%; max-width:1100px; display:flex; flex-direction:column; align-items:center; gap:22px;}
+  .panel{
+    background:var(--card); border-radius:26px; padding:32px 28px;
+    box-shadow:0 14px 0 rgba(0,0,0,0.18), 0 20px 40px rgba(0,0,0,0.25);
+    width:100%; max-width:900px; text-align:center;
+    border:6px solid #ffffff55;
+  }
+  .hero-title{
+    color:#fff; text-align:center; text-shadow:0 4px 0 rgba(0,0,0,0.3);
+    font-size:clamp(1.8rem, 5vw, 3.1rem); margin:6px 0 0;
+  }
+  .hero-sub{color:var(--sun); font-weight:800; text-align:center; margin:0 0 6px; font-size:clamp(1rem,2.4vw,1.3rem); text-shadow:0 2px 0 rgba(0,0,0,0.3);}
+  .badge-row{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:10px 0;}
+  .critter{font-size:2.4rem; filter:drop-shadow(0 4px 3px rgba(0,0,0,.3));}
+
+  /* ---------- team setup ---------- */
+  .team-count-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:14px 0;}
+  .count-btn{
+    font-family:'Baloo 2'; font-weight:800; font-size:1.3rem;
+    width:64px; height:64px; border-radius:50%; border:4px solid var(--forest-3);
+    background:#fff; color:var(--forest-2); cursor:pointer; transition:.15s;
+  }
+  .count-btn.active{background:var(--sun-dark); color:#3a2600; border-color:var(--sun-dark); transform:scale(1.1);}
+  .team-inputs{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0;}
+  .team-input-card{
+    border-radius:18px; padding:14px; text-align:left; color:#fff; box-shadow:0 6px 0 rgba(0,0,0,0.2);
+  }
+  .team-input-card label{font-weight:800; font-size:.8rem; opacity:.9; display:block; margin-bottom:6px;}
+  .team-input-card input{
+    width:100%; padding:10px 12px; border-radius:10px; border:none; font-size:1rem;
+    font-family:'Nunito'; font-weight:700; color:var(--ink);
+  }
+
+  /* ---------- round select ---------- */
+  .round-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:18px; width:100%; max-width:900px;}
+  .round-card{
+    border-radius:22px; padding:22px 16px; color:#fff; text-align:center; cursor:pointer;
+    box-shadow:0 10px 0 rgba(0,0,0,0.2); border:4px solid rgba(255,255,255,0.5);
+    transition:transform .1s;
+  }
+  .round-card:hover{transform:translateY(-4px);}
+  .round-card:active{transform:translateY(3px);}
+  .round-card h3{margin:6px 0 2px; font-size:1.3rem;}
+  .round-card .pts{font-weight:800; color:#123524; background:var(--sun); display:inline-block; padding:3px 12px; border-radius:20px; font-size:.85rem; margin-top:6px;}
+  .r1{background:linear-gradient(160deg,#5aa62a,#2f7a1a);}
+  .r2{background:linear-gradient(160deg,#0288b8,#02506b);}
+  .r3{background:linear-gradient(160deg,#f5a300,#b56d00);}
+  .rc{background:linear-gradient(160deg,#e2483a,#7d1810);}
+
+  /* ---------- scoreboard chips ---------- */
+  .score-strip{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; width:100%; max-width:1000px;}
+  .team-chip{
+    display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:30px;
+    color:#fff; font-weight:800; box-shadow:0 4px 0 rgba(0,0,0,0.2); font-size:.9rem;
+  }
+  .team-chip.turn{outline:4px solid #fff; transform:scale(1.06);}
+  .team-chip .pts{background:rgba(0,0,0,0.25); padding:2px 9px; border-radius:14px;}
+
+  /* ---------- question screen ---------- */
+  .q-topinfo{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin-bottom:6px;}
+  .type-badge{
+    background:var(--sky); color:#04303f; font-weight:800; padding:6px 16px; border-radius:20px; font-size:.85rem; letter-spacing:.5px;
+  }
+  .pts-badge{background:var(--sun-dark); color:#3a2600; font-weight:800; padding:6px 16px; border-radius:20px; font-size:.85rem;}
+  .bonus-badge{background:#ff2fd1; color:#fff; font-weight:800; padding:6px 16px; border-radius:20px; font-size:.85rem; animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+  .turn-banner{
+    color:#fff; font-weight:800; font-size:1.1rem; text-shadow:0 2px 0 rgba(0,0,0,.3);
+  }
+  .clue{font-size:5rem; margin:6px 0; line-height:1;}
+  .q-text{font-size:clamp(1.15rem,2.6vw,1.6rem); font-weight:800; color:var(--ink); margin:8px 0 18px; line-height:1.5;}
+  .options-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; width:100%;}
+  .opt-btn{
+    font-family:'Baloo 2'; font-size:1.15rem; font-weight:700; color:var(--ink);
+    background:#fff; border:4px solid var(--forest-3); border-radius:18px; padding:18px 16px;
+    cursor:pointer; box-shadow:0 6px 0 var(--forest-3); transition:.12s;
+  }
+  .opt-btn:hover{background:#eaffe0;}
+  .opt-btn:active{transform:translateY(4px); box-shadow:0 2px 0 var(--forest-3);}
+  .opt-btn.correct{background:var(--success); border-color:var(--success-dark); color:#fff; box-shadow:0 6px 0 var(--success-dark);}
+  .opt-btn.wrong{background:var(--danger); border-color:var(--danger-dark); color:#fff; box-shadow:0 6px 0 var(--danger-dark);}
+  .opt-btn:disabled{cursor:default;}
+  .opt-btn:disabled:not(.correct):not(.wrong){opacity:.55;}
+
+  .actions-row{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:6px;}
+
+  /* ---------- feedback ---------- */
+  .feedback-icon{font-size:5rem; animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(0.3); opacity:0;}70%{transform:scale(1.15);}100%{transform:scale(1); opacity:1;}}
+  .feedback-title{font-size:clamp(1.6rem,4vw,2.4rem); font-weight:800;}
+  .feedback-title.ok{color:var(--success-dark);}
+  .feedback-title.bad{color:var(--danger-dark);}
+  .steal-row{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px;}
+
+  /* ---------- winner ---------- */
+  .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:2;}
+  .confetti span{position:absolute; top:-5%; font-size:1.6rem; animation:confetti-fall 3.2s linear infinite;}
+  @keyframes confetti-fall{
+    0%{transform:translateY(-10vh) rotate(0deg); opacity:1;}
+    100%{transform:translateY(110vh) rotate(540deg); opacity:0.9;}
+  }
+  .podium{display:flex; align-items:flex-end; gap:14px; justify-content:center; margin:20px 0; flex-wrap:wrap;}
+  .podium-team{
+    background:#fff; border-radius:16px 16px 0 0; padding:16px 18px; min-width:120px; text-align:center;
+    box-shadow:0 8px 0 rgba(0,0,0,0.2); font-weight:800;
+  }
+  .podium-team.gold{order:2; padding-top:34px; background:linear-gradient(180deg,#fff6d8,#ffe066);}
+  .podium-team.silver{order:1; background:linear-gradient(180deg,#f5f5f5,#dcdcdc);}
+  .podium-team.bronze{order:3; background:linear-gradient(180deg,#ffe8d6,#e0a877);}
+
+  /* ---------- word list ---------- */
+  .word-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; width:100%;}
+  .word-card{background:#fff; border-radius:16px; padding:14px; text-align:left; border:3px solid var(--leaf-dark); box-shadow:0 5px 0 rgba(0,0,0,0.12);}
+  .word-card .en{font-weight:800; color:var(--forest-1); font-size:1.05rem;}
+  .word-card .ar{color:#7a4a00; font-weight:800; margin-top:2px;}
+  .word-card .def{font-size:.85rem; color:#3a3a3a; margin-top:6px; line-height:1.4;}
+
+  footer.credit{color:rgba(255,255,255,0.6); font-size:.75rem; margin-top:14px; text-align:center;}
+
+  [hidden]{display:none !important;}
+
+  @media (max-width:600px){
+    .panel{padding:22px 16px;}
+    .clue{font-size:3.4rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sky-decor" id="skyDecor"></div>
+
+<div id="app">
+
+  <div class="topbar" id="topbar" hidden>
+    <div class="brand">
+      <span class="emoji">🌍</span>
+      <div>
+        <div class="title-font" style="font-weight:800; font-size:1.05rem;">PEOPLE &amp; NATURE</div>
+        <span class="small">VOCABULARY CHALLENGE 🌿</span>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn ghost small" onclick="goHome()">🏠 HOME</button>
+      <button class="btn leaf small" onclick="goRound(0)">🌱 ROUND 1</button>
+      <button class="btn sky small" onclick="goRound(1)">🦜 ROUND 2</button>
+      <button class="btn sun small" onclick="goRound(2)">🌍 ROUND 3</button>
+      <button class="btn danger small" onclick="goRound(3)">🔥 CHALLENGE</button>
+      <button class="btn ghost small" onclick="openScoreboard()">🏆 SCOREBOARD</button>
+    </div>
+  </div>
+
+  <div id="screenRoot" class="screen"></div>
+
+  <footer class="credit">🌿 People &amp; Nature Vocabulary Challenge — for classroom use</footer>
+</div>
+
+<script>
+/* ================= VOCABULARY DATA ================= */
+const WORDS = [
+  {en:"emissions", ar:"انبعاثات", def:"Gases or substances (like carbon dioxide) that are released into the air, often by cars and factories."},
+  {en:"deforestation", ar:"إزالة الغابات", def:"The cutting down and clearing of forests, usually to use the land for something else."},
+  {en:"carbon emissions", ar:"انبعاثات الكربون", def:"The release of carbon dioxide gas into the atmosphere."},
+  {en:"forests", ar:"غابات", def:"Large areas of land covered mainly with trees."},
+  {en:"absorb carbon", ar:"تمتص الكربون", def:"To take in and store carbon dioxide from the air, the way trees do."},
+  {en:"global climate", ar:"المناخ العالمي", def:"The general weather patterns of the whole planet Earth."},
+  {en:"destroyed", ar:"دُمِّر", def:"Ruined or damaged so badly that it no longer exists or works."},
+  {en:"roughly", ar:"تقريبًا", def:"Approximately; about a certain amount, not the exact number."},
+  {en:"To put it another way", ar:"بعبارة أخرى", def:"A phrase used to explain the same idea in a different, often simpler, way."},
+  {en:"thriving", ar:"مزدهر", def:"Growing, developing, or living very successfully and healthily."},
+  {en:"sustain life", ar:"تحافظ على الحياة", def:"To provide what living things need in order to stay alive."},
+  {en:"biodiversity", ar:"التنوع الحيوي", def:"The variety of different plants and animals living in a place."},
+  {en:"tropical forests", ar:"الغابات الاستوائية", def:"Forests found in hot, wet regions near the Earth's equator."},
+  {en:"storehouses", ar:"مخازن", def:"Places where large quantities of something are kept or stored."},
+  {en:"rare creatures", ar:"مخلوقات نادرة", def:"Animals that are uncommon and not often seen."},
+  {en:"orang-utans", ar:"إنسان الغاب", def:"Large, reddish-brown apes that live in the rainforests of Borneo and Sumatra."},
+  {en:"jaguars", ar:"اليغور", def:"Large wild cats with spotted coats, found in the forests of the Americas."},
+  {en:"rhinos", ar:"وحيد القرن", def:"Large, thick-skinned mammals with one or two horns on their nose."},
+  {en:"increasingly", ar:"بشكل متزايد", def:"More and more, as time goes on."},
+  {en:"threatened", ar:"مهدد", def:"In danger of being harmed, hurt, or of disappearing."},
+  {en:"extinction", ar:"الانقراض", def:"The complete disappearance of a species from the Earth forever."}
+];
+
+/* ================= QUESTION BANK ================= */
+/* type: mc | guess | sentence | match | tf | def | odd | challenge */
+const ROUNDS = [
+  {
+    key:"r1", label:"ROUND 1", name:"EASY START", emoji:"🌱", cls:"r1", points:10,
+    questions:[
+      {type:"mc", q:"Which word means: “Large areas of land covered with many trees”?",
+        options:["forests","storehouses","biodiversity","extinction"], correct:0},
+      {type:"sentence", q:"Cutting down trees to clear land for farming is a form of ______.",
+        options:["deforestation","extinction","biodiversity","emissions"], correct:0},
+      {type:"tf", q:"True or False: Trees absorb carbon from the air and help clean it.",
+        options:["True ✅","False ❌"], correct:0},
+      {type:"mc", q:"Which word means: “Gases and substances released into the air, often by cars and factories”?",
+        options:["emissions","storehouses","biodiversity","thriving"], correct:0},
+      {type:"match", q:"Choose the correct Arabic meaning of: “forests”",
+        options:["غابات","وحيد القرن","الانقراض","مخازن"], correct:0},
+      {type:"sentence", q:"Scientists say ______ 20% of the Amazon rainforest has already been destroyed.",
+        options:["roughly","increasingly","thriving","extinction"], correct:0, bonus:true},
+      {type:"tf", q:"True or False: “Destroyed” means something was built and greatly improved.",
+        options:["True ✅","False ❌"], correct:1},
+      {type:"mc", q:"Which phrase means: “The release of carbon dioxide gas into the atmosphere”?",
+        options:["carbon emissions","biodiversity","storehouses","sustain life"], correct:0},
+      {type:"sentence", q:"Rainforests are often called ______ of biodiversity because they hold so many species.",
+        options:["storehouses","emissions","extinction","roughly"], correct:0},
+      {type:"match", q:"Choose the correct Arabic meaning of: “global climate”",
+        options:["المناخ العالمي","الانقراض","تمتص الكربون","مخلوقات نادرة"], correct:0}
+    ]
+  },
+  {
+    key:"r2", label:"ROUND 2", name:"WILD CHALLENGE", emoji:"🦜", cls:"r2", points:20,
+    questions:[
+      {type:"guess", q:"Which word is this?", clue:"🦧🌴🍃",
+        hint:"I am a large orange-haired ape that lives in the rainforests of Borneo and Sumatra.",
+        options:["orang-utans","jaguars","rhinos","rare creatures"], correct:0, bonus:true},
+      {type:"guess", q:"Which word is this?", clue:"🐆🌳",
+        hint:"I am a powerful wild cat with a spotted coat, found in the jungles of the Americas.",
+        options:["jaguars","orang-utans","rhinos","thriving"], correct:0},
+      {type:"guess", q:"Which word is this?", clue:"🦏",
+        hint:"I am a huge animal with thick skin and a horn on my nose.",
+        options:["rhinos","jaguars","orang-utans","biodiversity"], correct:0},
+      {type:"odd", q:"Which word does NOT belong with the others?",
+        options:["orang-utans","jaguars","rhinos","deforestation"], correct:3},
+      {type:"def", q:"Choose the correct definition of: “biodiversity”",
+        options:[
+          "The variety of different plants and animals living in a place",
+          "The process of cutting down and clearing forests",
+          "Gases released into the air by cars and factories",
+          "A place where large amounts of something are stored"
+        ], correct:0},
+      {type:"sentence", q:"Tropical forests are ______ ecosystems, full of life and constantly growing.",
+        options:["thriving","destroyed","extinction","roughly"], correct:0},
+      {type:"tf", q:"True or False: “Sustain life” means to destroy living things.",
+        options:["True ✅","False ❌"], correct:1},
+      {type:"mc", q:"Which phrase means: “Animals or plants that are uncommon and hard to find”?",
+        options:["rare creatures","biodiversity","storehouses","emissions"], correct:0},
+      {type:"odd", q:"Which word does NOT belong with the others?",
+        options:["emissions","carbon emissions","absorb carbon","jaguars"], correct:3},
+      {type:"sentence", q:"Many species of animals are becoming ______ endangered as their habitats disappear.",
+        options:["increasingly","roughly","thriving","destroyed"], correct:0}
+    ]
+  },
+  {
+    key:"r3", label:"ROUND 3", name:"THINK FAST", emoji:"🌍", cls:"r3", points:30,
+    questions:[
+      {type:"def", q:"Choose the correct definition of: “threatened”",
+        options:[
+          "Completely safe from any danger",
+          "In danger of being harmed or of disappearing forever",
+          "Growing and developing very successfully",
+          "Kept or stored in large amounts"
+        ], correct:1},
+      {type:"sentence", q:"Without enough forests to ______, many species could disappear forever.",
+        options:["sustain life","absorb carbon","put it another way","roughly"], correct:0},
+      {type:"odd", q:"Which word does NOT belong with the others?",
+        options:["thriving","threatened","extinction","forests"], correct:3, bonus:true},
+      {type:"tf", q:"True or False: “To put it another way” is used when you want to explain an idea differently.",
+        options:["True ✅","False ❌"], correct:0},
+      {type:"match", q:"Choose the correct Arabic meaning of: “extinction”",
+        options:["الانقراض","التنوع الحيوي","مزدهر","تقريبًا"], correct:0}
+    ]
+  },
+  {
+    key:"cr", label:"CHALLENGE ROUND", name:"FINAL CHALLENGE", emoji:"🔥", cls:"rc", points:50,
+    questions:[
+      {type:"challenge", q:"Read: “Roughly half of the world's tropical forests have already been destroyed, mainly through deforestation.” What does ‘roughly’ mean here?",
+        options:["Exactly","Approximately","Never","Completely"], correct:1},
+      {type:"challenge", q:"A scientist says: “To put it another way, if we lose our forests, we lose the animals that depend on them.” What is she doing?",
+        options:["Giving an exact number","Explaining her idea in a different way","Asking a question","Making a joke"], correct:1, bonus:true},
+      {type:"sentence", q:"Because forests ______, cutting them down increases the amount of carbon dioxide in the air.",
+        options:["absorb carbon","sustain life","put it another way","roughly"], correct:0},
+      {type:"odd", q:"Which word does NOT belong with the others?",
+        options:["orang-utans","jaguars","rhinos","thriving"], correct:3},
+      {type:"challenge", q:"Read: “Increasingly, rare creatures like rhinos and jaguars are becoming threatened with extinction due to deforestation.” True or False: this sentence suggests these animals are becoming safer.",
+        options:["True ✅","False ❌"], correct:1}
+    ]
+  }
+];
+
+const TYPE_LABELS = {
+  mc:"MULTIPLE CHOICE", guess:"GUESS THE WORD", sentence:"COMPLETE THE SENTENCE",
+  match:"MATCH THE MEANING", tf:"TRUE OR FALSE", def:"CHOOSE THE DEFINITION",
+  odd:"ODD ONE OUT", challenge:"CHALLENGE ROUND"
+};
+
+const DEFAULT_TEAMS = [
+  {name:"Team Orang-utans", emoji:"🦧", color:"#c76b1e"},
+  {name:"Team Jaguars", emoji:"🐆", color:"#0288b8"},
+  {name:"Team Rhinos", emoji:"🦏", color:"#5aa62a"},
+  {name:"Team Earth Guardians", emoji:"🌍", color:"#8e44ad"}
+];
+
+/* ================= STATE ================= */
+let state = {
+  screen:"home",
+  numTeams:3,
+  teams:[],
+  currentTeamIndex:0,
+  roundIndex:0,
+  qIndex:0,
+  answered:false,
+  selected:null,
+  stoleTeam:null,
+  revealedNoScore:false
+};
+
+/* ================= DECOR ================= */
+function buildDecor(){
+  const el = document.getElementById("skyDecor");
+  const leaves = ["🍃","🍂","🌿","🌱"];
+  let html = "";
+  for(let i=0;i<14;i++){
+    const left = Math.random()*100;
+    const dur = 9 + Math.random()*10;
+    const delay = Math.random()*10;
+    const size = 1.2 + Math.random()*1.6;
+    html += `<span class="leaf-fall" style="left:${left}%; animation-duration:${dur}s; animation-delay:-${delay}s; font-size:${size}rem;">${leaves[i%leaves.length]}</span>`;
+  }
+  const clouds = ["☁️","☁️","🌤️"];
+  for(let i=0;i<5;i++){
+    const top = 3 + Math.random()*22;
+    const dur = 40 + Math.random()*30;
+    const delay = Math.random()*30;
+    html += `<span class="cloud-float" style="top:${top}%; animation-duration:${dur}s; animation-delay:-${delay}s;">${clouds[i%clouds.length]}</span>`;
+  }
+  el.innerHTML = html;
+}
+
+/* ================= HELPERS ================= */
+function el(html){ const d=document.createElement("div"); d.innerHTML=html.trim(); return d.firstChild; }
+function root(){ return document.getElementById("screenRoot"); }
+function render(html){ root().innerHTML = html; window.scrollTo({top:0, behavior:"smooth"}); }
+function totalPossiblePoints(){
+  return ROUNDS.reduce((sum,r)=> sum + r.questions.reduce((s,q)=> s + (q.bonus? r.points*2 : r.points), 0), 0);
+}
+function shuffleCopy(arr){ return arr; } // keep fixed order (answer key stays predictable for teacher)
+
+function scoreStripHTML(highlightTurn){
+  return `<div class="score-strip">` + state.teams.map((t,i)=>`
+    <div class="team-chip ${highlightTurn && i===state.currentTeamIndex ? 'turn':''}" style="background:${t.color}">
+      <span>${t.emoji}</span><span>${t.name}</span><span class="pts">${t.score} pts</span>
+    </div>`).join("") + `</div>`;
+}
+
+/* ================= SCREENS ================= */
+function goHome(){
+  state.screen="home";
+  document.getElementById("topbar").hidden = true;
+  render(`
+    <div class="badge-row">
+      <span class="critter">🌳</span><span class="critter">🦧</span><span class="critter">🐆</span>
+      <span class="critter">🦏</span><span class="critter">🌍</span><span class="critter">♻️</span>
+    </div>
+    <h1 class="hero-title">🌍 PEOPLE &amp; NATURE 🌿</h1>
+    <p class="hero-sub">VOCABULARY CHALLENGE — CLASSROOM COMPETITION</p>
+    <div class="panel">
+      <p style="font-size:1.1rem; font-weight:700; line-height:1.6;">
+        Get ready for a jungle-sized vocabulary showdown! 🌴<br>
+        Split into teams, race through 4 rounds, and see who becomes the
+        <strong>Vocabulary Champions</strong> of People &amp; Nature! 🏆
+      </p>
+      <div class="actions-row" style="margin-top:18px;">
+        <button class="btn big leaf" onclick="openSetup()">🎮 START GAME</button>
+        <button class="btn sun" onclick="openWordList()">📖 VOCABULARY LIST</button>
+      </div>
+    </div>
+    <div class="round-grid">
+      ${ROUNDS.map((r,i)=>`
+        <div class="round-card ${r.cls}">
+          <div style="font-size:2.2rem;">${r.emoji}</div>
+          <h3>${r.label}</h3>
+          <div>${r.name}</div>
+          <div class="pts">${r.questions.length} Qs • +${r.points} pts each</div>
+        </div>`).join("")}
+    </div>
+  `);
+}
+
+function openWordList(){
+  state.screen="wordlist";
+  render(`
+    <h2 class="hero-title" style="font-size:1.8rem;">📖 Word Bank — People &amp; Nature</h2>
+    <div class="panel" style="max-width:1000px;">
+      <div class="word-grid">
+        ${WORDS.map(w=>`
+          <div class="word-card">
+            <div class="en">${w.en}</div>
+            <div class="ar">${w.ar}</div>
+            <div class="def">${w.def}</div>
+          </div>`).join("")}
+      </div>
+      <div class="actions-row" style="margin-top:20px;">
+        <button class="btn leaf" onclick="goHome()">🏠 HOME</button>
+        <button class="btn sun" onclick="openSetup()">🎮 START GAME</button>
+      </div>
+    </div>
+  `);
+}
+
+function openSetup(){
+  state.screen="setup";
+  if(state.teams.length===0){
+    state.teams = DEFAULT_TEAMS.slice(0, state.numTeams).map(t=>({...t, score:0}));
+  }
+  render(`
+    <h2 class="hero-title" style="font-size:1.8rem;">👥 Build Your Teams</h2>
+    <div class="panel">
+      <p style="font-weight:800;">How many teams are playing?</p>
+      <div class="team-count-row">
+        ${[2,3,4].map(n=>`<button class="count-btn ${state.numTeams===n?'active':''}" onclick="setNumTeams(${n})">${n}</button>`).join("")}
+      </div>
+      <div class="team-inputs">
+        ${state.teams.map((t,i)=>`
+          <div class="team-input-card" style="background:${t.color}">
+            <label>${t.emoji} Team ${i+1} Name</label>
+            <input type="text" value="${t.name}" oninput="renameTeam(${i}, this.value)" maxlength="24">
+          </div>`).join("")}
+      </div>
+      <div class="actions-row">
+        <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+        <button class="btn big leaf" onclick="openRounds()">✅ START PLAYING</button>
+      </div>
+    </div>
+  `);
+}
+function setNumTeams(n){
+  state.numTeams = n;
+  const current = state.teams;
+  state.teams = DEFAULT_TEAMS.slice(0,n).map((t,i)=> current[i] ? {...current[i]} : {...t, score:0});
+  openSetup();
+}
+function renameTeam(i, val){ state.teams[i].name = val || state.teams[i].name; }
+
+function openRounds(){
+  state.screen="rounds";
+  document.getElementById("topbar").hidden = false;
+  render(`
+    <h2 class="hero-title" style="font-size:1.8rem;">🗺️ Choose a Round</h2>
+    ${scoreStripHTML(false)}
+    <div class="round-grid">
+      ${ROUNDS.map((r,i)=>`
+        <div class="round-card ${r.cls}" onclick="goRound(${i})">
+          <div style="font-size:2.4rem;">${r.emoji}</div>
+          <h3>${r.label}</h3>
+          <div>${r.name}</div>
+          <div class="pts">+${r.points} pts / question</div>
+        </div>`).join("")}
+    </div>
+    <div class="actions-row">
+      <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+      <button class="btn sun" onclick="openScoreboard()">🏆 SCOREBOARD</button>
+    </div>
+  `);
+}
+
+function goRound(i){
+  if(state.teams.length===0){ openSetup(); return; }
+  state.roundIndex = i;
+  state.qIndex = 0;
+  document.getElementById("topbar").hidden = false;
+  showRoundIntro();
+}
+
+function showRoundIntro(){
+  state.screen="roundintro";
+  const r = ROUNDS[state.roundIndex];
+  render(`
+    <div class="panel ${r.cls}" style="color:#fff;">
+      <div style="font-size:3.4rem;">${r.emoji}</div>
+      <h2 style="font-size:2rem; margin:6px 0;">${r.label}: ${r.name}</h2>
+      <p style="font-size:1.1rem; font-weight:700;">${r.questions.length} Questions • +${r.points} points each ${r.questions.some(q=>q.bonus) ? "• 🌟 Bonus questions inside!" : ""}</p>
+      <div class="actions-row">
+        <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
+        <button class="btn big sun" onclick="showQuestion()">▶ BEGIN ROUND</button>
+      </div>
+    </div>
+  `);
+}
+
+function showQuestion(){
+  state.screen="question";
+  state.answered=false;
+  state.selected=null;
+  state.stoleTeam=null;
+  state.revealedNoScore=false;
+  const r = ROUNDS[state.roundIndex];
+  const q = r.questions[state.qIndex];
+  const team = state.teams[state.currentTeamIndex];
+  const pts = q.bonus ? r.points*2 : r.points;
+
+  render(`
+    <div class="q-topinfo">
+      <span class="type-badge">${TYPE_LABELS[q.type]}</span>
+      <span class="pts-badge">+${pts} points</span>
+      ${q.bonus ? `<span class="bonus-badge">🌟 BONUS!</span>` : ""}
+    </div>
+    <div class="turn-banner">${team.emoji} ${team.name}'s turn — Question ${state.qIndex+1} of ${r.questions.length}</div>
+    <div class="panel">
+      ${q.clue ? `<div class="clue">${q.clue}</div>` : ""}
+      ${q.hint ? `<p style="font-style:italic; color:#3a3a3a;">"${q.hint}"</p>` : ""}
+      <div class="q-text">${q.q}</div>
+      <div class="options-grid" id="optionsGrid">
+        ${q.options.map((opt,i)=>`<button class="opt-btn" id="opt${i}" onclick="selectAnswer(${i})">${opt}</button>`).join("")}
+      </div>
+      <div class="actions-row">
+        <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
+        <button class="btn earth" onclick="revealAnswerOnly()">👁 SHOW ANSWER</button>
+        <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+        <button class="btn sun" onclick="openScoreboard()">🏆 SCOREBOARD</button>
+      </div>
+    </div>
+    ${scoreStripHTML(true)}
+  `);
+}
+
+function currentQ(){ return ROUNDS[state.roundIndex].questions[state.qIndex]; }
+function currentPts(){ const r=ROUNDS[state.roundIndex]; const q=currentQ(); return q.bonus ? r.points*2 : r.points; }
+
+function selectAnswer(i){
+  if(state.answered) return;
+  state.answered = true;
+  state.selected = i;
+  const q = currentQ();
+  const correct = i === q.correct;
+
+  document.querySelectorAll(".opt-btn").forEach((b,idx)=>{
+    b.disabled = true;
+    if(idx===q.correct) b.classList.add("correct");
+    else if(idx===i) b.classList.add("wrong");
+  });
+
+  if(correct){
+    state.teams[state.currentTeamIndex].score += currentPts();
+  }
+  setTimeout(()=> showFeedback(correct), 550);
+}
+
+function revealAnswerOnly(){
+  if(state.answered) return;
+  state.answered = true;
+  state.revealedNoScore = true;
+  const q = currentQ();
+  document.querySelectorAll(".opt-btn").forEach((b,idx)=>{
+    b.disabled = true;
+    if(idx===q.correct) b.classList.add("correct");
+  });
+  setTimeout(()=> showFeedback(null), 400);
+}
+
+function showFeedback(correct){
+  state.screen="feedback";
+  const r = ROUNDS[state.roundIndex];
+  const q = currentQ();
+  const team = state.teams[state.currentTeamIndex];
+  const pts = currentPts();
+
+  let head, body;
+  if(correct===true){
+    head = `<div class="feedback-icon">🎉✅</div><div class="feedback-title ok">CORRECT!</div>`;
+    body = `<p style="font-size:1.2rem; font-weight:700;">${team.emoji} ${team.name} earns <strong>+${pts} points</strong>! ${q.bonus ? "🌟 Bonus doubled it!" : ""}</p>`;
+  } else if(correct===false){
+    head = `<div class="feedback-icon">😬❌</div><div class="feedback-title bad">TRY AGAIN!</div>`;
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer was: <strong>${q.options[q.correct]}</strong></p>
+      <p style="font-weight:800; margin-top:10px;">🎯 Want another team to STEAL THE POINT?</p>
+      <div class="steal-row">
+        ${state.teams.map((t,i)=> i===state.currentTeamIndex ? "" : `<button class="btn small" style="background:${t.color}" onclick="stealPoint(${i})">${t.emoji} ${t.name} steals!</button>`).join("")}
+        <button class="btn ghost small" onclick="noSteal()">No steal — continue</button>
+      </div>`;
+  } else {
+    head = `<div class="feedback-icon">👁️</div><div class="feedback-title" style="color:var(--forest-1)">ANSWER REVEALED</div>`;
+    body = `<p style="font-size:1.1rem; font-weight:700;">The correct answer is: <strong>${q.options[q.correct]}</strong></p>`;
+  }
+
+  render(`
+    <div class="panel">
+      ${head}
+      ${body}
+      <div class="actions-row" style="margin-top:18px;">
+        <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
+        <button class="btn big leaf" id="nextBtn" onclick="nextQuestion()">▶ NEXT QUESTION</button>
+        <button class="btn sun" onclick="openScoreboard()">🏆 SCOREBOARD</button>
+      </div>
+    </div>
+    <div id="scoreStripWrap">${scoreStripHTML(true)}</div>
+  `);
+}
+
+function stealPoint(i){
+  state.teams[i].score += currentPts();
+  state.stoleTeam = i;
+  const team = state.teams[i];
+  document.querySelector(".steal-row").innerHTML = `<p style="font-weight:800; color:var(--success-dark);">🎯 ${team.emoji} ${team.name} stole +${currentPts()} points!</p>`;
+  const stripWrap = document.getElementById("scoreStripWrap");
+  if(stripWrap) stripWrap.innerHTML = scoreStripHTML(true);
+}
+function noSteal(){
+  const row = document.querySelector(".steal-row");
+  if(row) row.innerHTML = `<p style="font-weight:700; color:#555;">Moving on...</p>`;
+}
+
+function nextQuestion(){
+  const r = ROUNDS[state.roundIndex];
+  state.currentTeamIndex = (state.currentTeamIndex+1) % state.teams.length;
+  state.qIndex++;
+  if(state.qIndex >= r.questions.length){
+    showRoundComplete();
+  } else {
+    showQuestion();
+  }
+}
+
+function showRoundComplete(){
+  state.screen="roundcomplete";
+  const r = ROUNDS[state.roundIndex];
+  const isLast = state.roundIndex === ROUNDS.length-1;
+  render(`
+    <div class="panel ${r.cls}" style="color:#fff;">
+      <div style="font-size:3rem;">🎊</div>
+      <h2 style="font-size:1.8rem;">${r.label} COMPLETE!</h2>
+      <p style="font-weight:700;">Great job, explorers! Here's where the teams stand:</p>
+      ${scoreStripHTML(false)}
+      <div class="actions-row" style="margin-top:18px;">
+        <button class="btn ghost" onclick="openRounds()">🗺️ ALL ROUNDS</button>
+        ${isLast
+          ? `<button class="btn big sun" onclick="openWinner()">🏆 SEE WINNER</button>`
+          : `<button class="btn big sun" onclick="goRound(${state.roundIndex+1})">▶ NEXT ROUND: ${ROUNDS[state.roundIndex+1].label}</button>`}
+        <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+      </div>
+    </div>
+  `);
+}
+
+function openScoreboard(){
+  state.screen="scoreboard";
+  document.getElementById("topbar").hidden = false;
+  const maxScore = Math.max(1, ...state.teams.map(t=>t.score));
+  render(`
+    <h2 class="hero-title" style="font-size:1.8rem;">🏆 Scoreboard</h2>
+    <div class="panel">
+      ${state.teams.slice().sort((a,b)=>b.score-a.score).map(t=>`
+        <div style="margin:14px 0; text-align:left;">
+          <div style="font-weight:800; display:flex; justify-content:space-between;">
+            <span>${t.emoji} ${t.name}</span><span>${t.score} pts</span>
+          </div>
+          <div style="background:#e7e7e7; border-radius:10px; height:20px; overflow:hidden; margin-top:4px;">
+            <div style="width:${Math.max(4,(t.score/maxScore)*100)}%; background:${t.color}; height:100%;"></div>
+          </div>
+        </div>`).join("")}
+      <div class="actions-row" style="margin-top:16px;">
+        <button class="btn ghost" onclick="openRounds()">🗺️ ROUNDS</button>
+        <button class="btn danger" onclick="openWinner()">🏆 WINNER SCREEN</button>
+        <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+      </div>
+    </div>
+  `);
+}
+
+function openWinner(){
+  state.screen="winner";
+  document.getElementById("topbar").hidden = false;
+  const ranked = state.teams.slice().sort((a,b)=>b.score-a.score);
+  const medalClass = ["gold","silver","bronze"];
+  render(`
+    <div class="confetti">
+      ${Array.from({length:26}).map((_,i)=>{
+        const left = Math.random()*100, delay = Math.random()*3, emojis=["🎉","🎊","🌟","🍃","🏆"];
+        return `<span style="left:${left}%; animation-delay:-${delay}s;">${emojis[i%emojis.length]}</span>`;
+      }).join("")}
+    </div>
+    <h1 class="hero-title">🏆 WE HAVE A CHAMPION! 🏆</h1>
+    <div class="panel">
+      <div style="font-size:3rem;">${ranked[0].emoji}</div>
+      <h2 style="font-size:2rem; color:var(--success-dark);">${ranked[0].name}</h2>
+      <p style="font-weight:800; font-size:1.2rem;">Vocabulary Champions of the Jungle! 🌴 with ${ranked[0].score} points!</p>
+      <div class="podium">
+        ${ranked.slice(0,3).map((t,i)=>`
+          <div class="podium-team ${medalClass[i]}">
+            <div style="font-size:2rem;">${i===0?"🥇":i===1?"🥈":"🥉"}</div>
+            <div>${t.emoji} ${t.name}</div>
+            <div>${t.score} pts</div>
+          </div>`).join("")}
+      </div>
+      <div class="actions-row" style="margin-top:16px;">
+        <button class="btn ghost" onclick="openScoreboard()">🏆 SCOREBOARD</button>
+        <button class="btn leaf" onclick="restartGame()">🔄 NEW GAME</button>
+        <button class="btn ghost" onclick="goHome()">🏠 HOME</button>
+      </div>
+    </div>
+  `);
+}
+
+function restartGame(){
+  state = {screen:"home", numTeams:3, teams:[], currentTeamIndex:0, roundIndex:0, qIndex:0, answered:false, selected:null, stoleTeam:null, revealedNoScore:false};
+  goHome();
+}
+
+/* ================= INIT ================= */
+buildDecor();
+goHome();
+</script>
+</body>
+</html>
