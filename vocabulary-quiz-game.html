@@ -394,7 +394,9 @@ let state = {
   answered:false,
   selected:null,
   stoleTeam:null,
-  revealedNoScore:false
+  revealedNoScore:false,
+  shufOptions:null,
+  shufCorrect:null
 };
 
 /* ================= DECOR ================= */
@@ -576,6 +578,15 @@ function showRoundIntro(){
   `);
 }
 
+function shuffleIndices(n){
+  const arr = Array.from({length:n}, (_,i)=>i);
+  for(let i=arr.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
 function showQuestion(){
   state.screen="question";
   state.answered=false;
@@ -586,6 +597,12 @@ function showQuestion(){
   const q = r.questions[state.qIndex];
   const team = state.teams[state.currentTeamIndex];
   const pts = q.bonus ? r.points*2 : r.points;
+
+  // Shuffle the answer order fresh for every question so the correct
+  // choice isn't always in the same spot.
+  const order = shuffleIndices(q.options.length);
+  state.shufOptions = order.map(i => q.options[i]);
+  state.shufCorrect = order.indexOf(q.correct);
 
   const wordIsArabic = q.dir === "ar2en";
   const optionsAreArabic = q.dir === "en2ar";
@@ -604,7 +621,7 @@ function showQuestion(){
       <div class="word-display ${wordIsArabic ? 'ar' : ''}" ${wordIsArabic ? 'dir="rtl" lang="ar"' : ''}>${q.word}</div>
       <div class="q-text">${subtitle}</div>
       <div class="options-grid" id="optionsGrid">
-        ${q.options.map((opt,i)=>`<button class="opt-btn ${optionsAreArabic ? 'ar' : ''}" ${optionsAreArabic ? 'dir="rtl" lang="ar"' : ''} id="opt${i}" onclick="selectAnswer(${i})">${opt}</button>`).join("")}
+        ${state.shufOptions.map((opt,i)=>`<button class="opt-btn ${optionsAreArabic ? 'ar' : ''}" ${optionsAreArabic ? 'dir="rtl" lang="ar"' : ''} id="opt${i}" onclick="selectAnswer(${i})">${opt}</button>`).join("")}
       </div>
       <div class="actions-row">
         <button class="btn ghost" onclick="openRounds()">⬅ BACK</button>
@@ -624,12 +641,11 @@ function selectAnswer(i){
   if(state.answered) return;
   state.answered = true;
   state.selected = i;
-  const q = currentQ();
-  const correct = i === q.correct;
+  const correct = i === state.shufCorrect;
 
   document.querySelectorAll(".opt-btn").forEach((b,idx)=>{
     b.disabled = true;
-    if(idx===q.correct) b.classList.add("correct");
+    if(idx===state.shufCorrect) b.classList.add("correct");
     else if(idx===i) b.classList.add("wrong");
   });
 
@@ -643,10 +659,9 @@ function revealAnswerOnly(){
   if(state.answered) return;
   state.answered = true;
   state.revealedNoScore = true;
-  const q = currentQ();
   document.querySelectorAll(".opt-btn").forEach((b,idx)=>{
     b.disabled = true;
-    if(idx===q.correct) b.classList.add("correct");
+    if(idx===state.shufCorrect) b.classList.add("correct");
   });
   setTimeout(()=> showFeedback(null), 400);
 }
@@ -794,7 +809,7 @@ function openWinner(){
 }
 
 function restartGame(){
-  state = {screen:"home", numTeams:3, teams:[], currentTeamIndex:0, roundIndex:0, qIndex:0, answered:false, selected:null, stoleTeam:null, revealedNoScore:false};
+  state = {screen:"home", numTeams:3, teams:[], currentTeamIndex:0, roundIndex:0, qIndex:0, answered:false, selected:null, stoleTeam:null, revealedNoScore:false, shufOptions:null, shufCorrect:null};
   goHome();
 }
 
