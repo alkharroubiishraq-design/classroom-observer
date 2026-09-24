@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Grammar Auction</title>
+<meta name="description" content="لعبة مزاد الجمل لطلاب الصف الثامن: Present Simple vs Present Continuous" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;600;800&family=DM+Mono:wght@500&family=Tajawal:wght@500;700&display=swap" />
+<style>
+  /* Single deliberate look: banknote paper + engraving ink, meant for a classroom projector. */
+  :root {
+    --paper: #e7ede0;
+    --paper-2: #f5f8f0;
+    --ink: #163328;
+    --ink-soft: #4d6a5d;
+    --line: #bfcdb9;
+    --gold: #b3801a;
+    --gold-soft: #f3e4bd;
+    --gavel: #6e3219;
+    --win: #1c7443;
+    --win-soft: #d7efdf;
+    --loss: #b42318;
+    --loss-soft: #f8dcd8;
+    --display: "Alfa Slab One", "Rockwell", "Georgia", serif;
+    --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+    --mono: "DM Mono", ui-monospace, "Consolas", monospace;
+    --ar: "Tajawal", "Tahoma", sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--paper);
+    background-image:
+      repeating-radial-gradient(circle at 12% 0%, transparent 0 22px, rgba(22,51,40,.035) 22px 23px),
+      repeating-radial-gradient(circle at 88% 100%, transparent 0 22px, rgba(22,51,40,.035) 22px 23px);
+    color: var(--ink);
+    font: 400 16px/1.5 var(--body);
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 40px; display: grid; gap: 16px; }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: .45; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .ar { font-family: var(--ar); direction: rtl; unicode-bidi: isolate; }
+
+  /* Header */
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .brand h1 { margin: 0; font: 400 clamp(26px, 4vw, 38px)/1 var(--display); letter-spacing: .01em; }
+  .brand h1 span { color: var(--gold); }
+  .lotcount { font: 500 14px var(--mono); color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tool { background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+  .tool:hover:not(:disabled) { border-color: var(--ink-soft); }
+  .tool.armed { background: var(--loss); color: #fff; border-color: var(--loss); }
+
+  /* Bank / scoreboard */
+  .bank { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .acct {
+    position: relative; background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 10px 14px 12px; display: grid; gap: 2px; border-top: 6px solid var(--team);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .acct.active { box-shadow: 0 0 0 3px var(--team); transform: translateY(-2px); }
+  .acct .nm { font-weight: 800; font-size: 15px; overflow-wrap: anywhere; }
+  .acct .bal { font: 500 clamp(24px, 3vw, 32px)/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+  .acct .bal.broke { color: var(--loss); }
+  .acct .delta { position: absolute; top: 8px; right: 12px; font: 500 15px var(--mono); padding: 1px 8px; border-radius: 6px; animation: pop 2.2s ease forwards; }
+  .delta.up { color: var(--win); background: var(--win-soft); }
+  .delta.down { color: var(--loss); background: var(--loss-soft); }
+  @keyframes pop { 0% { opacity: 0; transform: translateY(6px); } 12% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* Stage */
+  .stage { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: clamp(16px, 3vw, 32px); display: grid; gap: 20px; position: relative; overflow: hidden; }
+  .eyebrow { font: 500 13px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .eyebrow .serial { color: var(--gold); }
+  .announce { font: 400 clamp(22px, 3.2vw, 34px)/1.15 var(--display); margin: 0; text-wrap: balance; color: var(--gavel); }
+
+  .lot {
+    border: 2px solid var(--ink); border-radius: 10px; padding: clamp(18px, 3vw, 34px);
+    background: #fff; position: relative;
+    box-shadow: 0 0 0 5px #fff, 0 0 0 6px var(--line);
+    margin: 6px;
+  }
+  .lot .sentence { font: 800 clamp(26px, 4.4vw, 50px)/1.22 var(--body); margin: 0; text-wrap: balance; }
+  mark { background: var(--gold-soft); color: var(--ink); padding: 0 .12em; border-radius: 4px; box-shadow: inset 0 -3px 0 var(--gold); }
+  .blank { display: inline-block; min-width: 3.4em; border-bottom: 4px solid var(--ink); text-align: center; color: var(--win); }
+  .hint { font-weight: 600; color: var(--ink-soft); font-size: .6em; }
+
+  .stamp {
+    position: absolute; top: 12px; right: 14px; transform: rotate(-8deg);
+    font: 400 clamp(18px, 2.6vw, 28px)/1 var(--display); letter-spacing: .06em; padding: 6px 12px;
+    border: 4px solid currentColor; border-radius: 8px; background: rgba(255,255,255,.85);
+    animation: slam .35s cubic-bezier(.2,1.6,.4,1) both;
+  }
+  @media (max-width: 640px) { .lot:has(.stamp) { padding-top: 64px; } }
+  .stamp.ok { color: var(--win); }
+  .stamp.bad { color: var(--loss); }
+  .stamp.sold { color: var(--gavel); }
+  @keyframes slam { from { transform: rotate(-8deg) scale(2.2); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+
+  .trap { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--gold-soft); font: 500 13px var(--mono); letter-spacing: .1em; padding: 4px 10px; border-radius: 6px; }
+
+  .fix { display: grid; gap: 6px; }
+  .fix .label { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  .fix .right { font: 800 clamp(20px, 3vw, 32px)/1.25 var(--body); color: var(--win); margin: 0; }
+  .why { font-size: 18px; margin: 0; max-width: 65ch; }
+  .why.ar { font-size: 19px; color: var(--ink-soft); }
+
+  /* Bidding panel */
+  .panel { display: grid; gap: 14px; border-top: 1px dashed var(--line); padding-top: 18px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .row .lbl { font: 500 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); min-width: 110px; }
+  .teambtn {
+    border: 2px solid var(--team); background: #fff; color: var(--ink); border-radius: 10px; padding: 8px 14px; font-weight: 800;
+    display: inline-flex; gap: 8px; align-items: center;
+  }
+  .teambtn .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--team); }
+  .teambtn[aria-pressed="true"] { background: var(--team); color: #fff; }
+  .teambtn[aria-pressed="true"] .dot { background: #fff; }
+  .money-in { display: inline-flex; align-items: center; border: 2px solid var(--ink); border-radius: 10px; background: #fff; overflow: hidden; }
+  .money-in span { padding: 0 4px 0 12px; font: 500 22px var(--mono); color: var(--ink-soft); }
+  .money-in input { border: 0; width: 130px; font: 500 26px var(--mono); padding: 6px 10px 6px 2px; background: transparent; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .money-in input:focus { outline: none; }
+  .money-in:focus-within { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .chip { border: 1px solid var(--line); background: var(--paper); border-radius: 999px; padding: 6px 12px; font: 500 15px var(--mono); }
+  .chip:hover:not(:disabled) { border-color: var(--ink); }
+  .chip.allin { background: var(--gold-soft); border-color: var(--gold); color: var(--gavel); }
+  .err { color: var(--loss); font-weight: 600; min-height: 1.5em; margin: 0; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .big {
+    font: 400 clamp(18px, 2.2vw, 22px)/1 var(--display); letter-spacing: .04em; padding: 14px 24px; border-radius: 10px;
+    border: 0; background: var(--ink); color: var(--paper-2); box-shadow: 0 4px 0 #0b1c16;
+  }
+  .big:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #0b1c16; }
+  .big.gavel { background: var(--gavel); box-shadow: 0 4px 0 #3d1a0c; }
+  .big.gold { background: var(--gold); color: #1d1405; box-shadow: 0 4px 0 #6b4c0f; }
+  .ghost { background: transparent; border: 2px solid var(--line); border-radius: 10px; padding: 10px 16px; font-weight: 700; }
+  .ghost:hover:not(:disabled) { border-color: var(--ink-soft); }
+
+  .clock { font: 500 28px var(--mono); font-variant-numeric: tabular-nums; min-width: 3ch; color: var(--gavel); }
+  .clock.low { color: var(--loss); animation: blink .5s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+
+  .result { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: baseline; font-size: 20px; }
+  .result strong { font: 500 26px var(--mono); }
+  .result .up { color: var(--win); }
+  .result .down { color: var(--loss); }
+
+  /* Setup */
+  .setup { display: grid; gap: 22px; grid-template-columns: 1.1fr 1fr; }
+  @media (max-width: 760px) { .setup { grid-template-columns: 1fr; } }
+  .setup h2 { font: 400 clamp(30px, 5vw, 54px)/1.02 var(--display); margin: 0; text-wrap: balance; }
+  .setup h2 em { font-style: normal; color: var(--gold); }
+  .rules { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .rules li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  .rules .n { font: 500 14px var(--mono); color: var(--gold); border: 1px solid var(--gold); border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; }
+  .rules p { margin: 0; }
+  .form { display: grid; gap: 14px; align-content: start; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .form label { font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: 6px; }
+  .names { display: grid; gap: 8px; }
+  .names .nrow { display: flex; align-items: center; gap: 8px; }
+  .names .sw { width: 14px; height: 14px; border-radius: 50%; background: var(--team); flex: none; }
+  .names input, .form input[type=number] { width: 100%; font: 600 17px var(--body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-2); color: var(--ink); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg button { border: 0; background: var(--paper-2); padding: 8px 18px; font: 500 18px var(--mono); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper-2); }
+
+  /* Final */
+  .final-head { display: grid; gap: 6px; }
+  .final-head h2 { margin: 0; font: 400 clamp(30px, 5vw, 56px)/1 var(--display); color: var(--gold); letter-spacing: .02em; }
+  .fteams { display: grid; gap: 10px; }
+  .fteam { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 10px 12px; border: 1px solid var(--line); border-left: 6px solid var(--team); border-radius: 10px; background: #fff; }
+  .fteam .nm { font-weight: 800; min-width: 130px; flex: 1 1 130px; }
+  .fteam .money-in input { width: 110px; font-size: 20px; }
+  .fteam .money-in span { font-size: 18px; }
+  .mark { border: 2px solid var(--line); background: #fff; border-radius: 10px; padding: 6px 14px; font-weight: 800; }
+  .mark.ok[aria-pressed="true"] { background: var(--win); border-color: var(--win); color: #fff; }
+  .mark.bad[aria-pressed="true"] { background: var(--loss); border-color: var(--loss); color: #fff; }
+
+  /* End */
+  .end { text-align: center; justify-items: center; }
+  .end .crown { font: 400 clamp(34px, 6.5vw, 72px)/1 var(--display); margin: 0; color: var(--gold); text-wrap: balance; }
+  .end .winner { font: 800 clamp(24px, 4vw, 40px)/1.1 var(--body); margin: 0; }
+  .end .wamt { font: 500 clamp(30px, 5vw, 54px) var(--mono); color: var(--win); }
+  .podium { width: 100%; max-width: 560px; display: grid; gap: 8px; text-align: left; }
+  .podium .p { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border: 1px solid var(--line); border-left: 6px solid var(--team); border-radius: 10px; }
+  .podium .rk { font: 500 18px var(--mono); color: var(--ink-soft); }
+  .podium .v { font: 500 20px var(--mono); font-variant-numeric: tabular-nums; }
+  .bills { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .bill { position: absolute; top: -40px; width: 54px; height: 26px; border-radius: 3px; background: var(--win-soft); border: 2px solid var(--win); color: var(--win); font: 500 11px/22px var(--mono); text-align: center; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(900px) rotate(540deg); opacity: .15; } }
+
+  footer { font-size: 13px; color: var(--ink-soft); text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
+    .bills { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Grammar <span>Auction</span></h1>
+      <div class="lotcount" id="lotcount"></div>
+    </div>
+    <div class="tools">
+      <button class="tool" id="undoBtn" type="button" title="تراجع عن آخر خطوة">↶ Undo</button>
+      <button class="tool" id="soundBtn" type="button" aria-pressed="true">🔊 Sound</button>
+      <button class="tool" id="resetBtn" type="button">New game</button>
+    </div>
+  </header>
+  <section class="bank" id="bank" aria-label="Team balances"></section>
+  <main class="stage" id="stage"></main>
+  <footer>Present Simple vs Present Continuous · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+</div>
+
+<script>
+/* ============================================================
+   الجمل (Lots) — عدّلي هنا بسهولة.
+   s: الجملة المعروضة · ok: صحيحة؟ · fix: التصحيح (للجمل الخاطئة)
+   sig: الكلمات الدالة التي تُظلَّل عند الكشف · trap: بطاقة فخ
+   why: الشرح بالإنجليزية · ar: الشرح بالعربية
+   ============================================================ */
+const LOTS = [
+  { s: "Sara is usually going to school by bus.", ok: false, fix: "Sara usually goes to school by bus.", sig: ["usually"],
+    why: "<b>usually</b> shows a habit → Present Simple.", ar: "usually تدل على عادة، لذلك نستخدم المضارع البسيط." },
+  { s: "Look! The boys are playing football.", ok: true, sig: ["Look!"],
+    why: "<b>Look!</b> means it is happening now → Present Continuous.", ar: "Look! تعني أن الحدث يحدث الآن ← مضارع مستمر." },
+  { s: "My brother plays football now.", ok: false, trap: true, fix: "My brother is playing football now.", sig: ["now"],
+    why: "<b>now</b> = at this moment → Present Continuous.", ar: "كلمة now تعني الآن، فنستخدم is + ing." },
+  { s: "Water boils at 100 degrees Celsius.", ok: true, sig: ["boils"],
+    why: "A scientific fact is always true → Present Simple.", ar: "الحقائق العلمية تأتي بالمضارع البسيط." },
+  { s: "Listen! Someone knocks at the door.", ok: false, fix: "Listen! Someone is knocking at the door.", sig: ["Listen!"],
+    why: "<b>Listen!</b> points to something happening right now.", ar: "Listen! تدل على حدث يحصل الآن ← مضارع مستمر." },
+  { s: "I am knowing the answer.", ok: false, trap: true, fix: "I know the answer.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb. We don't use it with -ing.", ar: "know فعل حالة (شعور/معرفة) ولا يأتي بصيغة ing." },
+  { s: "She doesn't like coffee.", ok: true, sig: ["doesn't like"],
+    why: "Negative Present Simple: doesn't + base verb.", ar: "النفي في المضارع البسيط: doesn't + الفعل بدون s." },
+  { s: "They are watching TV at the moment.", ok: true, sig: ["at the moment"],
+    why: "<b>at the moment</b> → Present Continuous.", ar: "at the moment تعني في هذه اللحظة ← مضارع مستمر." },
+  { s: "My mother cook dinner every evening.", ok: false, fix: "My mother cooks dinner every evening.", sig: ["every evening"],
+    why: "He / she / it in Present Simple needs <b>-s</b>: cooks.", ar: "مع he/she/it نضيف s للفعل في المضارع البسيط." },
+  { s: "Does your father work in a bank?", ok: true, sig: ["Does"],
+    why: "Question: Does + subject + base verb (no -s).", ar: "السؤال: Does + الفاعل + الفعل بدون s." },
+  { s: "We are having lunch right now.", ok: true, trap: true, sig: ["right now"],
+    why: "<b>have</b> = eat here, so -ing is correct. Tricky!", ar: "have هنا بمعنى يأكل، لذلك يصح استخدام ing. فخ!" },
+  { s: "Every Friday, we are visiting our grandparents.", ok: false, fix: "Every Friday, we visit our grandparents.", sig: ["Every Friday"],
+    why: "<b>Every Friday</b> = routine → Present Simple.", ar: "Every Friday روتين متكرر ← مضارع بسيط." },
+  { s: "The sun rises in the east.", ok: true, sig: ["rises"],
+    why: "A fact about nature → Present Simple with -s.", ar: "حقيقة طبيعية ← مضارع بسيط مع s." },
+  { s: "Is he study for the test now?", ok: false, trap: true, fix: "Is he studying for the test now?", sig: ["now"],
+    why: "Present Continuous question: Is + subject + verb<b>-ing</b>.", ar: "السؤال في المضارع المستمر: Is + الفاعل + الفعل مع ing." },
+];
+const FINAL = {
+  html: 'My father usually <span class="blank">______</span> <span class="hint">(drive)</span> to work, but today he <span class="blank">______</span> <span class="hint">(take)</span> the bus.',
+  answerHtml: 'My father usually <span class="blank">drives</span> to work, but today he <span class="blank">is taking</span> the bus.',
+  why: "<b>usually</b> → habit → drives. <b>today</b> → temporary, happening now → is taking.",
+  ar: "usually عادة ← drives · today مؤقت/الآن ← is taking",
+};
+const TEAM_COLORS = ["#2b62a8", "#b0306f", "#c0561f", "#6a43b8"];
+const DEFAULT_NAMES = ["Eagles", "Lions", "Falcons", "Tigers"];
+const TOTAL = LOTS.length + 1;
+const KEY = "grammar-auction-v1";
+
+let state = null;
+let history = [];
+let flashes = {};
+let sound = true;
+let clockTimer = null, clockLeft = 0;
+let setupDraft = { count: 3, names: DEFAULT_NAMES.slice(), start: 1000 };
+
+const $ = (id) => document.getElementById(id);
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = (n) => "$" + Number(n).toLocaleString("en-US");
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
+function snapshot() { history.push(JSON.stringify(state)); if (history.length > 60) history.shift(); }
+
+/* ---------- Sound (Web Audio, starts only after a click) ---------- */
+let actx = null;
+function tone(freq, dur, type = "sine", gain = .25, when = 0) {
+  if (!sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime + when, o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(gain, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur);
+  } catch (e) {}
+}
+const sfx = {
+  gavel() { tone(140, .18, "square", .3); tone(90, .25, "sine", .4, .02); },
+  win() { [523, 659, 784, 1046].forEach((f, i) => tone(f, .18, "triangle", .2, i * .09)); },
+  lose() { tone(220, .35, "sawtooth", .15); tone(160, .5, "sawtooth", .15, .25); },
+  tick() { tone(880, .05, "square", .08); },
+};
+
+/* ---------- Game flow ---------- */
+function newGame() {
+  const n = setupDraft.count;
+  state = {
+    phase: "lot", lot: 0, start: setupDraft.start,
+    teams: Array.from({ length: n }, (_, i) => ({ name: (setupDraft.names[i] || DEFAULT_NAMES[i]).trim() || DEFAULT_NAMES[i], money: setupDraft.start, color: TEAM_COLORS[i] })),
+    bid: { team: null, amount: 100 }, result: null,
+    final: null,
+  };
+  history = [];
+  render();
+}
+
+function sell() {
+  const { team, amount } = state.bid;
+  const t = state.teams[team];
+  if (team == null || !(amount > 0) || amount > t.money) return;
+  snapshot();
+  stopClock();
+  state.phase = "sold";
+  sfx.gavel();
+  render();
+}
+
+function check(noBids) {
+  snapshot();
+  const lot = LOTS[state.lot];
+  if (noBids) {
+    state.result = { team: null, delta: 0 };
+  } else {
+    const { team, amount } = state.bid;
+    const delta = lot.ok ? amount : -amount;
+    state.teams[team].money += delta;
+    flashes[team] = delta;
+    state.result = { team, delta };
+    lot.ok ? sfx.win() : sfx.lose();
+  }
+  stopClock();
+  state.phase = "reveal";
+  render();
+}
+
+function nextLot() {
+  snapshot();
+  state.lot += 1;
+  state.result = null;
+  state.bid = { team: null, amount: 100 };
+  if (state.lot >= LOTS.length) {
+    state.phase = "final";
+    state.final = { stakes: state.teams.map((t) => t.money), marks: state.teams.map(() => null), revealed: false, settled: false };
+  } else {
+    state.phase = "lot";
+  }
+  render();
+}
+
+function settleFinal() {
+  snapshot();
+  const f = state.final;
+  let anyWin = false;
+  state.teams.forEach((t, i) => {
+    const stake = Math.min(Math.max(0, f.stakes[i] || 0), t.money);
+    if (!stake || f.marks[i] == null) return;
+    const delta = f.marks[i] ? stake : -stake;
+    t.money += delta; flashes[i] = delta; if (delta > 0) anyWin = true;
+  });
+  f.settled = true;
+  anyWin ? sfx.win() : sfx.lose();
+  render();
+}
+
+/* ---------- Bidding clock ---------- */
+function startClock(sec = 20) {
+  stopClock(); clockLeft = sec; paintClock();
+  clockTimer = setInterval(() => {
+    clockLeft -= 1; paintClock();
+    if (clockLeft <= 5 && clockLeft > 0) sfx.tick();
+    if (clockLeft <= 0) { stopClock(); sfx.gavel(); }
+  }, 1000);
+}
+function stopClock() { clearInterval(clockTimer); clockTimer = null; }
+function paintClock() {
+  const el = $("clock"); if (!el) return;
+  el.textContent = clockLeft > 0 ? clockLeft + "s" : "Time!";
+  el.classList.toggle("low", clockLeft <= 5);
+}
+
+/* ---------- Rendering ---------- */
+function highlight(s, words) {
+  let out = esc(s);
+  (words || []).forEach((w) => {
+    const re = new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    out = out.replace(re, "<mark>$&</mark>");
+  });
+  return out;
+}
+
+function renderBank() {
+  const bank = $("bank");
+  if (!state) { bank.innerHTML = ""; bank.hidden = true; return; }
+  bank.hidden = false;
+  const activeTeam = (state.phase === "lot" || state.phase === "sold") ? state.bid.team : state.result && state.result.team;
+  bank.innerHTML = state.teams.map((t, i) => {
+    const d = flashes[i];
+    return `<div class="acct${activeTeam === i ? " active" : ""}" style="--team:${t.color}">
+      <div class="nm">${esc(t.name)}</div>
+      <div class="bal${t.money <= 0 ? " broke" : ""}">${money(t.money)}</div>
+      ${d ? `<div class="delta ${d > 0 ? "up" : "down"}">${d > 0 ? "+" : "−"}${money(Math.abs(d))}</div>` : ""}
+    </div>`;
+  }).join("");
+  flashes = {};
+}
+
+function renderHeader() {
+  const lc = $("lotcount");
+  if (!state) lc.textContent = "";
+  else if (state.phase === "final") lc.textContent = `Round ${TOTAL} of ${TOTAL} · Final`;
+  else if (state.phase === "end") lc.textContent = "Auction closed";
+  else lc.textContent = `Lot ${String(state.lot + 1).padStart(2, "0")} of ${TOTAL}`;
+  $("undoBtn").disabled = !history.length;
+  $("resetBtn").hidden = !state;
+}
+
+function renderSetup() {
+  const d = setupDraft;
+  const saved = load();
+  return `<div class="setup">
+    <div style="display:grid;gap:18px;align-content:start">
+      <div class="eyebrow"><span class="serial">No. GA-0815</span> Present Simple · Present Continuous</div>
+      <h2>Every team gets <em>${money(d.start)}</em>. Buy only the sentences you trust.</h2>
+      <ol class="rules">
+        <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it.<br><span class="ar">تُعرض جملة، والفرق تزايد عليها.</span></p></li>
+        <li><span class="n">2</span><p>The highest bid buys it. Then: <b>CHECK!</b><br><span class="ar">أعلى مزايدة تشتري الجملة، ثم نكشف.</span></p></li>
+        <li><span class="n">3</span><p>Correct sentence: win the bid as profit. Wrong sentence: lose it.<br><span class="ar">الجملة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>
+        <li><span class="n">4</span><p>Watch out for <b>Trap Cards</b>. Last round is <b>Double or Nothing</b>.<br><span class="ar">انتبهوا لبطاقات الفخ! والجولة الأخيرة: ضاعف أو اخسر.</span></p></li>
+      </ol>
+    </div>
+    <form class="form" id="setupForm">
+      <div>
+        <label>Number of teams</label>
+        <div class="seg" role="group">${[2, 3, 4].map((n) => `<button type="button" data-count="${n}" aria-pressed="${d.count === n}">${n}</button>`).join("")}</div>
+      </div>
+      <div>
+        <label>Team names</label>
+        <div class="names">${Array.from({ length: d.count }, (_, i) => `<div class="nrow" style="--team:${TEAM_COLORS[i]}"><span class="sw"></span><input id="tname${i}" data-name="${i}" value="${esc(d.names[i])}" maxlength="24" aria-label="Team ${i + 1} name" /></div>`).join("")}</div>
+      </div>
+      <div>
+        <label for="startCash">Starting Grammar Money</label>
+        <input type="number" id="startCash" min="100" step="100" value="${d.start}" />
+      </div>
+      <div class="actions">
+        <button class="big gavel" type="submit">Open the auction</button>
+        ${saved && saved.phase !== "end" ? `<button class="ghost" type="button" id="resumeBtn">Resume saved game</button>` : ""}
+      </div>
+    </form>
+  </div>`;
+}
+
+function renderLot() {
+  const lot = LOTS[state.lot];
+  const sold = state.phase === "sold";
+  const { team, amount } = state.bid;
+  const t = team != null ? state.teams[team] : null;
+  const over = t && amount > t.money;
+  const canSell = t && amount > 0 && !over;
+  return `
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Is this sentence correct?</div>
+    <p class="announce">${sold ? `Sold to ${esc(t.name)} for ${money(amount)}!` : "Auction starts! How much are you willing to pay?"}</p>
+    <div class="lot">
+      ${sold ? `<div class="stamp sold">SOLD</div>` : ""}
+      <p class="sentence">${esc(lot.s)}</p>
+    </div>
+    ${sold ? `
+      <div class="actions">
+        <button class="big gold" id="checkBtn" type="button">🔍 CHECK!</button>
+        <span class="ar" style="color:var(--ink-soft)">اسألي الصف أولًا: صحيحة أم خاطئة؟ ولماذا؟</span>
+      </div>` : `
+      <div class="panel">
+        <div class="row"><span class="lbl">Highest bid</span>
+          ${state.teams.map((tm, i) => `<button type="button" class="teambtn" style="--team:${tm.color}" data-team="${i}" aria-pressed="${team === i}" ${tm.money <= 0 ? "disabled" : ""}><span class="dot"></span>${esc(tm.name)}</button>`).join("")}
+        </div>
+        <div class="row"><span class="lbl">Amount</span>
+          <label class="money-in"><span>$</span><input id="bidAmt" type="number" inputmode="numeric" min="0" step="50" value="${amount || ""}" aria-label="Bid amount" /></label>
+          ${[100, 200, 300, 500].map((v) => `<button type="button" class="chip" data-amt="${v}">${v}</button>`).join("")}
+          <button type="button" class="chip allin" data-amt="all" ${t ? "" : "disabled"}>ALL IN</button>
+        </div>
+        <p class="err" id="bidErr">${over ? `${esc(t.name)} only has ${money(t.money)}.` : ""}</p>
+        <div class="actions">
+          <button class="big gavel" id="sellBtn" type="button" ${canSell ? "" : "disabled"}>🔨 SOLD!</button>
+          <button class="ghost" id="clockBtn" type="button">⏱ 20s clock</button>
+          <span class="clock" id="clock" aria-live="polite"></span>
+          <button class="ghost" id="noBidBtn" type="button" style="margin-left:auto">No bids · reveal</button>
+        </div>
+      </div>`}`;
+}
+
+function renderReveal() {
+  const lot = LOTS[state.lot];
+  const r = state.result;
+  const t = r.team != null ? state.teams[r.team] : null;
+  const last = state.lot === LOTS.length - 1;
+  return `
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check! ${lot.trap ? `<span class="trap">😈 TRAP CARD</span>` : ""}</div>
+    <div class="lot">
+      <div class="stamp ${lot.ok ? "ok" : "bad"}">${lot.ok ? "✓ CORRECT" : "✗ WRONG"}</div>
+      <p class="sentence">${highlight(lot.s, lot.sig)}</p>
+    </div>
+    ${lot.ok ? "" : `<div class="fix"><span class="label">Correction</span><p class="right">${highlight(lot.fix, lot.sig)}</p></div>`}
+    <div class="fix">
+      <p class="why">${lot.why}</p>
+      <p class="why ar">${esc(lot.ar)}</p>
+    </div>
+    <div class="result">
+      ${t ? `<span>${esc(t.name)} paid ${money(Math.abs(r.delta))} →</span>
+             <strong class="${r.delta > 0 ? "up" : "down"}">${r.delta > 0 ? "+" + money(r.delta) + " profit" : "−" + money(-r.delta) + " lost"}</strong>`
+          : `<span>Nobody bought this lot.</span>`}
+    </div>
+    <div class="actions">
+      <button class="big" id="nextBtn" type="button">${last ? "🔥 Final round: Double or Nothing" : "Next lot →"}</button>
+    </div>`;
+}
+
+function renderFinal() {
+  const f = state.final;
+  return `
+    <div class="final-head">
+      <div class="eyebrow"><span class="serial">Lot ${TOTAL}</span> Final round</div>
+      <h2>DOUBLE OR NOTHING!</h2>
+      <p class="ar" style="margin:0;color:var(--ink-soft)">كل فريق يختار المبلغ الذي يراهن عليه. إجابة صحيحة = يتضاعف المبلغ، إجابة خاطئة = يخسره.</p>
+    </div>
+    <div class="lot">
+      ${f.revealed ? `<div class="stamp ok">ANSWER</div>` : ""}
+      <p class="sentence">${f.revealed ? FINAL.answerHtml : FINAL.html}</p>
+    </div>
+    ${f.revealed ? `<div class="fix"><p class="why">${FINAL.why}</p><p class="why ar">${esc(FINAL.ar)}</p></div>` : ""}
+    <div class="fteams">
+      ${state.teams.map((t, i) => {
+        const broke = t.money <= 0 && !f.settled;
+        return `<div class="fteam" style="--team:${t.color}">
+          <span class="nm">${esc(t.name)}</span>
+          ${broke ? `<span style="color:var(--loss);font-weight:700">Out of money</span>` : `
+          <label class="money-in"><span>$</span><input id="stake${i}" type="number" min="0" step="50" data-stake="${i}" value="${f.stakes[i]}" aria-label="${esc(t.name)} stake" ${f.settled ? "disabled" : ""} /></label>
+          <button type="button" class="chip allin" data-allin="${i}" ${f.settled ? "disabled" : ""}>ALL IN</button>
+          <button type="button" class="mark ok" data-mark="${i}:1" aria-pressed="${f.marks[i] === true}" ${f.settled ? "disabled" : ""}>✓ Right</button>
+          <button type="button" class="mark bad" data-mark="${i}:0" aria-pressed="${f.marks[i] === false}" ${f.settled ? "disabled" : ""}>✗ Wrong</button>`}
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="actions">
+      ${f.revealed ? "" : `<button class="big gold" id="revealFinalBtn" type="button">🔍 Show the answer</button>`}
+      ${f.settled
+        ? `<button class="big gavel" id="endBtn" type="button">🏆 Crown the Grammar Millionaires</button>`
+        : `<button class="big" id="settleBtn" type="button" ${f.marks.some((m) => m != null) ? "" : "disabled"}>💰 Pay out</button>`}
+    </div>`;
+}
+
+function renderEnd() {
+  const ranked = state.teams.map((t, i) => ({ ...t, i })).sort((a, b) => b.money - a.money);
+  const top = ranked[0].money;
+  const winners = ranked.filter((t) => t.money === top);
+  const bills = Array.from({ length: 22 }, () =>
+    `<div class="bill" style="left:${Math.random() * 96}%;animation-duration:${3 + Math.random() * 3}s;animation-delay:${Math.random() * 1.5}s">G$ ${[100, 500, 1000][Math.floor(Math.random() * 3)]}</div>`).join("");
+  return `
+    <div class="bills" aria-hidden="true">${bills}</div>
+    <div class="end" style="display:grid;gap:14px">
+      <div class="eyebrow">Auction closed · Final balances</div>
+      <p class="crown">🏆 THE GRAMMAR MILLIONAIRES</p>
+      <p class="winner">${winners.map((w) => esc(w.name)).join(" & ")}</p>
+      <div class="wamt">${money(top)}</div>
+      <div class="podium">
+        ${ranked.map((t, k) => `<div class="p" style="--team:${t.color}"><span class="rk">#${k + 1}</span><b>${esc(t.name)}</b><span class="v">${money(t.money)}</span></div>`).join("")}
+      </div>
+      <div class="actions" style="justify-content:center">
+        <button class="big gavel" id="againBtn" type="button">Play again</button>
+      </div>
+    </div>`;
+}
+
+function render() {
+  renderHeader();
+  renderBank();
+  const stage = $("stage");
+  if (!state) stage.innerHTML = renderSetup();
+  else if (state.phase === "lot" || state.phase === "sold") stage.innerHTML = renderLot();
+  else if (state.phase === "reveal") stage.innerHTML = renderReveal();
+  else if (state.phase === "final") stage.innerHTML = renderFinal();
+  else stage.innerHTML = renderEnd();
+  if (state) save();
+  if (clockTimer) paintClock();
+}
+
+/* Update bid controls without re-rendering the input the teacher is typing in. */
+function refreshBidUI() {
+  const { team, amount } = state.bid;
+  const t = team != null ? state.teams[team] : null;
+  const over = t && amount > t.money;
+  $("bidErr").textContent = over ? `${t.name} only has ${money(t.money)}.` : "";
+  $("sellBtn").disabled = !(t && amount > 0 && !over);
+  document.querySelectorAll("[data-team]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.team === team)));
+  const allin = document.querySelector('[data-amt="all"]'); if (allin) allin.disabled = !t;
+  renderBank();
+}
+
+/* ---------- Events ---------- */
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b || b.disabled) return;
+  if (b.id !== "resetBtn") disarmReset();
+
+  if (b.dataset.count) { setupDraft.count = +b.dataset.count; $("stage").innerHTML = renderSetup(); return; }
+  if (b.id === "resumeBtn") { state = load(); history = []; render(); return; }
+
+  if (b.dataset.team != null && state) { state.bid.team = +b.dataset.team; refreshBidUI(); return; }
+  if (b.dataset.amt) {
+    const t = state.teams[state.bid.team];
+    state.bid.amount = b.dataset.amt === "all" ? (t ? t.money : 0) : +b.dataset.amt;
+    $("bidAmt").value = state.bid.amount; refreshBidUI(); return;
+  }
+  if (b.id === "sellBtn") return sell();
+  if (b.id === "noBidBtn") return check(true);
+  if (b.id === "clockBtn") { sfx.tick(); return startClock(20); }
+  if (b.id === "checkBtn") return check(false);
+  if (b.id === "nextBtn") return nextLot();
+
+  if (b.dataset.allin != null) { const i = +b.dataset.allin; state.final.stakes[i] = state.teams[i].money; render(); return; }
+  if (b.dataset.mark) {
+    const [i, v] = b.dataset.mark.split(":"); const val = v === "1";
+    state.final.marks[+i] = state.final.marks[+i] === val ? null : val; render(); return;
+  }
+  if (b.id === "revealFinalBtn") { snapshot(); state.final.revealed = true; sfx.gavel(); render(); return; }
+  if (b.id === "settleBtn") return settleFinal();
+  if (b.id === "endBtn") { snapshot(); state.phase = "end"; sfx.win(); render(); return; }
+  if (b.id === "againBtn") { state = null; history = []; try { localStorage.removeItem(KEY); } catch (err) {} render(); return; }
+
+  if (b.id === "undoBtn" && history.length) { stopClock(); state = JSON.parse(history.pop()); render(); return; }
+  if (b.id === "soundBtn") { sound = !sound; b.setAttribute("aria-pressed", String(sound)); b.textContent = sound ? "🔊 Sound" : "🔇 Muted"; return; }
+  if (b.id === "resetBtn") {
+    if (b.classList.contains("armed")) { disarmReset(); stopClock(); state = null; history = []; try { localStorage.removeItem(KEY); } catch (err) {} render(); }
+    else { b.classList.add("armed"); b.textContent = "Tap again to end game"; }
+  }
+});
+function disarmReset() { const r = $("resetBtn"); r.classList.remove("armed"); r.textContent = "New game"; }
+
+document.addEventListener("input", (e) => {
+  const el = e.target;
+  if (el.id === "bidAmt") { state.bid.amount = Math.max(0, Math.floor(+el.value || 0)); refreshBidUI(); }
+  else if (el.dataset.name != null) setupDraft.names[+el.dataset.name] = el.value;
+  else if (el.id === "startCash") setupDraft.start = Math.max(100, Math.floor(+el.value || 1000));
+  else if (el.dataset.stake != null) {
+    const i = +el.dataset.stake; state.final.stakes[i] = Math.min(state.teams[i].money, Math.max(0, Math.floor(+el.value || 0))); save();
+  }
+});
+document.addEventListener("submit", (e) => { e.preventDefault(); if (e.target.id === "setupForm") newGame(); });
+document.addEventListener("keydown", (e) => {
+  if (e.target.matches("input")) { if (e.key === "Enter" && e.target.id === "bidAmt") sell(); return; }
+  if (!state) return;
+  if (e.key >= "1" && e.key <= "4" && state.phase === "lot" && state.teams[+e.key - 1] && state.teams[+e.key - 1].money > 0) { state.bid.team = +e.key - 1; refreshBidUI(); }
+});
+
+/* Keep the game going if the page is live-updated or refreshed mid-lesson. */
+function start(data) {
+  if (data && data.state) { state = data.state; history = data.history || []; }
+  render();
+}
+if (window.claude && window.claude.hot && typeof window.claude.hot.snapshot === "function") window.claude.hot.snapshot(() => ({ state, history }));
+window.claude && window.claude.hot && window.claude.hot.ready ? window.claude.hot.ready(start) : start((window.claude && window.claude.hot && window.claude.hot.data) || {});
+</script>
+</body>
+</html>
