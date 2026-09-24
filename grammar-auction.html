@@ -275,7 +275,7 @@ let history = [];
 let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
-let setupDraft = { count: 3, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
