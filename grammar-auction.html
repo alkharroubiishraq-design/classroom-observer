@@ -208,9 +208,9 @@
   .seg button[aria-pressed="true"] { background: var(--card-ink); color: var(--gold); }
 
   .packs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
-  .packbtn { display: grid; gap: 2px; text-align: left; border: 2px solid #dde0f5; background: #f5f6ff; color: var(--card-ink); border-radius: 12px; padding: 10px 12px; }
-  .packbtn b { font: 400 15px var(--display); }
-  .packbtn .ar { font-size: 14px; color: var(--card-soft); text-align: right; }
+  .packbtn { display: grid; gap: 0; text-align: left; border: 2px solid #dde0f5; background: #f5f6ff; color: var(--card-ink); border-radius: 10px; padding: 6px 10px; }
+  .packbtn b { font: 400 13px var(--display); }
+  .packbtn .ar { font-size: 13px; color: var(--card-soft); text-align: right; }
   .packbtn[aria-pressed="true"] { background: var(--card-ink); border-color: var(--card-ink); color: var(--gold); box-shadow: 0 0 0 3px var(--gold); }
   .packbtn[aria-pressed="true"] .ar { color: #c9ceff; }
 
@@ -284,7 +284,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Past Family · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Modal Verbs + Passive</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -406,7 +406,85 @@ const PAST2_FINAL = {
   ar: "got فعل قصير · had been running استمر ساعة قبلها · had already eaten انتهى قبل وصولي",
 };
 
+/* ---------- Modal verbs + passive infinitive: modal + be + P.P ---------- */
+const MODAL_LOTS = [
+  { s: "Rare animals must be protected from hunters.", ok: true, sig: ["must be protected"],
+    why: "modal + <b>be</b> + P.P → must be protected.", ar: "المودال + be + التصريف الثالث ← must be protected." },
+  { s: "The rubbish should be recycle every week.", ok: false, fix: "The rubbish should be recycled every week.", sig: ["should be"],
+    why: "After <b>be</b> we need the P.P: recycled.", ar: "بعد be نستخدم التصريف الثالث: recycled." },
+  { s: "Can the planet be saved?", ok: true, sig: ["Can", "be saved"],
+    why: "Question: <b>Can</b> + subject + be + P.P?", ar: "السؤال: Can + الفاعل + be + التصريف الثالث؟" },
+  { s: "More trees ought be planted in our city.", ok: false, trap: true, fix: "More trees ought to be planted in our city.", sig: ["ought"],
+    why: "It's <b>ought to</b> + be + P.P. Don't forget <b>to</b>!", ar: "نقول ought to وليس ought فقط: ought to be planted." },
+  { s: "The fate of our planet should not be left to chance.", ok: true, sig: ["should not be left"],
+    why: "Negative: modal + <b>not</b> + be + P.P.", ar: "النفي: المودال + not + be + التصريف الثالث." },
+  { s: "Forests might be clear to create land for farming.", ok: false, fix: "Forests might be cleared to create land for farming.", sig: ["might be"],
+    why: "clear → <b>cleared</b> (P.P) after be.", ar: "بعد be نحتاج التصريف الثالث: cleared." },
+  { s: "Donations ought to be made at once.", ok: true, sig: ["ought to be made"],
+    why: "ought to + be + P.P (make → made).", ar: "ought to + be + التصريف الثالث (make ← made)." },
+  { s: "This problem must solved quickly.", ok: false, fix: "This problem must be solved quickly.", sig: ["must"],
+    why: "The problem can't solve itself → passive needs <b>be</b>: must be solved.", ar: "المشكلة لا تحل نفسها ← مبني للمجهول ويحتاج be." },
+  { s: "The land could be bought by a powerful oil company.", ok: true, trap: true, sig: ["could be bought", "by a powerful oil company"],
+    why: "Correct! We add <b>by</b> + the doer when the doer is important.", ar: "صحيحة! نضيف by + الفاعل عندما يكون الفاعل مهمًا." },
+  { s: "The old park can be improve with new benches.", ok: false, fix: "The old park can be improved with new benches.", sig: ["can be"],
+    why: "improve → <b>improved</b> (P.P).", ar: "بعد be نستخدم improved." },
+  { s: "Plastic bags shouldn't be used on the beach.", ok: true, sig: ["shouldn't be used"],
+    why: "shouldn't + be + P.P → shouldn't be used.", ar: "shouldn't + be + التصريف الثالث." },
+  { s: "Rare birds must be protecting from hunters.", ok: false, trap: true, fix: "Rare birds must be protected from hunters.", sig: ["must be"],
+    why: "Passive = be + <b>P.P</b>, not -ing. The birds don't protect, they are protected.", ar: "المبني للمجهول = be + التصريف الثالث وليس ing. الطيور لا تَحمي بل تُحمى." },
+  { s: "What could be done to improve our town?", ok: true, sig: ["could be done"],
+    why: "Wh- question + could + be + P.P (do → done).", ar: "سؤال + could + be + التصريف الثالث (do ← done)." },
+  { s: "Our national parks must to be looked after.", ok: false, trap: true, fix: "Our national parks must be looked after.", sig: ["must"],
+    why: "No <b>to</b> after must. Only <b>ought</b> takes to.", ar: "لا نضع to بعد must. فقط ought تأخذ to." },
+];
+const MODAL_FINAL = {
+  html: 'Our beaches <span class="blank">______</span> <span class="hint">(must / clean)</span> every week, and plastic <span class="blank">______</span> <span class="hint">(should not / throw)</span> into the sea.',
+  answerHtml: 'Our beaches <span class="blank">must be cleaned</span> every week, and plastic <span class="blank">should not be thrown</span> into the sea.',
+  why: "modal + <b>be</b> + P.P: clean → cleaned, throw → threw → <b>thrown</b>.",
+  ar: "المودال + be + التصريف الثالث: must be cleaned · should not be thrown",
+};
+
+/* ---------- Question tags ---------- */
+const TAGS_LOTS = [
+  { s: "The shops aren't open, are they?", ok: true, sig: ["aren't", "are they?"],
+    why: "Negative sentence → <b>affirmative</b> tag.", ar: "الجملة منفية ← السؤال الذيلي مثبت." },
+  { s: "The lady is selling honey, is she?", ok: false, fix: "The lady is selling honey, isn't she?", sig: ["is selling"],
+    why: "Affirmative sentence → <b>negative</b> tag: isn't she?", ar: "الجملة مثبتة ← السؤال الذيلي منفي: isn't she?" },
+  { s: "They went to Spain, didn't they?", ok: true, sig: ["went", "didn't they?"],
+    why: "No auxiliary in the sentence? went = past → <b>didn't</b>.", ar: "لا يوجد فعل مساعد، went ماضٍ ← didn't." },
+  { s: "She ought to practise, oughtn't she?", ok: true, trap: true, sig: ["ought to", "oughtn't she?"],
+    why: "Looks strange, but the tag for <b>ought to</b> is oughtn't.", ar: "تبدو غريبة لكنها صحيحة: ought to ← oughtn't." },
+  { s: "Everyone likes ice cream, doesn't he?", ok: false, trap: true, fix: "Everyone likes ice cream, don't they?", sig: ["Everyone likes"],
+    why: "everyone → verb is singular (likes) but the tag is <b>plural</b>: don't they?", ar: "مع everyone الفعل مفرد لكن السؤال الذيلي جمع: don't they?" },
+  { s: "Nobody is laughing, are they?", ok: true, trap: true, sig: ["Nobody is", "are they?"],
+    why: "nobody is negative → affirmative tag. Plural: <b>are they</b>.", ar: "nobody منفية ← سؤال مثبت، وبصيغة الجمع: are they." },
+  { s: "I'm right, am not I?", ok: false, trap: true, fix: "I'm right, aren't I?", sig: ["I'm right"],
+    why: "The exception: I'm … → <b>aren't I?</b>", ar: "الاستثناء: I'm ← aren't I?" },
+  { s: "You have finished your homework, haven't you?", ok: true, sig: ["have finished", "haven't you?"],
+    why: "have in the sentence → haven't in the tag.", ar: "have في الجملة ← haven't في السؤال الذيلي." },
+  { s: "He plays football every day, isn't he?", ok: false, fix: "He plays football every day, doesn't he?", sig: ["plays"],
+    why: "plays = Present Simple → <b>doesn't</b>, not isn't.", ar: "plays مضارع بسيط ← doesn't وليس isn't." },
+  { s: "They won't be late, will they?", ok: true, sig: ["won't", "will they?"],
+    why: "won't (negative) → will (affirmative).", ar: "won't منفية ← will مثبتة." },
+  { s: "Sara can swim, can she?", ok: false, fix: "Sara can swim, can't she?", sig: ["can swim"],
+    why: "Affirmative → negative tag: <b>can't</b> she?", ar: "جملة مثبتة ← can't she?" },
+  { s: "Your brother was at the match, wasn't he?", ok: true, sig: ["was", "wasn't he?"],
+    why: "was → wasn't.", ar: "was ← wasn't." },
+  { s: "We must leave now, don't we?", ok: false, fix: "We must leave now, mustn't we?", sig: ["must leave"],
+    why: "Modal in the sentence → same modal in the tag: <b>mustn't</b>.", ar: "المودال في الجملة يتكرر في السؤال الذيلي: mustn't." },
+  { s: "She has never been to Aqaba, hasn't she?", ok: false, fix: "She has never been to Aqaba, has she?", sig: ["never"],
+    why: "<b>never</b> makes the sentence negative → affirmative tag: has she?", ar: "never تجعل الجملة منفية ← السؤال الذيلي مثبت: has she?" },
+];
+const TAGS_FINAL = {
+  html: 'Nobody <span class="blank">______</span> <span class="hint">(know)</span> the answer, <span class="blank">______</span> <span class="blank">______</span>?',
+  answerHtml: 'Nobody <span class="blank">knows</span> the answer, <span class="blank">do</span> <span class="blank">they</span>?',
+  why: "nobody + singular verb → <b>knows</b>. nobody is negative → affirmative tag. Plural → <b>do they</b>.",
+  ar: "nobody + فعل مفرد ← knows · منفية ← سؤال مثبت · جمع ← do they",
+};
+
 const PACKS = {
+  modal: { name: "Modal Verbs + Passive", tag: "Modal verb + be + past participle", ar: "المودال مع المبني للمجهول", lots: MODAL_LOTS, final: MODAL_FINAL },
+  tags: { name: "Question Tags", tag: "Question tags", ar: "الأسئلة الذيلية", lots: TAGS_LOTS, final: TAGS_FINAL },
   present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
   past: { name: "Past Family · Level 1", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: مستوى 1", lots: PAST_LOTS, final: PAST_FINAL },
   past2: { name: "Past Family · Level 2", tag: "Past Family · Level 2 · Harder", ar: "عائلة الماضي: مستوى أصعب 🔥", lots: PAST2_LOTS, final: PAST2_FINAL },
@@ -425,7 +503,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "past2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { pack: "modal", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));

@@ -50,6 +50,8 @@
 - **Past Family · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect ·
   Past Perfect Continuous.
 - **Present Simple vs Present Continuous**.
+- **Modal Verbs + Passive**: modal + be + past participle.
+- **Question Tags**.
 
  يعمل مباشرة في المتصفح بدون تثبيت، ومناسب للعرض على
 اللوح/البروجكتر.
@@ -62,5 +64,5 @@
 - ساعة مزايدة 20 ثانية، زر تراجع (Undo)، أصوات مطرقة المزاد، وحفظ تلقائي
   للعبة في المتصفح إذا أُغلقت الصفحة بالخطأ.
 - النهاية: 🏆 THE GRAMMAR MILLIONAIRES.
-- لتغيير الجمل: عدّلي `PAST_LOTS` / `PAST2_LOTS` / `PAST_FINAL` / `PAST2_FINAL` أو `PRESENT_LOTS` / `PRESENT_FINAL`
+- لتغيير الجمل: عدّلي `PAST_LOTS` / `PAST2_LOTS` / `PAST_FINAL` / `PAST2_FINAL` أو `PRESENT_LOTS` / `PRESENT_FINAL` أو `MODAL_LOTS` / `TAGS_LOTS`
   في أعلى السكربت داخل الملف.
