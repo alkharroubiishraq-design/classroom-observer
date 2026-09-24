@@ -44,8 +44,13 @@
 
 # لعبة مزاد الجمل — Grammar Auction 💰
 
-ملف `grammar-auction.html` لعبة صفية لطلاب الصف الثامن (Present Simple vs
-Present Continuous). يعمل مباشرة في المتصفح بدون تثبيت، ومناسب للعرض على
+ملف `grammar-auction.html` لعبة صفية لطلاب الصف الثامن، فيها موضوعان تختارهما
+المعلمة من شاشة البداية:
+
+- **Past Family**: Past Continuous · Past Perfect · Past Perfect Continuous.
+- **Present Simple vs Present Continuous**.
+
+ يعمل مباشرة في المتصفح بدون تثبيت، ومناسب للعرض على
 اللوح/البروجكتر.
 
 - 4 مجموعات افتراضيًا (يمكن التغيير إلى 2 أو 3)، كل مجموعة تبدأ بـ $1000 Grammar Money (قابل للتعديل).
@@ -56,4 +61,5 @@ Present Continuous). يعمل مباشرة في المتصفح بدون تثبي
 - ساعة مزايدة 20 ثانية، زر تراجع (Undo)، أصوات مطرقة المزاد، وحفظ تلقائي
   للعبة في المتصفح إذا أُغلقت الصفحة بالخطأ.
 - النهاية: 🏆 THE GRAMMAR MILLIONAIRES.
-- لتغيير الجمل: عدّلي المصفوفة `LOTS` و `FINAL` في أعلى السكربت داخل الملف.
+- لتغيير الجمل: عدّلي `PAST_LOTS` / `PAST_FINAL` أو `PRESENT_LOTS` / `PRESENT_FINAL`
+  في أعلى السكربت داخل الملف.

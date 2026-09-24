@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Grammar Auction</title>
-<meta name="description" content="لعبة مزاد الجمل لطلاب الصف الثامن: Present Simple vs Present Continuous" />
+<meta name="description" content="لعبة مزاد الجمل لطلاب الصف الثامن: المضارع البسيط والمستمر، وعائلة الماضي" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;600;800&family=DM+Mono:wght@500&family=Tajawal:wght@500;700&display=swap" />
@@ -207,6 +207,13 @@
   .seg button { border: 0; background: #f5f6ff; padding: 8px 20px; font: 400 20px var(--display); color: var(--card-ink); }
   .seg button[aria-pressed="true"] { background: var(--card-ink); color: var(--gold); }
 
+  .packs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .packbtn { display: grid; gap: 2px; text-align: left; border: 2px solid #dde0f5; background: #f5f6ff; color: var(--card-ink); border-radius: 12px; padding: 10px 12px; }
+  .packbtn b { font: 400 15px var(--display); }
+  .packbtn .ar { font-size: 14px; color: var(--card-soft); text-align: right; }
+  .packbtn[aria-pressed="true"] { background: var(--card-ink); border-color: var(--card-ink); color: var(--gold); box-shadow: 0 0 0 3px var(--gold); }
+  .packbtn[aria-pressed="true"] .ar { color: #c9ceff; }
+
   /* Final */
   .final-head { display: grid; gap: 8px; }
   .final-head h2 {
@@ -277,7 +284,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer>Present Simple vs Present Continuous · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Past Family</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -287,7 +294,7 @@
    sig: الكلمات الدالة التي تُظلَّل عند الكشف · trap: بطاقة فخ
    why: الشرح بالإنجليزية · ar: الشرح بالعربية
    ============================================================ */
-const LOTS = [
+const PRESENT_LOTS = [
   { s: "Sara is usually going to school by bus.", ok: false, fix: "Sara usually goes to school by bus.", sig: ["usually"],
     why: "<b>usually</b> shows a habit → Present Simple.", ar: "usually تدل على عادة، لذلك نستخدم المضارع البسيط." },
   { s: "Look! The boys are playing football.", ok: true, sig: ["Look!"],
@@ -317,15 +324,60 @@ const LOTS = [
   { s: "Is he study for the test now?", ok: false, trap: true, fix: "Is he studying for the test now?", sig: ["now"],
     why: "Present Continuous question: Is + subject + verb<b>-ing</b>.", ar: "السؤال في المضارع المستمر: Is + الفاعل + الفعل مع ing." },
 ];
-const FINAL = {
+const PRESENT_FINAL = {
   html: 'My father usually <span class="blank">______</span> <span class="hint">(drive)</span> to work, but today he <span class="blank">______</span> <span class="hint">(take)</span> the bus.',
   answerHtml: 'My father usually <span class="blank">drives</span> to work, but today he <span class="blank">is taking</span> the bus.',
   why: "<b>usually</b> → habit → drives. <b>today</b> → temporary, happening now → is taking.",
   ar: "usually عادة ← drives · today مؤقت/الآن ← is taking",
 };
+/* ---------- Past Family: Past Continuous · Past Perfect · Past Perfect Continuous ---------- */
+const PAST_LOTS = [
+  { s: "I was studying at this time yesterday.", ok: true, sig: ["at this time yesterday"],
+    why: "<b>at this time yesterday</b> = in progress at a specific past time → Past Continuous.", ar: "at this time yesterday تدل على فعل كان مستمرًا في وقت محدد بالماضي ← ماضٍ مستمر." },
+  { s: "She was doing a quiz when her boss was walking in.", ok: false, fix: "She was doing a quiz when her boss walked in.", sig: ["when"],
+    why: "Long action (was/were + -ing) <b>when</b> short action (V2).", ar: "الفعل الطويل was/were + ing، والفعل القصير الذي قاطعه بعد when يكون V2." },
+  { s: "While I was walk to school, it started to rain.", ok: false, fix: "While I was walking to school, it started to rain.", sig: ["While"],
+    why: "<b>While</b> + was/were + verb<b>-ing</b>.", ar: "بعد While نستخدم was/were + الفعل مع ing." },
+  { s: "They had left by the time he arrived.", ok: true, sig: ["by the time"],
+    why: "They left first, he arrived later → the earlier action is Past Perfect.", ar: "المغادرة حدثت أولًا ← had left، والوصول بعدها ← arrived." },
+  { s: "After she wrote the letter, she had posted it.", ok: false, trap: true, fix: "After she had written the letter, she posted it.", sig: ["After"],
+    why: "Writing came <b>first</b>, so writing takes had + P.P, not posting.", ar: "الكتابة حدثت أولًا فهي التي تأخذ had + P.P، أما الإرسال فيأتي V2." },
+  { s: "I had never been to Aqaba before this trip.", ok: true, sig: ["never", "before this trip"],
+    why: "<b>never … before</b> → Past Perfect: had + never + P.P.", ar: "never … before من الكلمات الدالة على الماضي التام." },
+  { s: "As soon as I had passed, I phoned my parents.", ok: true, trap: true, sig: ["As soon as"],
+    why: "Passing happened first → had passed. Then → phoned. It looks odd but it's correct!", ar: "النجاح حدث أولًا ← had passed ثم اتصلت ← phoned. تبدو غريبة لكنها صحيحة!" },
+  { s: "By 1950, they have left.", ok: false, fix: "By 1950, they had left.", sig: ["By 1950"],
+    why: "<b>By + past time</b> → Past Perfect (had), not have.", ar: "By + زمن ماضٍ ← نستخدم had وليس have." },
+  { s: "We had been driving for less than an hour when the car broke down.", ok: true, sig: ["for less than an hour", "when"],
+    why: "Continuous action before a past moment: had been + <b>-ing</b> + for.", ar: "فعل مستمر قبل لحظة في الماضي ← had been + ing مع for." },
+  { s: "He had been sleep for a long time when the phone rang.", ok: false, fix: "He had been sleeping for a long time when the phone rang.", sig: ["for a long time"],
+    why: "Past Perfect Continuous = had been + verb<b>-ing</b>.", ar: "الماضي التام المستمر = had been + الفعل مع ing." },
+  { s: "I was knowing the answer when the teacher asked me.", ok: false, trap: true, fix: "I knew the answer when the teacher asked me.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb. No -ing, even in the past.", ar: "know فعل حالة لا يأتي مع ing حتى في الماضي." },
+  { s: "It was raining as we left the cinema.", ok: true, sig: ["as"],
+    why: "<b>as</b> = while: long action (was raining) + short action (left).", ar: "as بمعنى while: فعل طويل was raining وفعل قصير left." },
+  { s: "She had been bought lots of apples the night before.", ok: false, trap: true, fix: "She had bought lots of apples the night before.", sig: ["the night before"],
+    why: "Past Perfect is had + P.P. <b>had been bought</b> is the passive: the apples bought her!", ar: "الماضي التام: had + P.P فقط. had been bought مبني للمجهول ويغيّر المعنى." },
+  { s: "They had been flying to Tokyo for a few hours by this time yesterday.", ok: true, sig: ["for a few hours", "by this time yesterday"],
+    why: "<b>for</b> + <b>by this time yesterday</b> → Past Perfect Continuous.", ar: "for مع by this time yesterday ← ماضٍ تام مستمر." },
+];
+const PAST_FINAL = {
+  html: 'While I <span class="blank">______</span> <span class="hint">(walk)</span> home, I realised that I <span class="blank">______</span> <span class="hint">(leave)</span> my keys at school.',
+  answerHtml: 'While I <span class="blank">was walking</span> home, I realised that I <span class="blank">had left</span> my keys at school.',
+  why: "<b>While</b> → was walking. Leaving the keys happened <b>earlier</b> → had left.",
+  ar: "While ← was walking · ترك المفاتيح حدث قبل ← had left",
+};
+
+const PACKS = {
+  present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
+  past: { name: "Past Family", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي", lots: PAST_LOTS, final: PAST_FINAL },
+};
+const pack = () => PACKS[(state && state.pack) || setupDraft.pack] || PACKS.present;
+const lots = () => pack().lots;
+const total = () => lots().length + 1;
+
 const TEAM_COLORS = ["#2d8cff", "#ff3d8b", "#ff8a00", "#a259ff"];
 const DEFAULT_NAMES = ["Eagles", "Lions", "Falcons", "Tigers"];
-const TOTAL = LOTS.length + 1;
 const KEY = "grammar-auction-v1";
 
 let state = null;
@@ -334,7 +386,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { pack: "past", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -367,7 +419,7 @@ const sfx = {
 function newGame() {
   const n = setupDraft.count;
   state = {
-    phase: "lot", lot: 0, start: setupDraft.start,
+    pack: setupDraft.pack, phase: "lot", lot: 0, start: setupDraft.start,
     teams: Array.from({ length: n }, (_, i) => ({ name: (setupDraft.names[i] || DEFAULT_NAMES[i]).trim() || DEFAULT_NAMES[i], money: setupDraft.start, color: TEAM_COLORS[i] })),
     bid: { team: null, amount: 100 }, result: null,
     final: null,
@@ -390,7 +442,7 @@ function sell() {
 
 function check(noBids) {
   snapshot();
-  const lot = LOTS[state.lot];
+  const lot = lots()[state.lot];
   if (noBids) {
     state.result = { team: null, delta: 0 };
   } else {
@@ -412,7 +464,7 @@ function nextLot() {
   state.lot += 1;
   state.result = null;
   state.bid = { team: null, amount: 100 };
-  if (state.lot >= LOTS.length) {
+  if (state.lot >= lots().length) {
     state.phase = "final";
     state.final = { stakes: state.teams.map((t) => t.money), marks: state.teams.map(() => null), revealed: false, settled: false };
   } else {
@@ -509,11 +561,12 @@ function flashBad() {
 }
 
 function renderHeader() {
+  $("footTopic").textContent = pack().name;
   const lc = $("lotcount");
   if (!state) lc.textContent = "";
-  else if (state.phase === "final") lc.textContent = `Round ${TOTAL} of ${TOTAL} · Final`;
+  else if (state.phase === "final") lc.textContent = `Round ${total()} of ${total()} · Final`;
   else if (state.phase === "end") lc.textContent = "Auction closed";
-  else lc.textContent = `Lot ${String(state.lot + 1).padStart(2, "0")} of ${TOTAL}`;
+  else lc.textContent = `Lot ${String(state.lot + 1).padStart(2, "0")} of ${total()}`;
   $("undoBtn").disabled = !history.length;
   $("resetBtn").hidden = !state;
 }
@@ -523,7 +576,7 @@ function renderSetup() {
   const saved = load();
   return `<div class="setup">
     <div style="display:grid;gap:18px;align-content:start">
-      <div class="eyebrow"><span class="serial">No. GA-0815</span> Present Simple · Present Continuous</div>
+      <div class="eyebrow"><span class="serial">No. GA-0815</span> ${pack().tag}</div>
       <h2>Every team gets <em>${money(d.start)}</em>. Buy only the sentences you trust.</h2>
       <ol class="rules">
         <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it.<br><span class="ar">تُعرض جملة، والفرق تزايد عليها.</span></p></li>
@@ -533,6 +586,10 @@ function renderSetup() {
       </ol>
     </div>
     <form class="form" id="setupForm">
+      <div>
+        <label>Grammar topic</label>
+        <div class="packs" role="group">${Object.entries(PACKS).map(([id, p]) => `<button type="button" class="packbtn" data-pack="${id}" aria-pressed="${d.pack === id}"><b>${p.name}</b><span class="ar">${p.ar}</span></button>`).join("")}</div>
+      </div>
       <div>
         <label>Number of teams</label>
         <div class="seg" role="group">${[2, 3, 4].map((n) => `<button type="button" data-count="${n}" aria-pressed="${d.count === n}">${n}</button>`).join("")}</div>
@@ -554,7 +611,7 @@ function renderSetup() {
 }
 
 function renderLot() {
-  const lot = LOTS[state.lot];
+  const lot = lots()[state.lot];
   const sold = state.phase === "sold";
   const { team, amount } = state.bid;
   const t = team != null ? state.teams[team] : null;
@@ -592,10 +649,10 @@ function renderLot() {
 }
 
 function renderReveal() {
-  const lot = LOTS[state.lot];
+  const lot = lots()[state.lot];
   const r = state.result;
   const t = r.team != null ? state.teams[r.team] : null;
-  const last = state.lot === LOTS.length - 1;
+  const last = state.lot === lots().length - 1;
   return `
     <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check! ${lot.trap ? `<span class="trap">😈 TRAP CARD</span>` : ""}</div>
     <div class="lot ${lot.ok ? "glow-ok" : "shake"}">
@@ -621,15 +678,15 @@ function renderFinal() {
   const f = state.final;
   return `
     <div class="final-head">
-      <div class="eyebrow"><span class="serial">Lot ${TOTAL}</span> Final round</div>
+      <div class="eyebrow"><span class="serial">Lot ${total()}</span> Final round</div>
       <h2>DOUBLE OR NOTHING!</h2>
       <p class="ar" style="margin:0;color:var(--ink-soft)">كل فريق يختار المبلغ الذي يراهن عليه. إجابة صحيحة = يتضاعف المبلغ، إجابة خاطئة = يخسره.</p>
     </div>
     <div class="lot">
       ${f.revealed ? `<div class="stamp ok">ANSWER</div>` : ""}
-      <p class="sentence">${f.revealed ? FINAL.answerHtml : FINAL.html}</p>
+      <p class="sentence">${f.revealed ? pack().final.answerHtml : pack().final.html}</p>
     </div>
-    ${f.revealed ? `<div class="fix"><p class="why">${FINAL.why}</p><p class="why ar">${esc(FINAL.ar)}</p></div>` : ""}
+    ${f.revealed ? `<div class="fix"><p class="why">${pack().final.why}</p><p class="why ar">${esc(pack().final.ar)}</p></div>` : ""}
     <div class="fteams">
       ${state.teams.map((t, i) => {
         const broke = t.money <= 0 && !f.settled;
@@ -708,7 +765,8 @@ document.addEventListener("click", (e) => {
   if (b.id !== "resetBtn") disarmReset();
 
   if (b.dataset.count) { setupDraft.count = +b.dataset.count; $("stage").innerHTML = renderSetup(); return; }
-  if (b.id === "resumeBtn") { state = load(); state.teams.forEach((t, i) => { t.color = TEAM_COLORS[i]; }); history = []; shown = []; render(); return; }
+  if (b.dataset.pack) { setupDraft.pack = b.dataset.pack; render(); return; }
+  if (b.id === "resumeBtn") { state = load(); state.pack = state.pack || "present"; state.teams.forEach((t, i) => { t.color = TEAM_COLORS[i]; }); history = []; shown = []; render(); return; }
 
   if (b.dataset.team != null && state) { state.bid.team = +b.dataset.team; refreshBidUI(); return; }
   if (b.dataset.amt) {
@@ -763,7 +821,7 @@ document.addEventListener("keydown", (e) => {
 
 /* Keep the game going if the page is live-updated or refreshed mid-lesson. */
 function start(data) {
-  if (data && data.state) { state = data.state; history = data.history || []; }
+  if (data && data.state) { state = data.state; state.pack = state.pack || "present"; history = data.history || []; }
   render();
 }
 if (window.claude && window.claude.hot && typeof window.claude.hot.snapshot === "function") window.claude.hot.snapshot(() => ({ state, history }));
