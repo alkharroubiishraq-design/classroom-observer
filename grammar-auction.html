@@ -207,7 +207,7 @@
   .seg button { border: 0; background: #f5f6ff; padding: 8px 20px; font: 400 20px var(--display); color: var(--card-ink); }
   .seg button[aria-pressed="true"] { background: var(--card-ink); color: var(--gold); }
 
-  .packs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .packs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
   .packbtn { display: grid; gap: 2px; text-align: left; border: 2px solid #dde0f5; background: #f5f6ff; color: var(--card-ink); border-radius: 12px; padding: 10px 12px; }
   .packbtn b { font: 400 15px var(--display); }
   .packbtn .ar { font-size: 14px; color: var(--card-soft); text-align: right; }
@@ -284,7 +284,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Past Family</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Past Family · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -368,9 +368,48 @@ const PAST_FINAL = {
   ar: "While ← was walking · ترك المفاتيح حدث قبل ← had left",
 };
 
+/* ---------- Past Family · Level 2 (harder) ---------- */
+const PAST2_LOTS = [
+  { s: "By the time we reached the stadium, the match had already started.", ok: true, sig: ["By the time", "already"],
+    why: "The match started <b>first</b> → had already started. Then we reached → V2.", ar: "المباراة بدأت أولًا ← had already started، ووصولنا بعدها ← reached." },
+  { s: "When I arrived at the party, most of the guests already went home.", ok: false, fix: "When I arrived at the party, most of the guests had already gone home.", sig: ["already"],
+    why: "The guests left <b>before</b> I arrived → had already + P.P (gone).", ar: "الضيوف غادروا قبل وصولي ← had already gone." },
+  { s: "How long had you been waiting when the bus finally arrived?", ok: true, trap: true, sig: ["How long", "when"],
+    why: "Question form: Had + S + been + <b>-ing</b>. Long, but correct!", ar: "سؤال الماضي التام المستمر: Had + الفاعل + been + ing. طويلة لكنها صحيحة!" },
+  { s: "She was tired because she had been worked in the garden all afternoon.", ok: false, fix: "She was tired because she had been working in the garden all afternoon.", sig: ["all afternoon"],
+    why: "Past Perfect Continuous = had been + verb<b>-ing</b>, not P.P.", ar: "الماضي التام المستمر = had been + ing وليس التصريف الثالث." },
+  { s: "Were you sleeping when I called you last night?", ok: true, sig: ["when"],
+    why: "Question: Were + S + <b>-ing</b> (long action) + when + V2 (short action).", ar: "سؤال الماضي المستمر: Were + الفاعل + ing، والفعل القصير بعد when يكون V2." },
+  { s: "I didn't recognise him because he had grown a beard.", ok: true, trap: true, sig: ["had grown"],
+    why: "He grew the beard <b>before</b> I saw him → had grown. Correct!", ar: "اللحية نمت قبل أن أراه ← had grown. الجملة صحيحة!" },
+  { s: "They had been knowing each other for ten years before they got married.", ok: false, trap: true, fix: "They had known each other for ten years before they got married.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb, so no -ing. Use Past Perfect: had known.", ar: "know فعل حالة لا يأتي مع ing، فنستخدم had known." },
+  { s: "Had she ever travelled abroad before she moved to London?", ok: true, sig: ["ever", "before"],
+    why: "Question form: Had + S + <b>ever</b> + P.P … before + V2.", ar: "سؤال الماضي التام: Had + الفاعل + ever + التصريف الثالث." },
+  { s: "It was the first time I had ever saw snow.", ok: false, fix: "It was the first time I had ever seen snow.", sig: ["the first time"],
+    why: "had + <b>P.P</b>: see → saw → <b>seen</b>.", ar: "بعد had نستخدم التصريف الثالث: see – saw – seen." },
+  { s: "As soon as the teacher had left the room, the students started talking.", ok: true, sig: ["As soon as"],
+    why: "The teacher left <b>first</b> → had left. Then → started.", ar: "المعلم خرج أولًا ← had left، ثم بدأ الطلاب ← started." },
+  { s: "Did you had finished your homework before the match started?", ok: false, trap: true, fix: "Had you finished your homework before the match started?", sig: ["before"],
+    why: "Past Perfect question starts with <b>Had</b>, not Did.", ar: "سؤال الماضي التام يبدأ بـ Had وليس Did." },
+  { s: "The streets were wet because it had been raining all night.", ok: true, sig: ["all night"],
+    why: "A continuous action <b>before</b> a past result → had been raining.", ar: "فعل استمر قبل نتيجة في الماضي ← had been raining." },
+  { s: "Where were you going when I was seeing you yesterday?", ok: false, fix: "Where were you going when I saw you yesterday?", sig: ["when"],
+    why: "The short action after <b>when</b> is V2. Also, see is a state verb.", ar: "الفعل القصير بعد when يكون V2، وsee فعل حالة لا يأتي مع ing." },
+  { s: "They hadn't finish their homework when the lights went out.", ok: false, fix: "They hadn't finished their homework when the lights went out.", sig: ["when"],
+    why: "Negative Past Perfect: hadn't + <b>P.P</b> (finished).", ar: "نفي الماضي التام: hadn't + التصريف الثالث." },
+];
+const PAST2_FINAL = {
+  html: 'When I <span class="blank">______</span> <span class="hint">(get)</span> home, I was exhausted because I <span class="blank">______</span> <span class="hint">(run)</span> for an hour, and my family <span class="blank">______</span> <span class="hint">(already / eat)</span> dinner.',
+  answerHtml: 'When I <span class="blank">got</span> home, I was exhausted because I <span class="blank">had been running</span> for an hour, and my family <span class="blank">had already eaten</span> dinner.',
+  why: "<b>When</b> + short action → got. <b>for an hour</b> before that → had been running. Finished <b>before</b> I got home → had already eaten.",
+  ar: "got فعل قصير · had been running استمر ساعة قبلها · had already eaten انتهى قبل وصولي",
+};
+
 const PACKS = {
   present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
-  past: { name: "Past Family", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي", lots: PAST_LOTS, final: PAST_FINAL },
+  past: { name: "Past Family · Level 1", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: مستوى 1", lots: PAST_LOTS, final: PAST_FINAL },
+  past2: { name: "Past Family · Level 2", tag: "Past Family · Level 2 · Harder", ar: "عائلة الماضي: مستوى أصعب 🔥", lots: PAST2_LOTS, final: PAST2_FINAL },
 };
 const pack = () => PACKS[(state && state.pack) || setupDraft.pack] || PACKS.present;
 const lots = () => pack().lots;
@@ -386,7 +425,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "past", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { pack: "past2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
