@@ -530,14 +530,14 @@ const FUTURE2_LOTS = [
     why: "In progress at a point in the future → will be + <b>-ing</b>.", ar: "فعل مستمر في وقت محدد بالمستقبل ← will be + ing." },
   { s: "Will you be use the printer this afternoon? I need it.", ok: false, fix: "Will you be using the printer this afternoon? I need it.", sig: ["this afternoon"],
     why: "Will + S + be + verb<b>-ing</b>: be using.", ar: "Will + الفاعل + be + الفعل مع ing: be using." },
-  { s: "When you arrive at the airport, I will be waiting for you at the gate.", ok: true, trap: true, sig: ["When you arrive"],
-    why: "After <b>when</b> we use Present Simple (arrive), even for the future. Correct!", ar: "بعد when نستخدم المضارع البسيط arrive حتى لو كان المعنى مستقبلًا. صحيحة!" },
+  { s: "Don't call Grandma at 10 p.m. She will be sleeping then.", ok: true, trap: true, sig: ["at 10 p.m."],
+    why: "At that future moment the action will be in progress → will be sleeping. Correct!", ar: "في تلك اللحظة بالمستقبل سيكون الفعل مستمرًا ← will be sleeping. صحيحة!" },
   { s: "Our teacher will not to be coming to school tomorrow.", ok: false, fix: "Our teacher will not be coming to school tomorrow.", sig: ["will not"],
     why: "Negative: will <b>not be</b> + -ing. No <b>to</b>.", ar: "النفي: will not be + ing بدون to." },
   { s: "Do you think people will live on Mars one day?", ok: true, sig: ["Do you think"],
     why: "A prediction → will + base verb.", ar: "توقع ← will + الفعل الأساسي." },
-  { s: "When you will arrive tomorrow, I will be waiting at the gate.", ok: false, trap: true, fix: "When you arrive tomorrow, I will be waiting at the gate.", sig: ["When"],
-    why: "No <b>will</b> after when / as soon as / before. Use Present Simple: arrive.", ar: "لا نستخدم will بعد when أو as soon as ← When you arrive." },
+  { s: "They will be not playing football at 5 p.m. tomorrow.", ok: false, trap: true, fix: "They will not be playing football at 5 p.m. tomorrow.", sig: ["at 5 p.m. tomorrow"],
+    why: "Negative word order: will + <b>not</b> + be + -ing.", ar: "ترتيب النفي: will + not + be + ing." },
   { s: "What will you be doing at 10 o'clock tomorrow morning?", ok: true, sig: ["at 10 o'clock tomorrow morning"],
     why: "Asking about an action in progress at a future time → will + S + be + <b>-ing</b>.", ar: "سؤال عن فعل مستمر في وقت بالمستقبل ← will + الفاعل + be + ing." },
   { s: "I think the new school will being ready next year.", ok: false, fix: "I think the new school will be ready next year.", sig: ["I think"],
@@ -556,10 +556,10 @@ const FUTURE2_LOTS = [
     why: "<b>believe</b> is a state verb, so no -ing: will believe.", ar: "believe فعل حالة لا يأتي مع ing ← will believe." },
 ];
 const FUTURE2_FINAL = {
-  html: 'When you <span class="blank">______</span> <span class="hint">(arrive)</span> tomorrow, I <span class="blank">______</span> <span class="hint">(wait)</span> at the gate, and I promise I <span class="blank">______</span> <span class="hint">(buy)</span> you a coffee.',
-  answerHtml: 'When you <span class="blank">arrive</span> tomorrow, I <span class="blank">will be waiting</span> at the gate, and I promise I <span class="blank">will buy</span> you a coffee.',
-  why: "After <b>when</b> → arrive (no will). In progress at that moment → will be waiting. <b>I promise</b> → will buy.",
-  ar: "بعد when ← arrive · فعل مستمر لحظة وصولك ← will be waiting · وعد ← will buy",
+  html: 'This time tomorrow, I <span class="blank">______</span> <span class="hint">(fly)</span> to London. Don\'t worry, I think the flight <span class="blank">______</span> <span class="hint">(be)</span> fine, and I promise I <span class="blank">______</span> <span class="hint">(call)</span> you tonight.',
+  answerHtml: 'This time tomorrow, I <span class="blank">will be flying</span> to London. Don\'t worry, I think the flight <span class="blank">will be</span> fine, and I promise I <span class="blank">will call</span> you tonight.',
+  why: "<b>This time tomorrow</b> → will be flying. <b>I think</b> → prediction → will be. <b>I promise</b> → will call.",
+  ar: "This time tomorrow ← will be flying · I think توقع ← will be · I promise وعد ← will call",
 };
 
 const PACKS = {
@@ -895,7 +895,7 @@ function renderFinal() {
       ${f.revealed ? `<div class="stamp ok">ANSWER</div>` : ""}
       <p class="sentence">${f.revealed ? pack().final.answerHtml : pack().final.html}</p>
     </div>
-    ${f.revealed ? `<div class="fix"><p class="why">${pack().final.why}</p><p class="why ar">${esc(pack().final.ar)}</p></div>` : ""}
+    ${f.revealed ? `<div class="fix"><p class="why">${pack().final.why}</p><p class="why ar">${pack().final.ar.split(" · ").map(esc).join("<br>")}</p></div>` : ""}
     <div class="fteams">
       ${state.teams.map((t, i) => {
         const broke = t.money <= 0 && !f.settled;
