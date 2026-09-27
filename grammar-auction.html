@@ -284,7 +284,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Modal Verbs + Passive</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Future Simple vs Continuous</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -482,7 +482,46 @@ const TAGS_FINAL = {
   ar: "nobody + فعل مفرد ← knows · منفية ← سؤال مثبت · جمع ← do they",
 };
 
+/* ---------- Future Simple (will) vs Future Continuous (will be + -ing) ---------- */
+const FUTURE_LOTS = [
+  { s: "This time tomorrow, I will be flying over the Atlantic.", ok: true, sig: ["This time tomorrow"],
+    why: "<b>This time tomorrow</b> = in progress at a point in the future → will be + -ing.", ar: "This time tomorrow تدل على فعل سيكون مستمرًا في وقت محدد بالمستقبل ← will be + ing." },
+  { s: "Six months from now, we will studying in different cities.", ok: false, fix: "Six months from now, we will be studying in different cities.", sig: ["Six months from now"],
+    why: "Future Continuous needs <b>be</b>: will <b>be</b> studying.", ar: "المستقبل المستمر يحتاج be: will be studying." },
+  { s: "I think it will rain tomorrow.", ok: true, sig: ["I think"],
+    why: "A prediction with <b>I think</b> → will + base verb.", ar: "توقع مع I think ← will + الفعل الأساسي." },
+  { s: "He wills help you with your homework.", ok: false, fix: "He will help you with your homework.", sig: ["He"],
+    why: "<b>will</b> never takes -s, and the verb after it is the base form.", ar: "will لا تأخذ s أبدًا، والفعل بعدها يكون في صيغته الأساسية." },
+  { s: "Will you be using the car tomorrow at 7 p.m.?", ok: true, trap: true, sig: ["Will you be using", "tomorrow at 7 p.m."],
+    why: "A polite question about someone's plans → Will + S + be + <b>-ing</b>. Correct!", ar: "سؤال مؤدب عن خطط شخص ← Will + الفاعل + be + ing. صحيحة!" },
+  { s: "Don't call me at 8 o'clock tonight. I will be watch the match.", ok: false, fix: "Don't call me at 8 o'clock tonight. I will be watching the match.", sig: ["at 8 o'clock tonight"],
+    why: "will be + verb<b>-ing</b>: watching.", ar: "بعد will be نضع الفعل مع ing: watching." },
+  { s: "Those bags look heavy. I'll help you carry them.", ok: true, sig: ["I'll help"],
+    why: "An offer / decision made now → will + base verb.", ar: "عرض مساعدة أو قرار لحظي ← will + الفعل الأساسي." },
+  { s: "Will be you coming to the meeting after the show?", ok: false, trap: true, fix: "Will you be coming to the meeting after the show?", sig: ["after the show"],
+    why: "Word order: <b>Will</b> + subject + <b>be</b> + -ing.", ar: "ترتيب السؤال: Will + الفاعل + be + ing." },
+  { s: "At 8 a.m. tomorrow, the students will be taking their final exam.", ok: true, sig: ["At 8 a.m. tomorrow"],
+    why: "In progress at a specific future time → Future Continuous.", ar: "فعل مستمر في وقت محدد بالمستقبل ← مستقبل مستمر." },
+  { s: "I promise I will not to tell anyone your secret.", ok: false, fix: "I promise I will not tell anyone your secret.", sig: ["I promise"],
+    why: "No <b>to</b> after will / will not.", ar: "لا نضع to بعد will أو will not." },
+  { s: "You'll all be coming back here in one year's time.", ok: true, trap: true, sig: ["in one year's time"],
+    why: "Something expected to happen naturally → Future Continuous. Correct!", ar: "شيء متوقع حدوثه بشكل طبيعي ← مستقبل مستمر. صحيحة!" },
+  { s: "The phone is ringing. I will answering it.", ok: false, fix: "The phone is ringing. I will answer it.", sig: ["I will"],
+    why: "A quick decision now → will + <b>base verb</b> (answer).", ar: "قرار لحظي ← will + الفعل الأساسي answer." },
+  { s: "I'm tired, so I think I will go to bed early tonight.", ok: true, sig: ["I think"],
+    why: "A decision / prediction → will + base verb.", ar: "قرار أو توقع ← will + الفعل الأساسي." },
+  { s: "I will be knowing the results next week.", ok: false, trap: true, fix: "I will know the results next week.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb, so no -ing: will know.", ar: "know فعل حالة لا يأتي مع ing ← will know." },
+];
+const FUTURE_FINAL = {
+  html: 'Don\'t call me at 9 tonight, because I <span class="blank">______</span> <span class="hint">(study)</span> for my exam. But I promise I <span class="blank">______</span> <span class="hint">(call)</span> you when I finish.',
+  answerHtml: 'Don\'t call me at 9 tonight, because I <span class="blank">will be studying</span> for my exam. But I promise I <span class="blank">will call</span> you when I finish.',
+  why: "<b>at 9 tonight</b> → in progress → will be studying. <b>I promise</b> → will call.",
+  ar: "at 9 tonight فعل مستمر ← will be studying · I promise وعد ← will call",
+};
+
 const PACKS = {
+  future: { name: "Future Simple vs Continuous", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر", lots: FUTURE_LOTS, final: FUTURE_FINAL },
   modal: { name: "Modal Verbs + Passive", tag: "Modal verb + be + past participle", ar: "المودال مع المبني للمجهول", lots: MODAL_LOTS, final: MODAL_FINAL },
   tags: { name: "Question Tags", tag: "Question tags", ar: "الأسئلة الذيلية", lots: TAGS_LOTS, final: TAGS_FINAL },
   present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
@@ -503,7 +542,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "modal", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { pack: "future", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
