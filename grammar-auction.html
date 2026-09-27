@@ -284,7 +284,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Future Simple vs Continuous</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Future · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -520,8 +520,47 @@ const FUTURE_FINAL = {
   ar: "at 9 tonight فعل مستمر ← will be studying · I promise وعد ← will call",
 };
 
+/* ---------- Future · Level 2 (harder) ---------- */
+const FUTURE2_LOTS = [
+  { s: "At this time next week, we will be lying on a beach in Aqaba.", ok: true, sig: ["At this time next week"],
+    why: "In progress at a point in the future → will be + <b>-ing</b>.", ar: "فعل مستمر في وقت محدد بالمستقبل ← will be + ing." },
+  { s: "Will you be use the printer this afternoon? I need it.", ok: false, fix: "Will you be using the printer this afternoon? I need it.", sig: ["this afternoon"],
+    why: "Will + S + be + verb<b>-ing</b>: be using.", ar: "Will + الفاعل + be + الفعل مع ing: be using." },
+  { s: "When you arrive at the airport, I will be waiting for you at the gate.", ok: true, trap: true, sig: ["When you arrive"],
+    why: "After <b>when</b> we use Present Simple (arrive), even for the future. Correct!", ar: "بعد when نستخدم المضارع البسيط arrive حتى لو كان المعنى مستقبلًا. صحيحة!" },
+  { s: "Our teacher will not to be coming to school tomorrow.", ok: false, fix: "Our teacher will not be coming to school tomorrow.", sig: ["will not"],
+    why: "Negative: will <b>not be</b> + -ing. No <b>to</b>.", ar: "النفي: will not be + ing بدون to." },
+  { s: "Do you think people will live on Mars one day?", ok: true, sig: ["Do you think"],
+    why: "A prediction → will + base verb.", ar: "توقع ← will + الفعل الأساسي." },
+  { s: "When you will arrive tomorrow, I will be waiting at the gate.", ok: false, trap: true, fix: "When you arrive tomorrow, I will be waiting at the gate.", sig: ["When"],
+    why: "No <b>will</b> after when / as soon as / before. Use Present Simple: arrive.", ar: "لا نستخدم will بعد when أو as soon as ← When you arrive." },
+  { s: "What will you be doing at 10 o'clock tomorrow morning?", ok: true, sig: ["at 10 o'clock tomorrow morning"],
+    why: "Asking about an action in progress at a future time → will + S + be + <b>-ing</b>.", ar: "سؤال عن فعل مستمر في وقت بالمستقبل ← will + الفاعل + be + ing." },
+  { s: "I think the new school will being ready next year.", ok: false, fix: "I think the new school will be ready next year.", sig: ["I think"],
+    why: "After <b>will</b> we use the base form: be, not being.", ar: "بعد will يأتي الفعل الأساسي be وليس being." },
+  { s: "The plane will be landing in a few minutes, so please fasten your seatbelts.", ok: true, sig: ["in a few minutes"],
+    why: "Something expected to happen naturally → Future Continuous.", ar: "شيء متوقع حدوثه بشكل طبيعي ← مستقبل مستمر." },
+  { s: "Don't worry about the test. I'm sure you will be passed.", ok: false, trap: true, fix: "Don't worry about the test. I'm sure you will pass.", sig: ["I'm sure"],
+    why: "You do the passing yourself → will <b>pass</b>. will be passed is passive!", ar: "أنت من ينجح ← will pass. أما will be passed فهي مبني للمجهول!" },
+  { s: "Will you be joining us for dinner tonight?", ok: true, sig: ["Will you be joining"],
+    why: "A polite question about someone's plans → Future Continuous.", ar: "سؤال مؤدب عن خطط شخص ← مستقبل مستمر." },
+  { s: "Next Saturday at noon, Ahmad will playing in the final match.", ok: false, fix: "Next Saturday at noon, Ahmad will be playing in the final match.", sig: ["Next Saturday at noon"],
+    why: "Future Continuous = will + <b>be</b> + -ing.", ar: "المستقبل المستمر = will + be + ing." },
+  { s: "Who will be looking after your cat while you're away?", ok: true, sig: ["while you're away"],
+    why: "An action in progress during a future period → Future Continuous.", ar: "فعل مستمر خلال فترة في المستقبل ← مستقبل مستمر." },
+  { s: "I will be believing you when I see it with my own eyes.", ok: false, trap: true, fix: "I will believe you when I see it with my own eyes.", sig: ["believing"],
+    why: "<b>believe</b> is a state verb, so no -ing: will believe.", ar: "believe فعل حالة لا يأتي مع ing ← will believe." },
+];
+const FUTURE2_FINAL = {
+  html: 'When you <span class="blank">______</span> <span class="hint">(arrive)</span> tomorrow, I <span class="blank">______</span> <span class="hint">(wait)</span> at the gate, and I promise I <span class="blank">______</span> <span class="hint">(buy)</span> you a coffee.',
+  answerHtml: 'When you <span class="blank">arrive</span> tomorrow, I <span class="blank">will be waiting</span> at the gate, and I promise I <span class="blank">will buy</span> you a coffee.',
+  why: "After <b>when</b> → arrive (no will). In progress at that moment → will be waiting. <b>I promise</b> → will buy.",
+  ar: "بعد when ← arrive · فعل مستمر لحظة وصولك ← will be waiting · وعد ← will buy",
+};
+
 const PACKS = {
-  future: { name: "Future Simple vs Continuous", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر", lots: FUTURE_LOTS, final: FUTURE_FINAL },
+  future: { name: "Future · Level 1", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر: مستوى 1", lots: FUTURE_LOTS, final: FUTURE_FINAL },
+  future2: { name: "Future · Level 2", tag: "Future Simple · Future Continuous · Harder", ar: "المستقبل: مستوى أصعب 🔥", lots: FUTURE2_LOTS, final: FUTURE2_FINAL },
   modal: { name: "Modal Verbs + Passive", tag: "Modal verb + be + past participle", ar: "المودال مع المبني للمجهول", lots: MODAL_LOTS, final: MODAL_FINAL },
   tags: { name: "Question Tags", tag: "Question tags", ar: "الأسئلة الذيلية", lots: TAGS_LOTS, final: TAGS_FINAL },
   present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
@@ -542,7 +581,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "future", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
+let setupDraft = { pack: "future2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000 };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
