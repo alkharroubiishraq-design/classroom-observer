@@ -288,7 +288,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Future · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Present · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -562,12 +562,51 @@ const FUTURE2_FINAL = {
   ar: "This time tomorrow ← will be flying · I think توقع ← will be · I promise وعد ← will call",
 };
 
+/* ---------- Present · Level 2 (harder) ---------- */
+const PRESENT2_LOTS = [
+  { s: "How often does your brother play tennis?", ok: true, sig: ["How often"],
+    why: "<b>How often</b> asks about a habit → does + subject + base verb (play, no -s).", ar: "How often تسأل عن عادة ← does + الفاعل + الفعل بدون s." },
+  { s: "She doesn't wearing her glasses today.", ok: false, fix: "She isn't wearing her glasses today.", sig: ["today"],
+    why: "Negative Present Continuous: <b>isn't</b> + -ing, not doesn't.", ar: "نفي المضارع المستمر: isn't + ing وليس doesn't." },
+  { s: "This week my father is working from home because his office is closed.", ok: true, trap: true, sig: ["This week"],
+    why: "A <b>temporary</b> situation → Present Continuous. Correct!", ar: "وضع مؤقت ← مضارع مستمر. صحيحة!" },
+  { s: "Water freeze at zero degrees Celsius.", ok: false, fix: "Water freezes at zero degrees Celsius.", sig: ["freeze"],
+    why: "A fact + singular subject (water) → verb + <b>-s</b>: freezes.", ar: "حقيقة علمية وفاعل مفرد ← نضيف s: freezes." },
+  { s: "Why are you laughing? What's so funny?", ok: true, sig: ["Why are you laughing"],
+    why: "Happening right now → Present Continuous question.", ar: "يحدث الآن ← سؤال بالمضارع المستمر." },
+  { s: "I am not understanding this lesson.", ok: false, trap: true, fix: "I don't understand this lesson.", sig: ["understanding"],
+    why: "<b>understand</b> is a state verb, so no -ing: I don't understand.", ar: "understand فعل حالة لا يأتي مع ing ← I don't understand." },
+  { s: "My friends and I usually meet at the park on Fridays.", ok: true, sig: ["usually", "on Fridays"],
+    why: "<b>usually</b> + <b>on Fridays</b> = routine → Present Simple (I → meet).", ar: "usually و on Fridays روتين ← مضارع بسيط." },
+  { s: "Does she studying for her exam right now?", ok: false, fix: "Is she studying for her exam right now?", sig: ["right now"],
+    why: "<b>right now</b> → Present Continuous question: <b>Is</b> + she + -ing.", ar: "right now ← سؤال المضارع المستمر يبدأ بـ Is." },
+  { s: "The train to Amman leaves at 7:30 every morning.", ok: true, trap: true, sig: ["every morning"],
+    why: "Timetables use Present Simple → leaves. Correct!", ar: "مواعيد الجداول (القطارات والباصات) تأتي بالمضارع البسيط. صحيحة!" },
+  { s: "He watches TV at the moment, so he can't talk.", ok: false, fix: "He is watching TV at the moment, so he can't talk.", sig: ["at the moment"],
+    why: "<b>at the moment</b> → Present Continuous: is watching.", ar: "at the moment ← مضارع مستمر: is watching." },
+  { s: "This soup tastes delicious!", ok: true, trap: true, sig: ["tastes"],
+    why: "<b>taste</b> (describing food) is a state verb → Present Simple. Correct!", ar: "taste بمعنى طعمه فعل حالة ← مضارع بسيط. صحيحة!" },
+  { s: "Every summer, the Dead Sea are attracting thousands of tourists.", ok: false, fix: "Every summer, the Dead Sea attracts thousands of tourists.", sig: ["Every summer"],
+    why: "<b>Every summer</b> = repeated → Present Simple, and singular subject → attracts.", ar: "Every summer تكرار ← مضارع بسيط، والفاعل مفرد ← attracts." },
+  { s: "Listen! The baby is crying again.", ok: true, sig: ["Listen!"],
+    why: "<b>Listen!</b> → happening now → Present Continuous.", ar: "Listen! ← يحدث الآن ← مضارع مستمر." },
+  { s: "My cousins doesn't live in Irbid; they live in Zarqa.", ok: false, fix: "My cousins don't live in Irbid; they live in Zarqa.", sig: ["My cousins"],
+    why: "Plural subject (cousins) → <b>don't</b>, not doesn't.", ar: "الفاعل جمع cousins ← don't وليس doesn't." },
+];
+const PRESENT2_FINAL = {
+  html: 'My brother usually <span class="blank">______</span> <span class="hint">(not / eat)</span> breakfast, but today he <span class="blank">______</span> <span class="hint">(eat)</span> a huge sandwich because he <span class="blank">______</span> <span class="hint">(have)</span> a big exam later.',
+  answerHtml: 'My brother usually <span class="blank">doesn\'t eat</span> breakfast, but today he <span class="blank">is eating</span> a huge sandwich because he <span class="blank">has</span> a big exam later.',
+  why: "<b>usually</b> → doesn't eat. <b>today</b> → is eating. <b>have an exam</b> is a fact, not an action in progress → has.",
+  ar: "usually عادة ← doesn't eat · today الآن ← is eating · have an exam حقيقة وليست فعلًا مستمرًا ← has",
+};
+
 const PACKS = {
   future: { name: "Future · Level 1", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر: مستوى 1", lots: FUTURE_LOTS, final: FUTURE_FINAL },
   future2: { name: "Future · Level 2", tag: "Future Simple · Future Continuous · Harder", ar: "المستقبل: مستوى أصعب 🔥", lots: FUTURE2_LOTS, final: FUTURE2_FINAL },
   modal: { name: "Modal Verbs + Passive", tag: "Modal verb + be + past participle", ar: "المودال مع المبني للمجهول", lots: MODAL_LOTS, final: MODAL_FINAL },
   tags: { name: "Question Tags", tag: "Question tags", ar: "الأسئلة الذيلية", lots: TAGS_LOTS, final: TAGS_FINAL },
-  present: { name: "Present Simple vs Continuous", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر", lots: PRESENT_LOTS, final: PRESENT_FINAL },
+  present: { name: "Present · Level 1", tag: "Present Simple · Present Continuous", ar: "المضارع البسيط والمستمر: مستوى 1", lots: PRESENT_LOTS, final: PRESENT_FINAL },
+  present2: { name: "Present · Level 2", tag: "Present Simple · Present Continuous · Harder", ar: "المضارع: مستوى أصعب 🔥", lots: PRESENT2_LOTS, final: PRESENT2_FINAL },
   past: { name: "Past Family · Level 1", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: مستوى 1", lots: PAST_LOTS, final: PAST_FINAL },
   past2: { name: "Past Family · Level 2", tag: "Past Family · Level 2 · Harder", ar: "عائلة الماضي: مستوى أصعب 🔥", lots: PAST2_LOTS, final: PAST2_FINAL },
 };
@@ -585,7 +624,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "future2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "present2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
