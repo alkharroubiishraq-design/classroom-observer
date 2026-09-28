@@ -288,7 +288,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Present · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Future Family</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -600,7 +600,46 @@ const PRESENT2_FINAL = {
   ar: "usually عادة ← doesn't eat · today الآن ← is eating · have an exam حقيقة وليست فعلًا مستمرًا ← has",
 };
 
+/* ---------- Future Family: Future Simple · Future Continuous · Future Perfect ---------- */
+const FUTURE3_LOTS = [
+  { s: "By next June, I will have finished my final exams.", ok: true, sig: ["By next June"],
+    why: "<b>By</b> + future time → completed before then → will have + P.P.", ar: "By + وقت في المستقبل ← فعل سينتهي قبله ← will have + التصريف الثالث." },
+  { s: "By 2030, scientists will have find a cure for this disease.", ok: false, fix: "By 2030, scientists will have found a cure for this disease.", sig: ["By 2030"],
+    why: "Future Perfect = will have + <b>P.P</b>: find → found → found.", ar: "المستقبل التام = will have + التصريف الثالث: found." },
+  { s: "This time tomorrow, we will be sitting on the plane.", ok: true, sig: ["This time tomorrow"],
+    why: "In progress at a future moment → will be + <b>-ing</b>.", ar: "فعل مستمر في لحظة بالمستقبل ← will be + ing." },
+  { s: "I think our team will win the match tomorrow.", ok: true, sig: ["I think"],
+    why: "A prediction → Future Simple: will + base verb.", ar: "توقع ← المستقبل البسيط: will + الفعل الأساسي." },
+  { s: "By the end of this week, she will has read three novels.", ok: false, trap: true, fix: "By the end of this week, she will have read three novels.", sig: ["By the end of this week"],
+    why: "After <b>will</b> it's always <b>have</b>, never has, even with she.", ar: "بعد will نستخدم have دائمًا وليس has حتى مع she." },
+  { s: "At 9 o'clock tonight, my father will be driving home from work.", ok: true, sig: ["At 9 o'clock tonight"],
+    why: "In progress at a specific future time → Future Continuous.", ar: "فعل مستمر في وقت محدد بالمستقبل ← مستقبل مستمر." },
+  { s: "By tomorrow evening, they will finished the project.", ok: false, fix: "By tomorrow evening, they will have finished the project.", sig: ["By tomorrow evening"],
+    why: "Future Perfect needs <b>have</b>: will <b>have</b> finished.", ar: "المستقبل التام يحتاج have: will have finished." },
+  { s: "Will you have completed the report by Monday morning?", ok: true, trap: true, sig: ["by Monday morning"],
+    why: "Question: <b>Will</b> + S + <b>have</b> + P.P? Correct!", ar: "السؤال: Will + الفاعل + have + التصريف الثالث؟ صحيحة!" },
+  { s: "Next Friday at 3 p.m., I will taking my driving test.", ok: false, fix: "Next Friday at 3 p.m., I will be taking my driving test.", sig: ["Next Friday at 3 p.m."],
+    why: "Future Continuous = will + <b>be</b> + -ing.", ar: "المستقبل المستمر = will + be + ing." },
+  { s: "By 10 p.m., the shop will have closed, so let's go now.", ok: true, trap: true, sig: ["By 10 p.m."],
+    why: "The shop closes <b>before</b> 10 p.m. → will have closed. Correct!", ar: "المحل سيغلق قبل الساعة 10 ← will have closed. صحيحة!" },
+  { s: "Our teacher will have not marked our tests by Sunday.", ok: false, trap: true, fix: "Our teacher will not have marked our tests by Sunday.", sig: ["by Sunday"],
+    why: "Negative word order: will + <b>not</b> + have + P.P.", ar: "ترتيب النفي: will + not + have + التصريف الثالث." },
+  { s: "In ten years' time, I will be work as a doctor.", ok: false, fix: "In ten years' time, I will be working as a doctor.", sig: ["In ten years' time"],
+    why: "will be + verb<b>-ing</b>: working.", ar: "بعد will be يأتي الفعل مع ing: working." },
+  { s: "By next month, I will be saving enough money to buy a bike.", ok: false, fix: "By next month, I will have saved enough money to buy a bike.", sig: ["By next month"],
+    why: "<b>By</b> next month + a finished result (enough money) → Future Perfect.", ar: "By next month مع نتيجة مكتملة ← المستقبل التام will have saved." },
+  { s: "Tomorrow at noon, the students will be having lunch in the canteen.", ok: true, sig: ["Tomorrow at noon"],
+    why: "In progress at a future time → Future Continuous (have lunch = eat, so -ing is OK).", ar: "فعل مستمر في وقت بالمستقبل، وhave lunch بمعنى يأكل فيصح معها ing." },
+];
+const FUTURE3_FINAL = {
+  html: 'By 6 p.m. tomorrow, I <span class="blank">______</span> <span class="hint">(finish)</span> all my homework, so at 7 I <span class="blank">______</span> <span class="hint">(watch)</span> the match, and I think our team <span class="blank">______</span> <span class="hint">(win)</span>!',
+  answerHtml: 'By 6 p.m. tomorrow, I <span class="blank">will have finished</span> all my homework, so at 7 I <span class="blank">will be watching</span> the match, and I think our team <span class="blank">will win</span>!',
+  why: "<b>By 6 p.m.</b> → will have finished. <b>at 7</b> → in progress → will be watching. <b>I think</b> → will win.",
+  ar: "By 6 p.m. ← will have finished · at 7 فعل مستمر ← will be watching · I think توقع ← will win",
+};
+
 const PACKS = {
+  future3: { name: "Future Family", tag: "Future Simple · Future Continuous · Future Perfect", ar: "المستقبل البسيط والمستمر والتام", lots: FUTURE3_LOTS, final: FUTURE3_FINAL },
   future: { name: "Future · Level 1", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر: مستوى 1", lots: FUTURE_LOTS, final: FUTURE_FINAL },
   future2: { name: "Future · Level 2", tag: "Future Simple · Future Continuous · Harder", ar: "المستقبل: مستوى أصعب 🔥", lots: FUTURE2_LOTS, final: FUTURE2_FINAL },
   modal: { name: "Modal Verbs + Passive", tag: "Modal verb + be + past participle", ar: "المودال مع المبني للمجهول", lots: MODAL_LOTS, final: MODAL_FINAL },
@@ -624,7 +663,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "present2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "future3", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
