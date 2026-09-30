@@ -288,7 +288,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Mixed Tenses</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Mixed Tenses · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -676,8 +676,47 @@ const MIXED_FINAL = {
   ar: "for … now ← have been waiting · فعل طويل مع when ← was walking · غادر قبلها ← had already left",
 };
 
+/* ---------- Mixed Tenses · Level 2 (harder) ---------- */
+const MIXED2_LOTS = [
+  { s: "I've been trying to call you all morning. Where have you been?", ok: true, sig: ["all morning"],
+    why: "Repeated action up to now → have been trying. Where have you been = Present Perfect.", ar: "محاولة مستمرة حتى الآن ← have been trying، وWhere have you been مضارع تام." },
+  { s: "She has been writing three emails since lunch.", ok: false, trap: true, fix: "She has written three emails since lunch.", sig: ["three emails"],
+    why: "A <b>number</b> of finished things (three emails) → Present Perfect, not continuous.", ar: "عدد أشياء منتهية (three emails) ← المضارع التام وليس المستمر." },
+  { s: "When I found my ticket, the train had already been leaving.", ok: false, fix: "When I found my ticket, the train had already left.", sig: ["already"],
+    why: "The train left <b>before</b> → Past Perfect: had already + P.P (left).", ar: "القطار غادر قبل ذلك ← had already left." },
+  { s: "We are having a great time here in Aqaba. The weather is perfect!", ok: true, trap: true, sig: ["are having a great time"],
+    why: "<b>have a good time</b> = enjoy (an action), so -ing is correct!", ar: "have a great time بمعنى نستمتع وهي فعل حركة، فيصح معها ing!" },
+  { s: "How long are you learning English?", ok: false, fix: "How long have you been learning English?", sig: ["How long"],
+    why: "<b>How long</b> + still going on → Present Perfect Continuous.", ar: "How long مع فعل ما زال مستمرًا ← have you been learning." },
+  { s: "The phone rang while I was having a shower.", ok: true, sig: ["while"],
+    why: "Short action (rang) + <b>while</b> + long action (was having).", ar: "فعل قصير rang مع while وفعل طويل was having." },
+  { s: "They had been lived in Irbid for ten years before they moved to Amman.", ok: false, fix: "They had lived in Irbid for ten years before they moved to Amman.", sig: ["before they moved"],
+    why: "Past Perfect = had + P.P (lived). No <b>been</b>.", ar: "الماضي التام = had + التصريف الثالث بدون been." },
+  { s: "Has your brother ever been to London?", ok: true, sig: ["ever"],
+    why: "Life experience → Present Perfect: Has + S + ever + been.", ar: "خبرة في الحياة ← Has + الفاعل + ever + been." },
+  { s: "I am knowing Sara since we were six.", ok: false, trap: true, fix: "I have known Sara since we were six.", sig: ["since"],
+    why: "<b>since</b> → Present Perfect, and know is a state verb → have known.", ar: "since ← المضارع التام، وknow فعل حالة ← have known." },
+  { s: "Why are your clothes wet? I have been walking in the rain.", ok: true, trap: true, sig: ["wet"],
+    why: "A visible result now of an activity → Present Perfect Continuous. Correct!", ar: "نتيجة ظاهرة الآن لنشاط مستمر ← المضارع التام المستمر. صحيحة!" },
+  { s: "When I got home, my parents were already eaten dinner.", ok: false, fix: "When I got home, my parents had already eaten dinner.", sig: ["already"],
+    why: "Finished <b>before</b> I got home → had already eaten.", ar: "انتهوا قبل وصولي ← had already eaten." },
+  { s: "At 8 o'clock last night, we were still doing our homework.", ok: true, sig: ["At 8 o'clock last night"],
+    why: "In progress at a specific past time → Past Continuous.", ar: "فعل مستمر في وقت محدد بالماضي ← ماضٍ مستمر." },
+  { s: "Scientists have discover a new planet recently.", ok: false, fix: "Scientists have discovered a new planet recently.", sig: ["recently"],
+    why: "have + <b>P.P</b>: discovered.", ar: "بعد have نستخدم التصريف الثالث: discovered." },
+  { s: "It's the best film I have ever seen.", ok: true, sig: ["the best", "ever"],
+    why: "Superlative + <b>ever</b> → Present Perfect.", ar: "صيغة التفضيل مع ever ← المضارع التام." },
+];
+const MIXED2_FINAL = {
+  html: 'Sami <span class="blank">______</span> <span class="hint">(study)</span> English for five years now. Last night, while he <span class="blank">______</span> <span class="hint">(read)</span> a story, he realised he <span class="blank">______</span> <span class="hint">(never / see)</span> that word before.',
+  answerHtml: 'Sami <span class="blank">has been studying</span> English for five years now. Last night, while he <span class="blank">was reading</span> a story, he realised he <span class="blank">had never seen</span> that word before.',
+  why: "<b>for … now</b> → has been studying. <b>while</b> → was reading. <b>never … before</b> a past moment → had never seen.",
+  ar: "for … now ← has been studying · while ← was reading · never … before ← had never seen",
+};
+
 const PACKS = {
-  mixed: { name: "Mixed Tenses", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة", lots: MIXED_LOTS, final: MIXED_FINAL },
+  mixed: { name: "Mixed Tenses · Level 1", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة: مستوى 1", lots: MIXED_LOTS, final: MIXED_FINAL },
+  mixed2: { name: "Mixed Tenses · Level 2", tag: "Mixed Tenses · Level 2 · Harder", ar: "خليط الأزمنة: مستوى أصعب 🔥", lots: MIXED2_LOTS, final: MIXED2_FINAL },
   future3: { name: "Future Family", tag: "Future Simple · Future Continuous · Future Perfect", ar: "المستقبل البسيط والمستمر والتام", lots: FUTURE3_LOTS, final: FUTURE3_FINAL },
   future: { name: "Future · Level 1", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر: مستوى 1", lots: FUTURE_LOTS, final: FUTURE_FINAL },
   future2: { name: "Future · Level 2", tag: "Future Simple · Future Continuous · Harder", ar: "المستقبل: مستوى أصعب 🔥", lots: FUTURE2_LOTS, final: FUTURE2_FINAL },
@@ -702,7 +741,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "mixed", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "mixed2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
