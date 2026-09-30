@@ -288,7 +288,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Future Family</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Mixed Tenses</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -638,7 +638,46 @@ const FUTURE3_FINAL = {
   ar: "By 6 p.m. ← will have finished · at 7 فعل مستمر ← will be watching · I think توقع ← will win",
 };
 
+/* ---------- Mixed Tenses: Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous ---------- */
+const MIXED_LOTS = [
+  { s: "I have lived in Amman since 2015.", ok: true, sig: ["since 2015"],
+    why: "Started in the past and still true → Present Perfect with <b>since</b>.", ar: "بدأ في الماضي وما زال مستمرًا ← المضارع التام مع since." },
+  { s: "She has been studying for three hours, so she looks tired.", ok: true, sig: ["for three hours"],
+    why: "Continuous action up to now + <b>for</b> → Present Perfect Continuous.", ar: "فعل مستمر حتى الآن مع for ← المضارع التام المستمر." },
+  { s: "I have seen that film yesterday.", ok: false, trap: true, fix: "I saw that film yesterday.", sig: ["yesterday"],
+    why: "<b>yesterday</b> is a finished time, so no Present Perfect → saw.", ar: "yesterday وقت منتهٍ في الماضي فلا نستخدم المضارع التام ← saw." },
+  { s: "Look! The children are playing in the rain.", ok: true, sig: ["Look!"],
+    why: "<b>Look!</b> → happening now → Present Continuous.", ar: "Look! ← يحدث الآن ← مضارع مستمر." },
+  { s: "They have been knowing each other since primary school.", ok: false, trap: true, fix: "They have known each other since primary school.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb, so no -ing → have known.", ar: "know فعل حالة لا يأتي مع ing ← have known." },
+  { s: "While I was cooking dinner, the lights went out.", ok: true, sig: ["While"],
+    why: "Long action (was cooking) interrupted by a short one (went out) → Past Continuous.", ar: "فعل طويل was cooking قاطعه فعل قصير went out ← ماضٍ مستمر." },
+  { s: "When we got to the cinema, the film had already started.", ok: true, sig: ["already"],
+    why: "The film started <b>first</b> → had already started.", ar: "الفيلم بدأ أولًا ← had already started." },
+  { s: "My brother has broke his arm, so he can't play today.", ok: false, fix: "My brother has broken his arm, so he can't play today.", sig: ["has broke"],
+    why: "has + <b>P.P</b>: break → broke → <b>broken</b>.", ar: "بعد has نستخدم التصريف الثالث: broken." },
+  { s: "How long have you been waiting for the bus?", ok: true, sig: ["How long"],
+    why: "<b>How long</b> + action still going on → Present Perfect Continuous question.", ar: "How long مع فعل ما زال مستمرًا ← سؤال المضارع التام المستمر." },
+  { s: "She is having a new phone.", ok: false, trap: true, fix: "She has a new phone.", sig: ["is having"],
+    why: "<b>have</b> = own is a state verb, so no -ing → has.", ar: "have بمعنى يملك فعل حالة لا يأتي مع ing ← has." },
+  { s: "We was watching TV when the phone rang.", ok: false, fix: "We were watching TV when the phone rang.", sig: ["We was"],
+    why: "<b>we</b> → <b>were</b> + -ing.", ar: "مع we نستخدم were." },
+  { s: "I had never visited Petra before last summer.", ok: true, trap: true, sig: ["never", "before last summer"],
+    why: "Up to a point in the past (last summer) → Past Perfect. Correct!", ar: "حتى نقطة في الماضي (الصيف الماضي) ← الماضي التام. صحيحة!" },
+  { s: "It has been raining since two hours.", ok: false, fix: "It has been raining for two hours.", sig: ["since two hours"],
+    why: "<b>for</b> + a period (two hours), <b>since</b> + a starting point (2 o'clock).", ar: "for مع مدة زمنية، وsince مع بداية الوقت." },
+  { s: "Have you ever been eaten sushi?", ok: false, fix: "Have you ever eaten sushi?", sig: ["ever"],
+    why: "Present Perfect question: Have + S + <b>ever</b> + P.P (no been).", ar: "سؤال المضارع التام: Have + الفاعل + ever + التصريف الثالث بدون been." },
+];
+const MIXED_FINAL = {
+  html: 'I <span class="blank">______</span> <span class="hint">(wait)</span> for the bus for twenty minutes now. Yesterday, I <span class="blank">______</span> <span class="hint">(walk)</span> to school when it started to rain, because the bus <span class="blank">______</span> <span class="hint">(already / leave)</span>.',
+  answerHtml: 'I <span class="blank">have been waiting</span> for the bus for twenty minutes now. Yesterday, I <span class="blank">was walking</span> to school when it started to rain, because the bus <span class="blank">had already left</span>.',
+  why: "<b>for … now</b> → have been waiting. Long action + <b>when</b> → was walking. Left <b>before</b> → had already left.",
+  ar: "for … now ← have been waiting · فعل طويل مع when ← was walking · غادر قبلها ← had already left",
+};
+
 const PACKS = {
+  mixed: { name: "Mixed Tenses", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة", lots: MIXED_LOTS, final: MIXED_FINAL },
   future3: { name: "Future Family", tag: "Future Simple · Future Continuous · Future Perfect", ar: "المستقبل البسيط والمستمر والتام", lots: FUTURE3_LOTS, final: FUTURE3_FINAL },
   future: { name: "Future · Level 1", tag: "Future Simple · Future Continuous", ar: "المستقبل البسيط والمستمر: مستوى 1", lots: FUTURE_LOTS, final: FUTURE_FINAL },
   future2: { name: "Future · Level 2", tag: "Future Simple · Future Continuous · Harder", ar: "المستقبل: مستوى أصعب 🔥", lots: FUTURE2_LOTS, final: FUTURE2_FINAL },
@@ -663,7 +702,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "future3", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "mixed", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
