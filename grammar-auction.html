@@ -218,6 +218,11 @@
   .form label.check input { width: 20px; height: 20px; accent-color: var(--card-ink); flex: none; }
   .form label.check .ar { color: var(--card-soft); font-weight: 500; }
 
+  .pickbtn { border: 3px solid var(--gold); background: rgba(255,255,255,.06); color: #fff; border-radius: 14px; padding: 10px 20px; font: 400 18px var(--display); letter-spacing: .03em; transition: transform .15s; }
+  .pickbtn:hover { transform: translateY(-2px); }
+  .pickbtn[aria-pressed="true"] { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 22px rgba(255,201,51,.7); transform: scale(1.06); }
+  .stamp.answer { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 30px rgba(255,201,51,.8); }
+
   /* Final */
   .final-head { display: grid; gap: 8px; }
   .final-head h2 {
@@ -288,7 +293,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Mixed Tenses · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Reading: Pop or Classical?</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -714,7 +719,37 @@ const MIXED2_FINAL = {
   ar: "for … now ← has been studying · while ← was reading · never … before ← had never seen",
 };
 
+/* ---------- Reading comprehension: Pop or classical? (Gustav's email) ----------
+   Choice packs: teams bid AND choose an answer. answer = the correct choice id. */
+const MUSIC_CHOICES = [
+  { id: "pop", label: "🎸 POP" },
+  { id: "classical", label: "🎻 CLASSICAL" },
+];
+const MUSIC_LOTS = [
+  { s: "It will attract a larger, younger audience.", answer: "pop",
+    why: "Pop music attracts <b>more</b> people, and <b>younger</b> ones.", ar: "موسيقى البوب تجذب جمهورًا أكبر وأصغر سنًا." },
+  { s: "It will attract people who understand and appreciate other art forms.", answer: "classical",
+    why: "Classical music attracts people who <b>appreciate other art forms</b>.", ar: "الموسيقى الكلاسيكية تجذب من يفهمون ويقدّرون الفنون الأخرى." },
+  { s: "It is superior to any other kind of music.", answer: "classical",
+    why: "<b>superior</b> = better than all others → classical music.", ar: "superior تعني أفضل من غيرها ← الموسيقى الكلاسيكية." },
+  { s: "It has no staying power.", answer: "pop",
+    why: "<b>no staying power</b> = it doesn't last long → pop music.", ar: "no staying power تعني لا تدوم طويلًا ← موسيقى البوب." },
+  { s: "It is more fun.", answer: "pop",
+    why: "Pop music is described as <b>more fun</b>.", ar: "موسيقى البوب أكثر متعة." },
+  { s: "It is essential for all school students as part of their general education.", answer: "classical",
+    why: "<b>essential</b> for students' <b>general education</b> → classical music.", ar: "ضرورية لكل الطلاب كجزء من تعليمهم العام ← الموسيقى الكلاسيكية." },
+  { s: "It contains outstandingly talented musicians.", answer: "classical",
+    why: "<b>outstandingly talented musicians</b> → classical music.", ar: "موسيقيون موهوبون بشكل استثنائي ← الموسيقى الكلاسيكية." },
+];
+const MUSIC_FINAL = {
+  html: '“It will be presented as being a desirable part of the programme.”<br>Pop or classical? <span class="blank">______</span>',
+  answerHtml: '“It will be presented as being a desirable part of the programme.”<br>Pop or classical? <span class="blank">🎸 POP</span>',
+  why: "Pop music <b>will be presented as</b> a desirable part of the programme.",
+  ar: "موسيقى البوب ستُقدَّم على أنها جزء مرغوب من البرنامج",
+};
+
 const PACKS = {
+  music: { name: "Reading: Pop or Classical?", tag: "Reading comprehension · Gustav's email", ar: "قراءة: بوب أم كلاسيكية؟", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
   mixed: { name: "Mixed Tenses · Level 1", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة: مستوى 1", lots: MIXED_LOTS, final: MIXED_FINAL },
   mixed2: { name: "Mixed Tenses · Level 2", tag: "Mixed Tenses · Level 2 · Harder", ar: "خليط الأزمنة: مستوى أصعب 🔥", lots: MIXED2_LOTS, final: MIXED2_FINAL },
   future3: { name: "Future Family", tag: "Future Simple · Future Continuous · Future Perfect", ar: "المستقبل البسيط والمستمر والتام", lots: FUTURE3_LOTS, final: FUTURE3_FINAL },
@@ -730,6 +765,9 @@ const PACKS = {
 const pack = () => PACKS[(state && state.pack) || setupDraft.pack] || PACKS.present;
 const lots = () => (state && state.order ? state.order.map((i) => pack().lots[i]) : pack().lots);
 const total = () => lots().length + 1;
+const choiceLabel = (id) => ((pack().choices || []).find((c) => c.id === id) || {}).label || id;
+/* Did the buying team win this lot? Grammar packs: the sentence is correct. Choice packs: the team picked the right answer. */
+const lotWon = (lot, bid) => (pack().choices ? bid && bid.pick === lot.answer : lot.ok);
 
 const TEAM_COLORS = ["#2d8cff", "#ff3d8b", "#ff8a00", "#a259ff"];
 const DEFAULT_NAMES = ["Eagles", "Lions", "Falcons", "Tigers"];
@@ -741,7 +779,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "mixed2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "music", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -795,6 +833,7 @@ function sell() {
   const { team, amount } = state.bid;
   const t = state.teams[team];
   if (team == null || !(amount > 0) || amount > t.money) return;
+  if (pack().choices && !state.bid.pick) return;
   snapshot();
   stopClock();
   state.phase = "sold";
@@ -809,23 +848,24 @@ function check(noBids) {
     state.result = { team: null, delta: 0 };
   } else {
     const { team, amount } = state.bid;
-    const delta = lot.ok ? amount : -amount;
+    const won = lotWon(lot, state.bid);
+    const delta = won ? amount : -amount;
     state.teams[team].money += delta;
     flashes[team] = delta;
-    state.result = { team, delta };
-    lot.ok ? sfx.win() : sfx.lose();
+    state.result = { team, delta, pick: state.bid.pick || null };
+    won ? sfx.win() : sfx.lose();
   }
   stopClock();
   state.phase = "reveal";
   render();
-  if (!noBids) lot.ok ? confetti() : flashBad();
+  if (!noBids) state.result.delta > 0 ? confetti() : flashBad();
 }
 
 function nextLot() {
   snapshot();
   state.lot += 1;
   state.result = null;
-  state.bid = { team: null, amount: 100 };
+  state.bid = { team: null, amount: 100, pick: null };
   if (state.lot >= lots().length) {
     state.phase = "final";
     state.final = { stakes: state.teams.map((t) => t.money), marks: state.teams.map(() => null), revealed: false, settled: false };
@@ -941,10 +981,14 @@ function renderSetup() {
       <div class="eyebrow"><span class="serial">No. GA-0815</span> ${pack().tag}</div>
       <h2>Every team gets <em>${money(d.start)}</em>. Buy only the sentences you trust.</h2>
       <ol class="rules">
-        <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it.<br><span class="ar">تُعرض جملة، والفرق تزايد عليها.</span></p></li>
+        <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it${pack().choices ? " and choose: pop or classical?" : "."}<br><span class="ar">تُعرض جملة، والفرق تزايد عليها${pack().choices ? " وتختار: بوب أم كلاسيكية؟" : "."}</span></p></li>
         <li><span class="n">2</span><p>The highest bid buys it. Then: <b>CHECK!</b><br><span class="ar">أعلى مزايدة تشتري الجملة، ثم نكشف.</span></p></li>
-        <li><span class="n">3</span><p>Correct sentence: win the bid as profit. Wrong sentence: lose it.<br><span class="ar">الجملة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>
-        <li><span class="n">4</span><p>Watch out for <b>Trap Cards</b>. Last round is <b>Double or Nothing</b>.<br><span class="ar">انتبهوا لبطاقات الفخ! والجولة الأخيرة: ضاعف أو اخسر.</span></p></li>
+        ${pack().choices
+          ? `<li><span class="n">3</span><p>Right answer: win the bid as profit. Wrong answer: lose it.<br><span class="ar">الإجابة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>`
+          : `<li><span class="n">3</span><p>Correct sentence: win the bid as profit. Wrong sentence: lose it.<br><span class="ar">الجملة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>`}
+        ${pack().choices
+          ? `<li><span class="n">4</span><p>Last round is <b>Double or Nothing</b>.<br><span class="ar">الجولة الأخيرة: ضاعف أو اخسر.</span></p></li>`
+          : `<li><span class="n">4</span><p>Watch out for <b>Trap Cards</b>. Last round is <b>Double or Nothing</b>.<br><span class="ar">انتبهوا لبطاقات الفخ! والجولة الأخيرة: ضاعف أو اخسر.</span></p></li>`}
       </ol>
     </div>
     <form class="form" id="setupForm">
@@ -981,10 +1025,12 @@ function renderLot() {
   const { team, amount } = state.bid;
   const t = team != null ? state.teams[team] : null;
   const over = t && amount > t.money;
-  const canSell = t && amount > 0 && !over;
+  const choices = pack().choices;
+  const pick = state.bid.pick;
+  const canSell = t && amount > 0 && !over && (!choices || pick);
   return `
-    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Is this sentence correct?</div>
-    <p class="announce">${sold ? `Sold to ${esc(t.name)} for ${money(amount)}!` : "Auction starts! How much are you willing to pay?"}</p>
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> ${pack().question || "Is this sentence correct?"}</div>
+    <p class="announce">${sold ? `Sold to ${esc(t.name)} for ${money(amount)}!${choices ? ` They say ${choiceLabel(pick)}` : ""}` : "Auction starts! How much are you willing to pay?"}</p>
     <div class="lot">
       ${sold ? `<div class="stamp sold">SOLD</div>` : ""}
       <p class="sentence">${esc(lot.s)}</p>
@@ -992,7 +1038,7 @@ function renderLot() {
     ${sold ? `
       <div class="actions">
         <button class="big gold" id="checkBtn" type="button">🔍 CHECK!</button>
-        <span class="ar" style="color:var(--ink-soft)">اسألي الصف أولًا: صحيحة أم خاطئة؟ ولماذا؟</span>
+        <span class="ar" style="color:var(--ink-soft)">${esc(pack().questionAr || "اسألي الصف أولًا: صحيحة أم خاطئة؟ ولماذا؟")}</span>
       </div>` : `
       <div class="panel">
         <div class="row"><span class="lbl">Highest bid</span>
@@ -1003,6 +1049,9 @@ function renderLot() {
           ${[100, 200, 300, 500].map((v) => `<button type="button" class="chip" data-amt="${v}">${v}</button>`).join("")}
           <button type="button" class="chip allin" data-amt="all" ${t ? "" : "disabled"}>ALL IN</button>
         </div>
+        ${choices ? `<div class="row"><span class="lbl">Their answer</span>
+          ${choices.map((c) => `<button type="button" class="pickbtn" data-pick="${c.id}" aria-pressed="${pick === c.id}">${c.label}</button>`).join("")}
+        </div>` : ""}
         <p class="err" id="bidErr">${over ? `${esc(t.name)} only has ${money(t.money)}.` : ""}</p>
         <div class="actions">
           <button class="big gavel" id="sellBtn" type="button" ${canSell ? "" : "disabled"}>🔨 SOLD!</button>
@@ -1018,6 +1067,24 @@ function renderReveal() {
   const r = state.result;
   const t = r.team != null ? state.teams[r.team] : null;
   const last = state.lot === lots().length - 1;
+  if (pack().choices) return `
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check!</div>
+    <div class="lot ${!t ? "" : r.delta > 0 ? "glow-ok" : "shake"}">
+      <div class="stamp answer">${choiceLabel(lot.answer)}</div>
+      <p class="sentence">${esc(lot.s)}</p>
+    </div>
+    <div class="fix">
+      <p class="why">${lot.why}</p>
+      <p class="why ar">${esc(lot.ar)}</p>
+    </div>
+    <div class="result">
+      ${t ? `<span>${esc(t.name)} said ${choiceLabel(r.pick)} and paid ${money(Math.abs(r.delta))} →</span>
+             <strong class="${r.delta > 0 ? "up" : "down"}">${r.delta > 0 ? "+" + money(r.delta) + " profit" : "−" + money(-r.delta) + " lost"}</strong>`
+          : `<span>Nobody bought this lot.</span>`}
+    </div>
+    <div class="actions">
+      <button class="big" id="nextBtn" type="button">${last ? "🔥 Final round: Double or Nothing" : "Next lot →"}</button>
+    </div>`;
   return `
     <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check! ${lot.trap ? `<span class="trap">😈 TRAP CARD</span>` : ""}</div>
     <div class="lot ${lot.ok ? "glow-ok" : "shake"}">
@@ -1118,7 +1185,8 @@ function refreshBidUI() {
   const t = team != null ? state.teams[team] : null;
   const over = t && amount > t.money;
   $("bidErr").textContent = over ? `${t.name} only has ${money(t.money)}.` : "";
-  $("sellBtn").disabled = !(t && amount > 0 && !over);
+  $("sellBtn").disabled = !(t && amount > 0 && !over && (!pack().choices || state.bid.pick));
+  document.querySelectorAll("[data-pick]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.pick === state.bid.pick)));
   document.querySelectorAll("[data-team]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.team === team)));
   const allin = document.querySelector('[data-amt="all"]'); if (allin) allin.disabled = !t;
   renderBank();
@@ -1134,6 +1202,7 @@ document.addEventListener("click", (e) => {
   if (b.id === "resumeBtn") { state = load(); state.pack = state.pack || "present"; state.teams.forEach((t, i) => { t.color = TEAM_COLORS[i]; }); history = []; shown = []; render(); return; }
 
   if (b.dataset.team != null && state) { state.bid.team = +b.dataset.team; refreshBidUI(); return; }
+  if (b.dataset.pick && state) { state.bid.pick = b.dataset.pick; refreshBidUI(); return; }
   if (b.dataset.amt) {
     const t = state.teams[state.bid.team];
     state.bid.amount = b.dataset.amt === "all" ? (t ? t.money : 0) : +b.dataset.amt;

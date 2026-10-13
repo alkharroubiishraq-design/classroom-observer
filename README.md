@@ -50,6 +50,8 @@
 - **Past Family · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect ·
   Past Perfect Continuous.
 - **Present · Level 1** و **Level 2 (أصعب)**: Present Simple vs Present Continuous.
+- **Reading: Pop or Classical?**: جمل سؤال القراءة (رسالة Gustav). هنا الفريق يزايد
+  ويختار POP أو CLASSICAL، والإجابة الصحيحة تربح المبلغ.
 - **Mixed Tenses · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect · Present Continuous ·
   Present Perfect · Present Perfect Continuous.
 - **Future Family**: Future Simple · Future Continuous · Future Perfect.
