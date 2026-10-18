@@ -293,7 +293,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Reading: Pop or Classical?</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Pop or Classical? · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -748,8 +748,47 @@ const MUSIC_FINAL = {
   ar: "موسيقى البوب ستُقدَّم على أنها جزء مرغوب من البرنامج",
 };
 
+/* ---------- Pop or classical? · Level 2 (new statements) ---------- */
+const MUSIC2_LOTS = [
+  { s: "It is usually played by a large orchestra.", answer: "classical",
+    why: "Big <b>orchestras</b> play classical music.", ar: "الأوركسترا الكبيرة تعزف الموسيقى الكلاسيكية." },
+  { s: "Its songs are often short, with a catchy chorus.", answer: "pop",
+    why: "Short songs with a <b>catchy chorus</b> → pop.", ar: "الأغاني القصيرة ذات اللازمة سهلة الحفظ ← بوب." },
+  { s: "Composers like Mozart and Beethoven wrote it.", answer: "classical",
+    why: "<b>Mozart</b> and <b>Beethoven</b> are classical composers.", ar: "موزارت وبيتهوفن مؤلفان للموسيقى الكلاسيكية." },
+  { s: "Its stars often become famous on social media and TV talent shows.", answer: "pop",
+    why: "Stars from <b>social media</b> and <b>talent shows</b> → pop.", ar: "نجوم مواقع التواصل وبرامج المواهب ← بوب." },
+  { s: "It often uses electric guitars, drums and keyboards.", answer: "pop",
+    why: "<b>Electric guitars</b> and drums are typical of pop.", ar: "الغيتار الكهربائي والطبول من سمات موسيقى البوب." },
+  { s: "Audiences usually sit quietly and clap only at the end.", answer: "classical",
+    why: "Sitting <b>quietly</b> until the end → a classical concert.", ar: "الجمهور يجلس بهدوء ويصفّق في النهاية فقط ← حفلة كلاسيكية." },
+  { s: "It is often performed in opera houses and concert halls.", answer: "classical",
+    why: "<b>Opera houses</b> and <b>concert halls</b> → classical.", ar: "دور الأوبرا وقاعات الحفلات ← كلاسيكية." },
+  { s: "Its hits go up and down the charts every week.", answer: "pop",
+    why: "<b>Hits</b> and <b>the charts</b> → pop music.", ar: "الأغاني الناجحة وقوائم الأكثر استماعًا ← بوب." },
+  { s: "Its pieces are often called symphonies and sonatas.", answer: "classical",
+    why: "<b>Symphonies</b> and <b>sonatas</b> are classical pieces.", ar: "السيمفونيات والسوناتات قطع موسيقية كلاسيكية." },
+  { s: "Fans often sing and dance along at its concerts.", answer: "pop",
+    why: "Fans <b>sing and dance along</b> → a pop concert.", ar: "المعجبون يغنّون ويرقصون في الحفلة ← بوب." },
+  { s: "Many of its famous works are hundreds of years old.", answer: "classical",
+    why: "Works that are <b>hundreds of years old</b> and still played → classical.", ar: "أعمال عمرها مئات السنين وما زالت تُعزف ← كلاسيكية." },
+  { s: "It is mainly made to be popular and sell lots of copies.", answer: "pop",
+    why: "Made to be <b>popular</b> (pop = popular!) and sell a lot.", ar: "تُصنع لتكون مشهورة وتبيع كثيرًا، وكلمة pop من popular!" },
+  { s: "Performers usually wear formal clothes, like black suits and long dresses.", answer: "classical",
+    why: "<b>Formal clothes</b> on stage → a classical concert.", ar: "الملابس الرسمية على المسرح ← حفلة كلاسيكية." },
+  { s: "It changes fast, and what is popular this year may be forgotten next year.", answer: "pop",
+    why: "Popular now, <b>forgotten</b> soon → pop has no staying power.", ar: "تتغير بسرعة وتُنسى ← البوب ليس لها قدرة على البقاء." },
+];
+const MUSIC2_FINAL = {
+  html: '“The musicians follow a conductor who uses a small stick called a baton.”<br>Pop or classical? <span class="blank">______</span>',
+  answerHtml: '“The musicians follow a conductor who uses a small stick called a baton.”<br>Pop or classical? <span class="blank">🎻 CLASSICAL</span>',
+  why: "A <b>conductor</b> with a <b>baton</b> leads an orchestra → classical music.",
+  ar: "قائد الأوركسترا يستخدم عصا صغيرة اسمها baton ← موسيقى كلاسيكية",
+};
+
 const PACKS = {
-  music: { name: "Reading: Pop or Classical?", tag: "Reading comprehension · Gustav's email", ar: "قراءة: بوب أم كلاسيكية؟", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
+  music: { name: "Pop or Classical? · Level 1", tag: "Reading comprehension · Gustav's email", ar: "بوب أم كلاسيكية؟ جمل الكتاب", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
+  music2: { name: "Pop or Classical? · Level 2", tag: "Pop or classical? · New statements", ar: "بوب أم كلاسيكية؟ جمل جديدة 🔥", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC2_LOTS, final: MUSIC2_FINAL },
   mixed: { name: "Mixed Tenses · Level 1", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة: مستوى 1", lots: MIXED_LOTS, final: MIXED_FINAL },
   mixed2: { name: "Mixed Tenses · Level 2", tag: "Mixed Tenses · Level 2 · Harder", ar: "خليط الأزمنة: مستوى أصعب 🔥", lots: MIXED2_LOTS, final: MIXED2_FINAL },
   future3: { name: "Future Family", tag: "Future Simple · Future Continuous · Future Perfect", ar: "المستقبل البسيط والمستمر والتام", lots: FUTURE3_LOTS, final: FUTURE3_FINAL },
@@ -779,7 +818,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "music", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "music2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
