@@ -305,7 +305,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Past Family · Level 3</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Past Family · Level 4</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -836,7 +836,46 @@ const PAST3_FINAL = {
   ar: "When مع فعل قصير ← woke · for hours قبلها ← had been raining · غادر قبل استيقاظي ← had already left",
 };
 
+/* ---------- Past Family · Level 4 (new set) ---------- */
+const PAST4_LOTS = [
+  { s: "It was snowing heavily when we left the house.", ok: true, sig: ["when"],
+    why: "Long action (was snowing) + <b>when</b> + short action (left).", ar: "فعل طويل was snowing مع when وفعل قصير left." },
+  { s: "I couldn't get in because I had lose my keys.", ok: false, fix: "I couldn't get in because I had lost my keys.", sig: ["had lose"],
+    why: "had + <b>P.P</b>: lose → lost → lost.", ar: "بعد had نستخدم التصريف الثالث: lost." },
+  { s: "They had been argued for an hour before their mother came in.", ok: false, fix: "They had been arguing for an hour before their mother came in.", sig: ["for an hour"],
+    why: "Past Perfect Continuous = had been + verb<b>-ing</b>.", ar: "الماضي التام المستمر = had been + الفعل مع ing." },
+  { s: "Were you sleep when I knocked on the door?", ok: false, fix: "Were you sleeping when I knocked on the door?", sig: ["when"],
+    why: "Past Continuous question: Were + S + verb<b>-ing</b>.", ar: "سؤال الماضي المستمر: Were + الفاعل + الفعل مع ing." },
+  { s: "By 8 o'clock, we had finished all our homework.", ok: true, sig: ["By 8 o'clock"],
+    why: "<b>By</b> + a past time → finished before then → had finished.", ar: "By + وقت في الماضي ← انتهى قبله ← had finished." },
+  { s: "The ground was wet because it had rained all night.", ok: true, trap: true, sig: ["all night"],
+    why: "It rained <b>before</b> we saw the wet ground → had rained. Correct! (had been raining is also fine)", ar: "المطر نزل قبل ذلك ← had rained. صحيحة! (وhad been raining صحيحة أيضًا)" },
+  { s: "I was believing every word he said.", ok: false, trap: true, fix: "I believed every word he said.", sig: ["believing"],
+    why: "<b>believe</b> is a state verb, so no -ing → believed.", ar: "believe فعل حالة لا يأتي مع ing ← believed." },
+  { s: "After he had eaten breakfast, he went to school.", ok: true, sig: ["After"],
+    why: "Eating came <b>first</b> → had eaten. Then → went.", ar: "الأكل حدث أولًا ← had eaten، ثم ذهب ← went." },
+  { s: "My parents were watched TV when I got home.", ok: false, fix: "My parents were watching TV when I got home.", sig: ["when"],
+    why: "Past Continuous = was/were + verb<b>-ing</b>.", ar: "الماضي المستمر = was/were + الفعل مع ing." },
+  { s: "Why were your hands so dirty? I had been working in the garden.", ok: true, trap: true, sig: ["dirty"],
+    why: "A past result (dirty hands) of a long activity before it → had been working. Correct!", ar: "نتيجة في الماضي لنشاط استمر قبلها ← had been working. صحيحة!" },
+  { s: "We had already ate when our guests arrived.", ok: false, fix: "We had already eaten when our guests arrived.", sig: ["already"],
+    why: "had + <b>P.P</b>: eat → ate → eaten.", ar: "بعد had نستخدم التصريف الثالث: eaten." },
+  { s: "While I walked to school, I was seeing an accident.", ok: false, trap: true, fix: "While I was walking to school, I saw an accident.", sig: ["While"],
+    why: "The tenses are <b>swapped</b>! While + long action (was walking), short action (saw).", ar: "الزمنان معكوسان! While مع الفعل الطويل was walking، والفعل القصير saw." },
+  { s: "Nobody had told me about the meeting, so I missed it.", ok: true, sig: ["so"],
+    why: "Telling should have happened <b>before</b> the meeting → had told.", ar: "الإخبار كان يجب أن يحدث قبل الاجتماع ← had told." },
+  { s: "The baby had been crying all night, so we were exhausted.", ok: true, sig: ["all night"],
+    why: "A long activity before a past result → had been crying.", ar: "نشاط طويل قبل نتيجة في الماضي ← had been crying." },
+];
+const PAST4_FINAL = {
+  html: 'When I <span class="blank">______</span> <span class="hint">(arrive)</span> at the party, everyone <span class="blank">______</span> <span class="hint">(dance)</span>, but Sara wasn\'t there because she <span class="blank">______</span> <span class="hint">(already / go)</span> home.',
+  answerHtml: 'When I <span class="blank">arrived</span> at the party, everyone <span class="blank">was dancing</span>, but Sara wasn\'t there because she <span class="blank">had already gone</span> home.',
+  why: "<b>When</b> + short action → arrived. In progress at that moment → was dancing (everyone = singular). Left <b>before</b> → had already gone.",
+  ar: "When مع فعل قصير ← arrived · فعل مستمر في تلك اللحظة ← was dancing (everyone مفرد) · غادرت قبلها ← had already gone",
+};
+
 const PACKS = {
+  past4: { name: "Past Family · Level 4", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 4 🔥", lots: PAST4_LOTS, final: PAST4_FINAL },
   past3: { name: "Past Family · Level 3", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 🔥", lots: PAST3_LOTS, final: PAST3_FINAL },
   music: { name: "Pop or Classical? · Level 1", tag: "Reading comprehension · Gustav's email", ar: "بوب أم كلاسيكية؟ جمل الكتاب", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
   music2: { name: "Pop or Classical? · Level 2", tag: "Pop or classical? · New statements", ar: "بوب أم كلاسيكية؟ جمل جديدة 🔥", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC2_LOTS, final: MUSIC2_FINAL },
@@ -878,7 +917,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "past3", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "past4", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
