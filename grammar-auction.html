@@ -223,6 +223,18 @@
   .pickbtn[aria-pressed="true"] { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 22px rgba(255,201,51,.7); transform: scale(1.06); }
   .stamp.answer { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 30px rgba(255,201,51,.8); }
 
+  .seg.mode { display: flex; flex-wrap: wrap; }
+  .seg.mode button { font: 400 14px var(--display); padding: 9px 12px; flex: 1 1 160px; }
+  .pickbtn.sm { padding: 6px 12px; font-size: 14px; }
+  .boardres { display: grid; gap: 8px; }
+  .bres { display: grid; grid-template-columns: minmax(90px, 160px) 1fr auto; align-items: center; gap: 6px 14px; padding: 10px 14px; border-radius: 12px; background: var(--surface-2); border: 2px solid var(--team); box-shadow: inset 6px 0 0 var(--team); }
+  .bres b { font: 400 16px var(--display); padding-left: 6px; }
+  .bres span { font-weight: 700; color: var(--ink-soft); }
+  .bres strong { font: 400 20px var(--display); padding: 2px 10px; border-radius: 8px; }
+  .bres strong.up { color: #053b1c; background: var(--win); box-shadow: 0 0 16px rgba(31,211,107,.5); }
+  .bres strong.down { color: #fff; background: var(--loss); box-shadow: 0 0 16px rgba(255,59,74,.5); }
+  @media (max-width: 560px) { .bres { grid-template-columns: 1fr auto; } .bres span { grid-column: 1 / -1; grid-row: 2; } }
+
   /* Final */
   .final-head { display: grid; gap: 8px; }
   .final-head h2 {
@@ -293,7 +305,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Pop or Classical? · Level 2</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Past Family · Level 3</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -786,7 +798,46 @@ const MUSIC2_FINAL = {
   ar: "قائد الأوركسترا يستخدم عصا صغيرة اسمها baton ← موسيقى كلاسيكية",
 };
 
+/* ---------- Past Family · Level 3 (new set) ---------- */
+const PAST3_LOTS = [
+  { s: "I was having dinner when you called me last night.", ok: true, trap: true, sig: ["when"],
+    why: "<b>have dinner</b> = eat (an action), so -ing is fine. Correct!", ar: "have dinner بمعنى يتناول العشاء وهو فعل حركة فيصح مع ing. صحيحة!" },
+  { s: "By the time the police arrived, the thief had escaped.", ok: true, sig: ["By the time"],
+    why: "The thief escaped <b>first</b> → had escaped.", ar: "اللص هرب أولًا ← had escaped." },
+  { s: "She had been cried for hours, so her eyes were red.", ok: false, fix: "She had been crying for hours, so her eyes were red.", sig: ["for hours"],
+    why: "Past Perfect Continuous = had been + verb<b>-ing</b>.", ar: "الماضي التام المستمر = had been + الفعل مع ing." },
+  { s: "While my father was fixing the car, my mother was cooking lunch.", ok: true, sig: ["While"],
+    why: "Two long actions at the same time → both Past Continuous.", ar: "فعلان طويلان في نفس الوقت ← كلاهما ماضٍ مستمر." },
+  { s: "When we arrived, the concert already started.", ok: false, fix: "When we arrived, the concert had already started.", sig: ["already"],
+    why: "It started <b>before</b> we arrived → had already started.", ar: "الحفلة بدأت قبل وصولنا ← had already started." },
+  { s: "I had been knowing him for years before we became friends.", ok: false, trap: true, fix: "I had known him for years before we became friends.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb, so no -ing → had known.", ar: "know فعل حالة لا يأتي مع ing ← had known." },
+  { s: "How long had you been living in Aqaba before you moved to Amman?", ok: true, trap: true, sig: ["How long", "before"],
+    why: "Question: How long + had + S + been + <b>-ing</b>. Correct!", ar: "سؤال: How long + had + الفاعل + been + ing. صحيحة!" },
+  { s: "The children was playing outside when it started to snow.", ok: false, fix: "The children were playing outside when it started to snow.", sig: ["The children"],
+    why: "<b>children</b> is plural → were.", ar: "children جمع ← were." },
+  { s: "He was tired because he had been running for an hour.", ok: true, sig: ["for an hour"],
+    why: "A long activity before a past moment → had been running.", ar: "نشاط استمر قبل لحظة في الماضي ← had been running." },
+  { s: "Had you ever visited Jerash before last summer?", ok: true, sig: ["ever", "before last summer"],
+    why: "Experience before a past time → Had + S + ever + P.P.", ar: "خبرة قبل وقت في الماضي ← Had + الفاعل + ever + التصريف الثالث." },
+  { s: "When I saw her, she was waiting for me for over an hour.", ok: false, trap: true, fix: "When I saw her, she had been waiting for me for over an hour.", sig: ["for over an hour"],
+    why: "<b>for</b> + a period <b>before</b> a past moment → had been waiting.", ar: "for مع مدة قبل لحظة في الماضي ← had been waiting." },
+  { s: "We hadn't saw the film before, so we watched it.", ok: false, fix: "We hadn't seen the film before, so we watched it.", sig: ["hadn't"],
+    why: "hadn't + <b>P.P</b>: see → saw → seen.", ar: "بعد hadn't نستخدم التصريف الثالث: seen." },
+  { s: "What were you doing at 9 o'clock last night?", ok: true, sig: ["at 9 o'clock last night"],
+    why: "In progress at a specific past time → Past Continuous question.", ar: "فعل مستمر في وقت محدد بالماضي ← سؤال الماضي المستمر." },
+  { s: "I had been lived here for two years when I met Sami.", ok: false, fix: "I had been living here for two years when I met Sami.", sig: ["for two years"],
+    why: "had been + <b>-ing</b>, not had been + P.P.", ar: "had been + ing وليس had been + التصريف الثالث." },
+];
+const PAST3_FINAL = {
+  html: 'When I <span class="blank">______</span> <span class="hint">(wake)</span> up, it <span class="blank">______</span> <span class="hint">(rain)</span> for hours, and my brother <span class="blank">______</span> <span class="hint">(already / leave)</span> for school.',
+  answerHtml: 'When I <span class="blank">woke</span> up, it <span class="blank">had been raining</span> for hours, and my brother <span class="blank">had already left</span> for school.',
+  why: "<b>When</b> + short action → woke. <b>for hours</b> before that → had been raining. Left <b>before</b> I woke → had already left.",
+  ar: "When مع فعل قصير ← woke · for hours قبلها ← had been raining · غادر قبل استيقاظي ← had already left",
+};
+
 const PACKS = {
+  past3: { name: "Past Family · Level 3", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 🔥", lots: PAST3_LOTS, final: PAST3_FINAL },
   music: { name: "Pop or Classical? · Level 1", tag: "Reading comprehension · Gustav's email", ar: "بوب أم كلاسيكية؟ جمل الكتاب", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
   music2: { name: "Pop or Classical? · Level 2", tag: "Pop or classical? · New statements", ar: "بوب أم كلاسيكية؟ جمل جديدة 🔥", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC2_LOTS, final: MUSIC2_FINAL },
   mixed: { name: "Mixed Tenses · Level 1", tag: "Past Continuous · Past Perfect · Present Continuous · Present Perfect · Present Perfect Continuous", ar: "خليط الأزمنة: مستوى 1", lots: MIXED_LOTS, final: MIXED_FINAL },
@@ -806,6 +857,15 @@ const lots = () => (state && state.order ? state.order.map((i) => pack().lots[i]
 const total = () => lots().length + 1;
 const choiceLabel = (id) => ((pack().choices || []).find((c) => c.id === id) || {}).label || id;
 /* Did the buying team win this lot? Grammar packs: the sentence is correct. Choice packs: the team picked the right answer. */
+const GRAMMAR_PICKS = [
+  { id: "ok", label: "✓ CORRECT" },
+  { id: "bad", label: "✗ WRONG" },
+];
+/* Answers a team can write on its board: the pack's choices, or correct / wrong for grammar packs. */
+const answerOptions = () => pack().choices || GRAMMAR_PICKS;
+const pickLabel = (id) => (answerOptions().find((o) => o.id === id) || {}).label || id;
+const pickWins = (lot, pick) => (pack().choices ? pick === lot.answer : (pick === "ok") === !!lot.ok);
+const emptyBoards = (n) => Array.from({ length: n }, () => ({ amount: 0, pick: null }));
 const lotWon = (lot, bid) => (pack().choices ? bid && bid.pick === lot.answer : lot.ok);
 
 const TEAM_COLORS = ["#2d8cff", "#ff3d8b", "#ff8a00", "#a259ff"];
@@ -818,7 +878,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "music2", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "past3", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -857,7 +917,8 @@ function shuffled(n) {
 function newGame() {
   const n = setupDraft.count;
   state = {
-    pack: setupDraft.pack, phase: "lot", lot: 0, start: setupDraft.start,
+    pack: setupDraft.pack, mode: setupDraft.mode, phase: "lot", lot: 0, start: setupDraft.start,
+    bids: emptyBoards(n),
     order: setupDraft.shuffle ? shuffled(PACKS[setupDraft.pack].lots.length) : null,
     teams: Array.from({ length: n }, (_, i) => ({ name: (setupDraft.names[i] || DEFAULT_NAMES[i]).trim() || DEFAULT_NAMES[i], money: setupDraft.start, color: TEAM_COLORS[i] })),
     bid: { team: null, amount: 100 }, result: null,
@@ -900,11 +961,33 @@ function check(noBids) {
   if (!noBids) state.result.delta > 0 ? confetti() : flashBad();
 }
 
+/* Boards mode: every team that wrote an amount and an answer wins or loses its own bid. */
+function checkBoards() {
+  snapshot();
+  const lot = lots()[state.lot];
+  const rows = state.teams.map((t, i) => {
+    const b = state.bids[i];
+    const amount = Math.min(b.amount || 0, t.money);
+    if (!(amount > 0) || !b.pick) return { team: i, amount: 0, pick: null, delta: 0 };
+    const delta = pickWins(lot, b.pick) ? amount : -amount;
+    t.money += delta;
+    flashes[i] = delta;
+    return { team: i, amount, pick: b.pick, delta };
+  });
+  state.result = { all: true, rows };
+  stopClock();
+  state.phase = "reveal";
+  render();
+  if (rows.some((r) => r.delta > 0)) { sfx.win(); confetti(); }
+  else if (rows.some((r) => r.delta < 0)) { sfx.lose(); flashBad(); }
+}
+
 function nextLot() {
   snapshot();
   state.lot += 1;
   state.result = null;
   state.bid = { team: null, amount: 100, pick: null };
+  state.bids = emptyBoards(state.teams.length);
   if (state.lot >= lots().length) {
     state.phase = "final";
     state.final = { stakes: state.teams.map((t) => t.money), marks: state.teams.map(() => null), revealed: false, settled: false };
@@ -1020,9 +1103,12 @@ function renderSetup() {
       <div class="eyebrow"><span class="serial">No. GA-0815</span> ${pack().tag}</div>
       <h2>Every team gets <em>${money(d.start)}</em>. Buy only the sentences you trust.</h2>
       <ol class="rules">
+        ${d.mode === "all" ? `
+        <li><span class="n">1</span><p>A sentence appears. Every team <b>secretly</b> writes a bid and an answer on its board.<br><span class="ar">تُعرض جملة، وكل مجموعة تكتب بصمت على لوحها المبلغ والإجابة.</span></p></li>
+        <li><span class="n">2</span><p><b>Boards up!</b> All teams show their boards at the same time. Then: <b>CHECK!</b><br><span class="ar">ترفع كل المجموعات ألواحها معًا، ثم نكشف.</span></p></li>` : `
         <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it${pack().choices ? " and choose: pop or classical?" : "."}<br><span class="ar">تُعرض جملة، والفرق تزايد عليها${pack().choices ? " وتختار: بوب أم كلاسيكية؟" : "."}</span></p></li>
-        <li><span class="n">2</span><p>The highest bid buys it. Then: <b>CHECK!</b><br><span class="ar">أعلى مزايدة تشتري الجملة، ثم نكشف.</span></p></li>
-        ${pack().choices
+        <li><span class="n">2</span><p>The highest bid buys it. Then: <b>CHECK!</b><br><span class="ar">أعلى مزايدة تشتري الجملة، ثم نكشف.</span></p></li>`}
+        ${pack().choices || d.mode === "all"
           ? `<li><span class="n">3</span><p>Right answer: win the bid as profit. Wrong answer: lose it.<br><span class="ar">الإجابة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>`
           : `<li><span class="n">3</span><p>Correct sentence: win the bid as profit. Wrong sentence: lose it.<br><span class="ar">الجملة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>`}
         ${pack().choices
@@ -1034,6 +1120,13 @@ function renderSetup() {
       <div>
         <label>Grammar topic</label>
         <div class="packs" role="group">${Object.entries(PACKS).map(([id, p]) => `<button type="button" class="packbtn" data-pack="${id}" aria-pressed="${d.pack === id}"><b>${p.name}</b><span class="ar">${p.ar}</span></button>`).join("")}</div>
+      </div>
+      <div>
+        <label>Game mode</label>
+        <div class="seg mode" role="group">
+          <button type="button" data-mode="all" aria-pressed="${d.mode === "all"}">🪧 Boards: all teams play</button>
+          <button type="button" data-mode="auction" aria-pressed="${d.mode !== "all"}">🔨 Classic auction</button>
+        </div>
       </div>
       <div>
         <label>Number of teams</label>
@@ -1101,6 +1194,57 @@ function renderLot() {
       </div>`}`;
 }
 
+function renderBoards() {
+  const lot = lots()[state.lot];
+  const ready = state.bids.some((b, i) => b.amount > 0 && b.pick && b.amount <= state.teams[i].money);
+  return `
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> ${pack().question || "Is this sentence correct?"}</div>
+    <p class="announce">Write your bid and your answer. Boards up!</p>
+    <div class="lot">
+      <p class="sentence">${esc(lot.s)}</p>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="clockBtn" type="button">⏱ 20s clock</button>
+      <span class="clock" id="clock" aria-live="polite"></span>
+      <span class="ar" style="color:var(--ink-soft)">كل مجموعة تكتب المبلغ والإجابة على لوحها بصمت، ثم ترفع الألواح معًا.</span>
+    </div>
+    <div class="fteams">
+      ${state.teams.map((t, i) => {
+        const b = state.bids[i];
+        return `<div class="fteam" style="--team:${t.color}">
+          <span class="nm">${esc(t.name)}</span>
+          ${t.money <= 0 ? `<span style="color:var(--loss);font-weight:700">Out of money</span>` : `
+          <label class="money-in"><span>$</span><input id="board${i}" type="number" inputmode="numeric" min="0" step="50" data-board-amt="${i}" value="${b.amount || ""}" aria-label="${esc(t.name)} bid" /></label>
+          <button type="button" class="chip allin" data-board-allin="${i}">ALL IN</button>
+          ${answerOptions().map((o) => `<button type="button" class="pickbtn sm" data-board-pick="${i}:${o.id}" aria-pressed="${b.pick === o.id}">${o.label}</button>`).join("")}
+          <span class="err" id="berr${i}">${b.amount > t.money ? `Only ${money(t.money)}` : ""}</span>`}
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="actions">
+      <button class="big gold" id="boardCheckBtn" type="button" ${ready ? "" : "disabled"}>🔍 CHECK!</button>
+      <span class="ar" style="color:var(--ink-soft)">المجموعة التي لا تكتب مبلغًا أو إجابة لا تربح ولا تخسر.</span>
+    </div>`;
+}
+
+function refreshBoards() {
+  state.teams.forEach((t, i) => { const e = $("berr" + i); if (e) e.textContent = state.bids[i].amount > t.money ? `Only ${money(t.money)}` : ""; });
+  const btn = $("boardCheckBtn");
+  if (btn) btn.disabled = !state.bids.some((b, i) => b.amount > 0 && b.pick && b.amount <= state.teams[i].money);
+  save();
+}
+
+function boardResults(r) {
+  return `<div class="boardres">${r.rows.map((x) => {
+    const t = state.teams[x.team];
+    return `<div class="bres" style="--team:${t.color}">
+      <b>${esc(t.name)}</b>
+      <span>${x.pick ? `said ${pickLabel(x.pick)} · bid ${money(x.amount)}` : "sat out"}</span>
+      ${x.pick ? `<strong class="${x.delta > 0 ? "up" : "down"}">${x.delta > 0 ? "+" + money(x.delta) : "−" + money(-x.delta)}</strong>` : "<strong></strong>"}
+    </div>`;
+  }).join("")}</div>`;
+}
+
 function renderReveal() {
   const lot = lots()[state.lot];
   const r = state.result;
@@ -1108,7 +1252,7 @@ function renderReveal() {
   const last = state.lot === lots().length - 1;
   if (pack().choices) return `
     <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check!</div>
-    <div class="lot ${!t ? "" : r.delta > 0 ? "glow-ok" : "shake"}">
+    <div class="lot ${r.all ? "glow-ok" : !t ? "" : r.delta > 0 ? "glow-ok" : "shake"}">
       <div class="stamp answer">${choiceLabel(lot.answer)}</div>
       <p class="sentence">${esc(lot.s)}</p>
     </div>
@@ -1116,11 +1260,11 @@ function renderReveal() {
       <p class="why">${lot.why}</p>
       <p class="why ar">${esc(lot.ar)}</p>
     </div>
-    <div class="result">
+    ${r.all ? boardResults(r) : `<div class="result">
       ${t ? `<span>${esc(t.name)} said ${choiceLabel(r.pick)} and paid ${money(Math.abs(r.delta))} →</span>
              <strong class="${r.delta > 0 ? "up" : "down"}">${r.delta > 0 ? "+" + money(r.delta) + " profit" : "−" + money(-r.delta) + " lost"}</strong>`
           : `<span>Nobody bought this lot.</span>`}
-    </div>
+    </div>`}
     <div class="actions">
       <button class="big" id="nextBtn" type="button">${last ? "🔥 Final round: Double or Nothing" : "Next lot →"}</button>
     </div>`;
@@ -1135,11 +1279,11 @@ function renderReveal() {
       <p class="why">${lot.why}</p>
       <p class="why ar">${esc(lot.ar)}</p>
     </div>
-    <div class="result">
+    ${r.all ? boardResults(r) : `<div class="result">
       ${t ? `<span>${esc(t.name)} paid ${money(Math.abs(r.delta))} →</span>
              <strong class="${r.delta > 0 ? "up" : "down"}">${r.delta > 0 ? "+" + money(r.delta) + " profit" : "−" + money(-r.delta) + " lost"}</strong>`
           : `<span>Nobody bought this lot.</span>`}
-    </div>
+    </div>`}
     <div class="actions">
       <button class="big" id="nextBtn" type="button">${last ? "🔥 Final round: Double or Nothing" : "Next lot →"}</button>
     </div>`;
@@ -1206,6 +1350,7 @@ function render() {
   renderBank();
   const stage = $("stage");
   if (!state) stage.innerHTML = renderSetup();
+  else if (state.phase === "lot" && state.mode === "all") stage.innerHTML = renderBoards();
   else if (state.phase === "lot" || state.phase === "sold") stage.innerHTML = renderLot();
   else if (state.phase === "reveal") stage.innerHTML = renderReveal();
   else if (state.phase === "final") stage.innerHTML = renderFinal();
@@ -1242,6 +1387,10 @@ document.addEventListener("click", (e) => {
 
   if (b.dataset.team != null && state) { state.bid.team = +b.dataset.team; refreshBidUI(); return; }
   if (b.dataset.pick && state) { state.bid.pick = b.dataset.pick; refreshBidUI(); return; }
+  if (b.dataset.mode) { setupDraft.mode = b.dataset.mode; render(); return; }
+  if (b.dataset.boardPick) { const [i, v] = b.dataset.boardPick.split(":"); const bd = state.bids[+i]; bd.pick = bd.pick === v ? null : v; render(); return; }
+  if (b.dataset.boardAllin != null) { const i = +b.dataset.boardAllin; state.bids[i].amount = state.teams[i].money; render(); return; }
+  if (b.id === "boardCheckBtn") return checkBoards();
   if (b.dataset.amt) {
     const t = state.teams[state.bid.team];
     state.bid.amount = b.dataset.amt === "all" ? (t ? t.money : 0) : +b.dataset.amt;
@@ -1278,7 +1427,8 @@ function disarmReset() { const r = $("resetBtn"); r.classList.remove("armed"); r
 
 document.addEventListener("input", (e) => {
   const el = e.target;
-  if (el.id === "bidAmt") { state.bid.amount = Math.max(0, Math.floor(+el.value || 0)); refreshBidUI(); }
+  if (el.dataset.boardAmt != null) { state.bids[+el.dataset.boardAmt].amount = Math.max(0, Math.floor(+el.value || 0)); refreshBoards(); }
+  else if (el.id === "bidAmt") { state.bid.amount = Math.max(0, Math.floor(+el.value || 0)); refreshBidUI(); }
   else if (el.dataset.name != null) setupDraft.names[+el.dataset.name] = el.value;
   else if (el.id === "shuffle") setupDraft.shuffle = el.checked;
   else if (el.id === "startCash") setupDraft.start = Math.max(100, Math.floor(+el.value || 1000));

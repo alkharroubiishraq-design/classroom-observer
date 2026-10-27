@@ -47,6 +47,7 @@
 ملف `grammar-auction.html` لعبة صفية لطلاب الصف الثامن، فيها موضوعان تختارهما
 المعلمة من شاشة البداية:
 
+- **Past Family · Level 3**: جمل جديدة على Past Continuous · Past Perfect · Past Perfect Continuous.
 - **Past Family · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect ·
   Past Perfect Continuous.
 - **Present · Level 1** و **Level 2 (أصعب)**: Present Simple vs Present Continuous.
@@ -72,6 +73,11 @@
   للعبة في المتصفح إذا أُغلقت الصفحة بالخطأ.
 - ترتيب الجمل عشوائي في كل لعبة جديدة (يمكن إلغاؤه من شاشة البداية)، والجولة
   النهائية تبقى دائمًا الأخيرة.
+- طريقتان للعب (من شاشة البداية):
+  - **🪧 Boards: all teams play** (الافتراضية): كل مجموعة تكتب بصمت على لوحها المبلغ
+    والإجابة، ثم ترفع الألواح معًا. المعلمة تُدخل لوح كل مجموعة، وكل مجموعة تربح أو
+    تخسر حسب إجابتها. هذا يمنع الصراخ والتنافس على الشراء ويُشرك كل المجموعات.
+  - **🔨 Classic auction**: مزاد عادي، أعلى مزايدة تشتري الجملة.
 - النهاية: 🏆 THE GRAMMAR MILLIONAIRES.
 - لتغيير الجمل: عدّلي `PAST_LOTS` / `PAST2_LOTS` / `PAST_FINAL` / `PAST2_FINAL` أو `PRESENT_LOTS` / `PRESENT_FINAL` أو `MODAL_LOTS` / `TAGS_LOTS`
   في أعلى السكربت داخل الملف.
