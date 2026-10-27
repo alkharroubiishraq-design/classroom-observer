@@ -47,6 +47,7 @@
 ملف `grammar-auction.html` لعبة صفية لطلاب الصف الثامن، فيها موضوعان تختارهما
 المعلمة من شاشة البداية:
 
+- **Future Perfect**: Future Perfect · Future Perfect Continuous.
 - **Past Family · Level 4**: مجموعة جمل رابعة لأزمنة الماضي.
 - **Past Family · Level 3**: جمل جديدة على Past Continuous · Past Perfect · Past Perfect Continuous.
 - **Past Family · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect ·
@@ -65,7 +66,7 @@
  يعمل مباشرة في المتصفح بدون تثبيت، ومناسب للعرض على
 اللوح/البروجكتر.
 
-- 4 مجموعات افتراضيًا (يمكن التغيير إلى 2 أو 3)، كل مجموعة تبدأ بـ $1000 Grammar Money (قابل للتعديل).
+- 4 مجموعات افتراضيًا (من 2 حتى 8 مجموعات)، كل مجموعة تبدأ بـ $1000 Grammar Money (قابل للتعديل).
 - 14 جملة للمزاد (منها 4 Trap Cards) + جولة نهائية DOUBLE OR NOTHING = 15 جولة.
 - في كل جولة: اختاري الفريق صاحب أعلى مزايدة والمبلغ ← 🔨 SOLD ← 🔍 CHECK!
   الجملة الصحيحة = ربح المبلغ، الخاطئة = خسارته، مع التصحيح والشرح بالعربي

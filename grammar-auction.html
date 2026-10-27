@@ -91,6 +91,11 @@
   }
   .acct.active { transform: translateY(-4px) scale(1.03); box-shadow: 0 0 0 4px var(--gold), 0 0 30px rgba(255,201,51,.6), 0 10px 24px rgba(0,0,0,.4); }
   .acct .nm { font: 400 15px var(--display); letter-spacing: .04em; overflow-wrap: anywhere; text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+  .bank.many { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 10px; }
+  .bank.many .acct { padding: 10px 12px 12px; }
+  .bank.many .acct .bal { font-size: clamp(20px, 2.6vw, 30px); }
+  .bank.many .acct .nm { font-size: 13px; }
+  @media (max-width: 640px) { .bank.many { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .acct .bal { font: 400 clamp(26px, 3.4vw, 38px)/1.1 var(--display); font-variant-numeric: tabular-nums; text-shadow: 0 3px 0 rgba(0,0,0,.25); }
   .acct .bal.broke { color: #ffd0d4; }
   .acct .delta { position: absolute; top: 10px; right: 12px; font: 400 16px var(--display); padding: 2px 10px; border-radius: 8px; animation: pop 2.4s ease forwards; }
@@ -305,7 +310,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Past Family · Level 4</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Future Perfect</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -874,7 +879,46 @@ const PAST4_FINAL = {
   ar: "When مع فعل قصير ← arrived · فعل مستمر في تلك اللحظة ← was dancing (everyone مفرد) · غادرت قبلها ← had already gone",
 };
 
+/* ---------- Future Perfect · Future Perfect Continuous ---------- */
+const FPERF_LOTS = [
+  { s: "By the end of this month, I will have read five books.", ok: true, sig: ["By the end of this month"],
+    why: "<b>By</b> + future time + a finished result → will have + P.P.", ar: "By + وقت في المستقبل مع نتيجة مكتملة ← will have + التصريف الثالث." },
+  { s: "By 2027, my brother will have been working at the bank for ten years.", ok: true, sig: ["By 2027", "for ten years"],
+    why: "<b>By</b> + <b>for</b> + a period → will have been + -ing.", ar: "By مع for ومدة زمنية ← will have been + ing." },
+  { s: "By tomorrow morning, the snow will have melt.", ok: false, fix: "By tomorrow morning, the snow will have melted.", sig: ["By tomorrow morning"],
+    why: "Future Perfect = will have + <b>P.P</b>: melted.", ar: "المستقبل التام = will have + التصريف الثالث: melted." },
+  { s: "By next Friday, I will have been study English for six years.", ok: false, fix: "By next Friday, I will have been studying English for six years.", sig: ["for six years"],
+    why: "Future Perfect Continuous = will have been + verb<b>-ing</b>.", ar: "المستقبل التام المستمر = will have been + الفعل مع ing." },
+  { s: "Will they have arrived in Paris by 6 p.m. tonight?", ok: true, sig: ["by 6 p.m. tonight"],
+    why: "Question: <b>Will</b> + S + <b>have</b> + P.P?", ar: "السؤال: Will + الفاعل + have + التصريف الثالث؟" },
+  { s: "By 10 p.m., she will have did all her homework.", ok: false, fix: "By 10 p.m., she will have done all her homework.", sig: ["By 10 p.m."],
+    why: "will have + <b>P.P</b>: do → did → done.", ar: "بعد will have نستخدم التصريف الثالث: done." },
+  { s: "In June, we will have been living in this house for five years.", ok: true, trap: true, sig: ["for five years"],
+    why: "A period (<b>for five years</b>) up to a future point (June) → will have been living. Correct!", ar: "مدة زمنية حتى نقطة في المستقبل ← will have been living. صحيحة!" },
+  { s: "By next year, I will have been knowing Sara for ten years.", ok: false, trap: true, fix: "By next year, I will have known Sara for ten years.", sig: ["knowing"],
+    why: "<b>know</b> is a state verb, so no -ing → will have known.", ar: "know فعل حالة لا يأتي مع ing ← will have known." },
+  { s: "By 5 p.m., the workers will have painted the whole building.", ok: true, sig: ["By 5 p.m."],
+    why: "Finished before 5 p.m. → Future Perfect.", ar: "سينتهي قبل الساعة 5 ← المستقبل التام." },
+  { s: "By 9 o'clock, he will have been waiting for two hours.", ok: true, sig: ["for two hours"],
+    why: "<b>for two hours</b> up to 9 o'clock → will have been waiting.", ar: "for two hours حتى الساعة 9 ← will have been waiting." },
+  { s: "By next month, they will not have finish building the bridge.", ok: false, fix: "By next month, they will not have finished building the bridge.", sig: ["By next month"],
+    why: "Negative: will not have + <b>P.P</b>: finished.", ar: "النفي: will not have + التصريف الثالث: finished." },
+  { s: "By the end of the match, the players will been running for 90 minutes.", ok: false, fix: "By the end of the match, the players will have been running for 90 minutes.", sig: ["for 90 minutes"],
+    why: "Don't forget <b>have</b>: will <b>have</b> been running.", ar: "لا تنسَ have: will have been running." },
+  { s: "By 2030, scientists will have been sent people to Mars.", ok: false, trap: true, fix: "By 2030, scientists will have sent people to Mars.", sig: ["By 2030"],
+    why: "Scientists do the sending → will have <b>sent</b>. No been!", ar: "العلماء هم من يرسلون ← will have sent بدون been!" },
+  { s: "How long will you have been teaching by the end of this year?", ok: true, trap: true, sig: ["How long", "by the end of this year"],
+    why: "Question: How long + will + S + have been + <b>-ing</b>. Correct!", ar: "سؤال: How long + will + الفاعل + have been + ing. صحيحة!" },
+];
+const FPERF_FINAL = {
+  html: 'By 8 p.m. tonight, I <span class="blank">______</span> <span class="hint">(study)</span> for five hours, I <span class="blank">______</span> <span class="hint">(finish)</span> all the exercises, and I <span class="blank">______</span> <span class="hint">(be)</span> very tired!',
+  answerHtml: 'By 8 p.m. tonight, I <span class="blank">will have been studying</span> for five hours, I <span class="blank">will have finished</span> all the exercises, and I <span class="blank">will be</span> very tired!',
+  why: "<b>for five hours</b> up to 8 p.m. → will have been studying. Finished <b>by</b> then → will have finished. A prediction → will be.",
+  ar: "for five hours حتى الساعة 8 ← will have been studying · سينتهي قبلها ← will have finished · توقع ← will be",
+};
+
 const PACKS = {
+  fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
   past4: { name: "Past Family · Level 4", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 4 🔥", lots: PAST4_LOTS, final: PAST4_FINAL },
   past3: { name: "Past Family · Level 3", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 🔥", lots: PAST3_LOTS, final: PAST3_FINAL },
   music: { name: "Pop or Classical? · Level 1", tag: "Reading comprehension · Gustav's email", ar: "بوب أم كلاسيكية؟ جمل الكتاب", question: "Pop or classical?", questionAr: "اسألي الصف أولًا: Pop أم Classical؟ ولماذا؟", choices: MUSIC_CHOICES, lots: MUSIC_LOTS, final: MUSIC_FINAL },
@@ -907,8 +951,8 @@ const pickWins = (lot, pick) => (pack().choices ? pick === lot.answer : (pick ==
 const emptyBoards = (n) => Array.from({ length: n }, () => ({ amount: 0, pick: null }));
 const lotWon = (lot, bid) => (pack().choices ? bid && bid.pick === lot.answer : lot.ok);
 
-const TEAM_COLORS = ["#2d8cff", "#ff3d8b", "#ff8a00", "#a259ff"];
-const DEFAULT_NAMES = ["Eagles", "Lions", "Falcons", "Tigers"];
+const TEAM_COLORS = ["#2d8cff", "#ff3d8b", "#ff8a00", "#a259ff", "#0fb5a4", "#84cc16", "#e0453a", "#8d6e63"];
+const DEFAULT_NAMES = ["Eagles", "Lions", "Falcons", "Tigers", "Sharks", "Wolves", "Panthers", "Dragons"];
 const KEY = "grammar-auction-v1";
 
 let state = null;
@@ -917,7 +961,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "past4", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "fperf", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1082,6 +1126,10 @@ function renderBank() {
   const bank = $("bank");
   if (!state) { bank.innerHTML = ""; bank.hidden = true; return; }
   bank.hidden = false;
+  /* More than four teams: two even rows of cards. */
+  const n = state.teams.length;
+  bank.classList.toggle("many", n > 4);
+  bank.style.setProperty("--cols", Math.ceil(n / 2));
   const activeTeam = (state.phase === "lot" || state.phase === "sold") ? state.bid.team : state.result && state.result.team;
   const prev = shown.slice();
   bank.innerHTML = state.teams.map((t, i) => {
@@ -1169,7 +1217,7 @@ function renderSetup() {
       </div>
       <div>
         <label>Number of teams</label>
-        <div class="seg" role="group">${[2, 3, 4].map((n) => `<button type="button" data-count="${n}" aria-pressed="${d.count === n}">${n}</button>`).join("")}</div>
+        <div class="seg" role="group">${[2, 3, 4, 5, 6, 7, 8].map((n) => `<button type="button" data-count="${n}" aria-pressed="${d.count === n}">${n}</button>`).join("")}</div>
       </div>
       <div>
         <label>Team names</label>
@@ -1479,7 +1527,7 @@ document.addEventListener("submit", (e) => { e.preventDefault(); if (e.target.id
 document.addEventListener("keydown", (e) => {
   if (e.target.matches("input")) { if (e.key === "Enter" && e.target.id === "bidAmt") sell(); return; }
   if (!state) return;
-  if (e.key >= "1" && e.key <= "4" && state.phase === "lot" && state.teams[+e.key - 1] && state.teams[+e.key - 1].money > 0) { state.bid.team = +e.key - 1; refreshBidUI(); }
+  if (e.key >= "1" && e.key <= "8" && state.phase === "lot" && state.teams[+e.key - 1] && state.teams[+e.key - 1].money > 0) { state.bid.team = +e.key - 1; refreshBidUI(); }
 });
 
 /* Keep the game going if the page is live-updated or refreshed mid-lesson. */
