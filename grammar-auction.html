@@ -310,7 +310,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Future Perfect</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Past Family · Level 5</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -917,7 +917,46 @@ const FPERF_FINAL = {
   ar: "for five hours حتى الساعة 8 ← will have been studying · سينتهي قبلها ← will have finished · توقع ← will be",
 };
 
+/* ---------- Past Family · Level 5 (new set) ---------- */
+const PAST5_LOTS = [
+  { s: "The students were taking notes while the teacher was explaining the lesson.", ok: true, sig: ["while"],
+    why: "Two long actions at the same time → both Past Continuous.", ar: "فعلان طويلان في نفس الوقت ← كلاهما ماضٍ مستمر." },
+  { s: "She had already left the office by the time I called.", ok: true, sig: ["by the time", "already"],
+    why: "She left <b>first</b> → had already left. Then I called → V2.", ar: "غادرت أولًا ← had already left، ثم اتصلت ← called." },
+  { s: "We were walking along the beach when we were finding a beautiful shell.", ok: false, trap: true, fix: "We were walking along the beach when we found a beautiful shell.", sig: ["when"],
+    why: "The short action after <b>when</b> is V2 → found.", ar: "الفعل القصير بعد when يكون V2 ← found." },
+  { s: "My sister had been practising the piano for two hours before dinner.", ok: true, sig: ["for two hours", "before dinner"],
+    why: "A long activity up to a past moment → had been practising.", ar: "نشاط استمر حتى لحظة في الماضي ← had been practising." },
+  { s: "They didn't go to the cinema because they had already watch the film.", ok: false, fix: "They didn't go to the cinema because they had already watched the film.", sig: ["already"],
+    why: "had + <b>P.P</b>: watched.", ar: "بعد had نستخدم التصريف الثالث: watched." },
+  { s: "What was your brother doing when the earthquake started?", ok: true, sig: ["when"],
+    why: "Long action in progress (was doing) + <b>when</b> + short action (started).", ar: "فعل مستمر was doing مع when وفعل قصير started." },
+  { s: "He had been owning that car for ten years before he sold it.", ok: false, trap: true, fix: "He had owned that car for ten years before he sold it.", sig: ["owning"],
+    why: "<b>own</b> is a state verb, so no -ing → had owned.", ar: "own فعل حالة لا يأتي مع ing ← had owned." },
+  { s: "By the time the guests arrived, we had been cooking for five hours.", ok: true, trap: true, sig: ["By the time", "for five hours"],
+    why: "<b>for five hours</b> up to a past moment → had been cooking. Correct!", ar: "for five hours حتى لحظة في الماضي ← had been cooking. صحيحة!" },
+  { s: "I didn't know the way because I never been there before.", ok: false, fix: "I didn't know the way because I had never been there before.", sig: ["never", "before"],
+    why: "<b>never … before</b> a past moment → <b>had</b> never been.", ar: "never … before قبل لحظة في الماضي ← had never been." },
+  { s: "The shop had closing before we got there.", ok: false, fix: "The shop had closed before we got there.", sig: ["before"],
+    why: "Past Perfect = had + <b>P.P</b>, not -ing.", ar: "الماضي التام = had + التصريف الثالث وليس ing." },
+  { s: "I realised that I had left my phone on the bus.", ok: true, trap: true, sig: ["realised"],
+    why: "Leaving the phone happened <b>before</b> realising → had left. Correct!", ar: "ترك الهاتف حدث قبل الانتباه ← had left. صحيحة!" },
+  { s: "Sami and Omar was waiting for the bus when it started to rain.", ok: false, fix: "Sami and Omar were waiting for the bus when it started to rain.", sig: ["Sami and Omar"],
+    why: "Two people = plural → <b>were</b> waiting.", ar: "شخصان = جمع ← were waiting." },
+  { s: "Had she been cry? Her eyes were red.", ok: false, fix: "Had she been crying? Her eyes were red.", sig: ["Her eyes were red"],
+    why: "Question: Had + S + been + verb<b>-ing</b>.", ar: "السؤال: Had + الفاعل + been + الفعل مع ing." },
+  { s: "The road was closed because a tree had fallen on it.", ok: true, sig: ["because"],
+    why: "The tree fell <b>before</b> the road was closed → had fallen.", ar: "الشجرة سقطت قبل إغلاق الطريق ← had fallen." },
+];
+const PAST5_FINAL = {
+  html: 'I <span class="blank">______</span> <span class="hint">(live)</span> in Amman for three years when I <span class="blank">______</span> <span class="hint">(meet)</span> my best friend. We <span class="blank">______</span> <span class="hint">(play)</span> football in the park at the time.',
+  answerHtml: 'I <span class="blank">had been living</span> in Amman for three years when I <span class="blank">met</span> my best friend. We <span class="blank">were playing</span> football in the park at the time.',
+  why: "<b>for three years</b> before a past moment → had been living. <b>when</b> + short action → met. In progress <b>at the time</b> → were playing.",
+  ar: "for three years قبل لحظة في الماضي ← had been living · when مع فعل قصير ← met · at the time فعل مستمر ← were playing",
+};
+
 const PACKS = {
+  past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
   past4: { name: "Past Family · Level 4", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 4 🔥", lots: PAST4_LOTS, final: PAST4_FINAL },
   past3: { name: "Past Family · Level 3", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 🔥", lots: PAST3_LOTS, final: PAST3_FINAL },
@@ -961,7 +1000,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "fperf", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "past5", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
