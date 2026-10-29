@@ -310,7 +310,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Past Family · Level 5</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Reported Questions</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -955,7 +955,46 @@ const PAST5_FINAL = {
   ar: "for three years قبل لحظة في الماضي ← had been living · when مع فعل قصير ← met · at the time فعل مستمر ← were playing",
 };
 
+/* ---------- Reported questions ---------- */
+const REPQ_LOTS = [
+  { s: "She asked me where I lived.", ok: true, sig: ["where I lived"],
+    why: "Reported question: wh-word + <b>subject + verb</b> (normal order), and the tense moves back.", ar: "السؤال المنقول: أداة الاستفهام + الفاعل + الفعل (ترتيب الجملة العادية) مع إرجاع الزمن." },
+  { s: "He asked me where did I live.", ok: false, fix: "He asked me where I lived.", sig: ["where did I live"],
+    why: "No <b>did</b> and no question order in reported questions → where I lived.", ar: "لا نستخدم did ولا ترتيب السؤال في السؤال المنقول ← where I lived." },
+  { s: "My teacher asked if I had finished my homework.", ok: true, sig: ["if"],
+    why: "Yes/No question → <b>if</b> + subject + verb (Have you finished → had finished).", ar: "سؤال بنعم أو لا ← if + الفاعل + الفعل، والزمن يرجع: had finished." },
+  { s: "Sara asked me what time is it.", ok: false, fix: "Sara asked me what time it was.", sig: ["what time"],
+    why: "Normal order <b>it was</b>, and is → was.", ar: "ترتيب عادي it was، والزمن يرجع is ← was." },
+  { s: "They asked whether we were coming to the party.", ok: true, trap: true, sig: ["whether"],
+    why: "<b>whether</b> works just like <b>if</b> for yes/no questions. Correct!", ar: "whether مثل if تمامًا في أسئلة نعم/لا. صحيحة!" },
+  { s: "He asked me if I can swim.", ok: false, fix: "He asked me if I could swim.", sig: ["can"],
+    why: "The tense moves back: can → <b>could</b>.", ar: "الزمن يرجع خطوة: can ← could." },
+  { s: "She asked me why I was crying.", ok: true, sig: ["why I was crying"],
+    why: "wh-word + subject + verb, and is crying → was crying.", ar: "أداة الاستفهام + الفاعل + الفعل، وis crying ← was crying." },
+  { s: "The officer asked us where were we going.", ok: false, fix: "The officer asked us where we were going.", sig: ["where were we"],
+    why: "Subject before verb: where <b>we were</b> going.", ar: "الفاعل قبل الفعل: where we were going." },
+  { s: "Mum asked me that I had eaten.", ok: false, trap: true, fix: "Mum asked me if I had eaten.", sig: ["that"],
+    why: "We never use <b>that</b> for reported questions. Yes/No → if / whether.", ar: "لا نستخدم that في السؤال المنقول. سؤال نعم/لا ← if أو whether." },
+  { s: "He asked me how long I had been waiting.", ok: true, sig: ["how long"],
+    why: "How long + subject + verb, have been → had been.", ar: "How long + الفاعل + الفعل، وhave been ← had been." },
+  { s: "She asked me did I like pizza.", ok: false, fix: "She asked me if I liked pizza.", sig: ["did I like"],
+    why: "Yes/No question → <b>if</b> + I liked. No did!", ar: "سؤال نعم/لا ← if I liked بدون did!" },
+  { s: "The teacher asked who had broken the window.", ok: true, trap: true, sig: ["who had broken"],
+    why: "<b>who</b> is the subject here, so the order stays the same. Correct!", ar: "who هنا هي الفاعل فيبقى الترتيب كما هو. صحيحة!" },
+  { s: "He asked me what I was doing?", ok: false, trap: true, fix: "He asked me what I was doing.", sig: ["what I was doing"],
+    why: "A reported question is a statement: full stop, <b>no question mark</b>!", ar: "السؤال المنقول جملة خبرية: ننهيه بنقطة وليس بعلامة استفهام!" },
+  { s: "My friend asked me if I would help her the next day.", ok: true, sig: ["the next day"],
+    why: "will → <b>would</b>, tomorrow → <b>the next day</b>.", ar: "will ← would، وtomorrow ← the next day." },
+];
+const REPQ_FINAL = {
+  html: '“Have you seen my keys?” Sara asked me.<br>→ Sara asked me <span class="blank">______</span> I <span class="blank">______</span> <span class="blank">______</span> keys.',
+  answerHtml: '“Have you seen my keys?” Sara asked me.<br>→ Sara asked me <span class="blank">if</span> I <span class="blank">had seen</span> <span class="blank">her</span> keys.',
+  why: "Yes/No question → <b>if</b>. have seen → <b>had seen</b>. my → <b>her</b> (Sara's keys).",
+  ar: "سؤال نعم/لا ← if · have seen ← had seen · my ← her لأنها مفاتيح سارة",
+};
+
 const PACKS = {
+  repq: { name: "Reported Questions", tag: "Reported speech · Reported questions", ar: "الأسئلة المنقولة 🔥", lots: REPQ_LOTS, final: REPQ_FINAL },
   past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
   past4: { name: "Past Family · Level 4", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 4 🔥", lots: PAST4_LOTS, final: PAST4_FINAL },
@@ -1000,7 +1039,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "past5", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "repq", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
