@@ -311,7 +311,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Word Forms · Level 2</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Word Forms · Level 3</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -1070,9 +1070,48 @@ const WORDS2_FINAL = {
   ar: "team's + اسم ← preparation · so + صفة ← impressive · felt + صفة ← confident",
 };
 
+/* ---------- Word forms · Level 3 (correct or wrong) ---------- */
+const WORDS3_LOTS = [
+  { s: "Smoking is harm to your health.", ok: false, fix: "Smoking is harmful to your health.", fixSig: ["harmful"], sig: ["harm"],
+    why: "<b>is</b> + adjective → harmful (harm is a noun / verb).", ar: "بعد is نضع صفة ← harmful، وharm اسم أو فعل." },
+  { s: "The students listened with great attention to the guest speaker.", ok: true, sig: ["attention"],
+    why: "<b>with great</b> + noun → attention.", ar: "with great + اسم ← attention." },
+  { s: "Online shopping is more convenience than going to the shops.", ok: false, fix: "Online shopping is more convenient than going to the shops.", fixSig: ["convenient"], sig: ["convenience"],
+    why: "Comparison: more + <b>adjective</b> + than → convenient.", ar: "في المقارنة: more + صفة + than ← convenient." },
+  { s: "The rapid growth of the town has created many new jobs.", ok: true, trap: true, sig: ["growth"],
+    why: "<b>growth</b> is a noun (-th ending). Correct!", ar: "growth اسم ينتهي بـ th. صحيحة!" },
+  { s: "She has great confident in her own abilities.", ok: false, fix: "She has great confidence in her own abilities.", fixSig: ["confidence"], sig: ["confident"],
+    why: "<b>has great</b> + noun → confidence.", ar: "has great + اسم ← confidence." },
+  { s: "The documentary about space was really interested.", ok: false, trap: true, fix: "The documentary about space was really interesting.", fixSig: ["interesting"], sig: ["interested"],
+    why: "The documentary <b>causes</b> the feeling → -ing: interesting.", ar: "الفيلم الوثائقي هو سبب الاهتمام ← interesting." },
+  { s: "Environmental awareness has increased dramatically over the past decade.", ok: true, sig: ["awareness"],
+    why: "Adjective (environmental) + <b>noun</b> → awareness.", ar: "صفة + اسم ← awareness." },
+  { s: "These old coins are extremely valuably.", ok: false, fix: "These old coins are extremely valuable.", fixSig: ["valuable"], sig: ["valuably"],
+    why: "Ignore <b>extremely</b>: are + adjective → valuable.", ar: "تجاهل extremely: are + صفة ← valuable." },
+  { s: "He showed no apology for his mistake.", ok: true, sig: ["apology"],
+    why: "<b>no</b> + noun → apology.", ar: "no + اسم ← apology." },
+  { s: "The weather in Aqaba is pleasant in winter.", ok: true, sig: ["pleasant"],
+    why: "<b>is</b> + adjective → pleasant.", ar: "is + صفة ← pleasant." },
+  { s: "We need some informations about the new course.", ok: false, trap: true, fix: "We need some information about the new course.", fixSig: ["information"], sig: ["informations"],
+    why: "<b>information</b> is uncountable: no -s!", ar: "information اسم غير معدود فلا يأخذ s!" },
+  { s: "My brother is studying linguistics at university.", ok: true, trap: true, sig: ["linguistics"],
+    why: "<b>-ics</b> = a subject of study → a noun. Correct!", ar: "النهاية ics- تخصص دراسي (اسم). صحيحة!" },
+  { s: "It was a cold, storm night in January.", ok: false, fix: "It was a cold, stormy night in January.", fixSig: ["stormy"], sig: ["storm"],
+    why: "Adjective, ___ + noun → another <b>adjective</b>: stormy.", ar: "صفة، ___ + اسم ← صفة أخرى: stormy." },
+  { s: "Equality means that everyone has exactly the same rights.", ok: true, sig: ["Equality"],
+    why: "Subject at the <b>beginning</b> → a noun: Equality.", ar: "الفاعل في أول الجملة اسم ← Equality." },
+];
+const WORDS3_FINAL = {
+  html: 'The <span class="blank">______</span> <span class="hint">(organise)</span> of the event was <span class="blank">______</span> <span class="hint">(excel)</span>, and all the visitors were <span class="blank">______</span> <span class="hint">(satisfy)</span>.',
+  answerHtml: 'The <span class="blank">organisation</span> of the event was <span class="blank">excellent</span>, and all the visitors were <span class="blank">satisfied</span>.',
+  why: "<b>The ___ of</b> → noun: organisation. <b>was</b> + adjective → excellent. The visitors <b>feel</b> it → satisfied.",
+  ar: "The ___ of ← اسم: organisation · was + صفة ← excellent · الزوار هم من يشعرون ← satisfied",
+};
+
 const PACKS = {
   words: { grade: "Grade 11", name: "Word Forms · Level 1", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ مستوى 1", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
   words2: { grade: "Grade 11", name: "Word Forms · Level 2", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: مستوى أصعب 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS2_LOTS, final: WORDS2_FINAL },
+  words3: { grade: "Grade 11", name: "Word Forms · Level 3", tag: "Word formation · Correct or wrong?", ar: "الاشتقاق: صح أم خطأ؟ 🔥", lots: WORDS3_LOTS, final: WORDS3_FINAL },
   repq: { name: "Reported Questions", tag: "Reported speech · Reported questions", ar: "الأسئلة المنقولة 🔥", lots: REPQ_LOTS, final: REPQ_FINAL },
   past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
@@ -1121,7 +1160,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "words2", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "words3", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1522,7 +1561,7 @@ function renderReveal() {
       <div class="stamp ${lot.ok ? "ok" : "bad"}">${lot.ok ? "✓ CORRECT" : "✗ WRONG"}</div>
       <p class="sentence">${highlight(lot.s, lot.sig)}</p>
     </div>
-    ${lot.ok ? "" : `<div class="fix"><span class="label">Correction</span><p class="right">${highlight(lot.fix, lot.sig)}</p></div>`}
+    ${lot.ok ? "" : `<div class="fix"><span class="label">Correction</span><p class="right">${highlight(lot.fix, lot.fixSig || lot.sig)}</p></div>`}
     <div class="fix">
       <p class="why">${lot.why}</p>
       <p class="why ar">${esc(lot.ar)}</p>
