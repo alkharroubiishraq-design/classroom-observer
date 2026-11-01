@@ -310,7 +310,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Reported Questions</span> · Grade 8 · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Word Forms: Noun or Adjective?</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -993,7 +993,46 @@ const REPQ_FINAL = {
   ar: "سؤال نعم/لا ← if · have seen ← had seen · my ← her لأنها مفاتيح سارة",
 };
 
+/* ---------- Word forms: noun or adjective? (A–D options per sentence) ---------- */
+const WORDS_LOTS = [
+  { s: "These ______ show that the climate is changing.", options: ["observe", "observations", "observant", "observable"], answer: "observations",
+    why: "<b>These</b> + noun → observations.", ar: "بعد these نضع اسمًا ← observations." },
+  { s: "To be a mountain guide, you must ensure the ______ of all the climbers.", options: ["safely", "safe", "safety", "safer"], answer: "safety",
+    why: "<b>the</b> + noun → safety.", ar: "بعد the نضع اسمًا ← safety." },
+  { s: "Her ______ helped the team win the final match.", options: ["determination", "determine", "determined", "determinedly"], answer: "determination",
+    why: "Possessive (<b>her</b>) + noun → determination.", ar: "بعد ضمير الملكية her نضع اسمًا ← determination." },
+  { s: "She left the room in ______ after the argument.", options: ["angry", "anger", "angrily", "angered"], answer: "anger",
+    why: "Preposition (<b>in</b>) + noun → anger.", ar: "بعد حرف الجر in نضع اسمًا ← anger." },
+  { s: "We had no ______ but to wait for the next bus.", options: ["choose", "chosen", "choosy", "choice"], answer: "choice",
+    why: "<b>no</b> + noun → choice.", ar: "بعد no نضع اسمًا ← choice." },
+  { s: "______ is the key to success in any job.", options: ["Punctuality", "Punctual", "Punctually", "Unpunctual"], answer: "Punctuality",
+    why: "A blank at the <b>beginning</b> of the sentence → a subject noun.", ar: "الفراغ في أول الجملة يكون اسمًا (فاعل) ← Punctuality." },
+  { s: "The ______ of the river is about two metres.", options: ["deep", "deeply", "deepen", "depth"], answer: "depth", trap: true,
+    why: "<b>-th</b> is a noun ending: depth (like length, truth, growth).", ar: "النهاية th- تدل على اسم: depth مثل length وtruth." },
+  { s: "Mariam is in her second year of studying ______ at the University of Jordan.", options: ["economics", "economical", "economically", "economic"], answer: "economics", trap: true,
+    why: "<b>-ics</b> = a subject of study → a noun: economics.", ar: "النهاية ics- تدل على تخصص دراسي (اسم) ← economics." },
+  { s: "Jordan has many ______ sites that attract tourists.", options: ["archaeology", "archaeologist", "archaeologically", "archaeological"], answer: "archaeological",
+    why: "Adjective + noun (<b>sites</b>) → archaeological.", ar: "الصفة تأتي قبل الاسم sites ← archaeological." },
+  { s: "The soup tastes ______ ; can I have some more?", options: ["deliciously", "delicious", "deliciousness", "delicacy"], answer: "delicious",
+    why: "Linking verb (<b>tastes</b>) + adjective, not adverb.", ar: "بعد أفعال الحواس مثل tastes نضع صفة وليس ظرفًا." },
+  { s: "My grandmother is still remarkably ______ at the age of ninety.", options: ["health", "healthily", "healthiness", "healthy"], answer: "healthy", trap: true,
+    why: "Ignore the -ly adverb (<b>remarkably</b>): be + adverb + adjective → healthy.", ar: "تجاهل الظرف remarkably: be + ظرف + صفة ← healthy." },
+  { s: "The match was ______ ; nothing happened for ninety minutes.", options: ["bored", "boring", "bore", "boredom"], answer: "boring", trap: true,
+    why: "The match <b>causes</b> the feeling → -ing: boring.", ar: "المباراة هي سبب الملل ← صفة تنتهي بـ ing: boring." },
+  { s: "They live in a large, ______ house near the sea.", options: ["comfort", "comfortably", "comfortable", "comforts"], answer: "comfortable",
+    why: "Adjective, ______ + noun → another <b>adjective</b>: comfortable.", ar: "صفة + فراغ + اسم ← الفراغ صفة أخرى: comfortable." },
+  { s: "Online shopping is more ______ than going to the shops.", options: ["convenience", "conveniently", "convenient", "convene"], answer: "convenient",
+    why: "Comparison: more + <b>adjective</b> + than → convenient.", ar: "في المقارنة: more + صفة + than ← convenient." },
+];
+const WORDS_FINAL = {
+  html: 'Ahmad was very <span class="blank">______</span> <span class="hint">(disappoint)</span> with the <span class="blank">______</span> <span class="hint">(decide)</span> of the referee.',
+  answerHtml: 'Ahmad was very <span class="blank">disappointed</span> with the <span class="blank">decision</span> of the referee.',
+  why: "<b>very</b> + adjective, and Ahmad <b>feels</b> it → disappointed. <b>the</b> + noun → decision.",
+  ar: "very + صفة، وأحمد هو من يشعر ← disappointed · the + اسم ← decision",
+};
+
 const PACKS = {
+  words: { grade: "Grade 11", name: "Word Forms: Noun or Adjective?", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
   repq: { name: "Reported Questions", tag: "Reported speech · Reported questions", ar: "الأسئلة المنقولة 🔥", lots: REPQ_LOTS, final: REPQ_FINAL },
   past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
@@ -1016,15 +1055,18 @@ const PACKS = {
 const pack = () => PACKS[(state && state.pack) || setupDraft.pack] || PACKS.present;
 const lots = () => (state && state.order ? state.order.map((i) => pack().lots[i]) : pack().lots);
 const total = () => lots().length + 1;
-const choiceLabel = (id) => ((pack().choices || []).find((c) => c.id === id) || {}).label || id;
+const choiceLabel = (id, lot) => pickLabel(id, lot);
 /* Did the buying team win this lot? Grammar packs: the sentence is correct. Choice packs: the team picked the right answer. */
 const GRAMMAR_PICKS = [
   { id: "ok", label: "✓ CORRECT" },
   { id: "bad", label: "✗ WRONG" },
 ];
 /* Answers a team can write on its board: the pack's choices, or correct / wrong for grammar packs. */
-const answerOptions = () => pack().choices || GRAMMAR_PICKS;
-const pickLabel = (id) => (answerOptions().find((o) => o.id === id) || {}).label || id;
+/* A lot can carry its own A–D options (word-form packs); otherwise the pack's choices, or correct / wrong. */
+const answerOptions = (lot) => (lot && lot.options ? lot.options.map((w, i) => ({ id: w, label: `${"ABCD"[i]}) ${w}` })) : pack().choices || GRAMMAR_PICKS);
+const pickLabel = (id, lot) => (answerOptions(lot).find((o) => o.id === id) || {}).label || id;
+/* Show the sentence with its blank filled by the right answer. */
+const filled = (lot) => esc(lot.s).replace("______", `<mark>${esc(lot.answer)}</mark>`);
 const pickWins = (lot, pick) => (pack().choices ? pick === lot.answer : (pick === "ok") === !!lot.ok);
 const emptyBoards = (n) => Array.from({ length: n }, () => ({ amount: 0, pick: null }));
 const lotWon = (lot, bid) => (pack().choices ? bid && bid.pick === lot.answer : lot.ok);
@@ -1039,7 +1081,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "repq", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "words", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1251,6 +1293,7 @@ function flashBad() {
 
 function renderHeader() {
   $("footTopic").textContent = pack().name;
+  $("footGrade").textContent = pack().grade || "Grade 8";
   const lc = $("lotcount");
   if (!state) lc.textContent = "";
   else if (state.phase === "final") lc.textContent = `Round ${total()} of ${total()} · Final`;
@@ -1271,7 +1314,7 @@ function renderSetup() {
         ${d.mode === "all" ? `
         <li><span class="n">1</span><p>A sentence appears. Every team <b>secretly</b> writes a bid and an answer on its board.<br><span class="ar">تُعرض جملة، وكل مجموعة تكتب بصمت على لوحها المبلغ والإجابة.</span></p></li>
         <li><span class="n">2</span><p><b>Boards up!</b> All teams show their boards at the same time. Then: <b>CHECK!</b><br><span class="ar">ترفع كل المجموعات ألواحها معًا، ثم نكشف.</span></p></li>` : `
-        <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it${pack().choices ? " and choose: pop or classical?" : "."}<br><span class="ar">تُعرض جملة، والفرق تزايد عليها${pack().choices ? " وتختار: بوب أم كلاسيكية؟" : "."}</span></p></li>
+        <li><span class="n">1</span><p>A sentence goes up for auction. Teams bid Grammar Money on it${pack().choices ? ` and choose: ${pack().chooseEn || "pop or classical?"}` : "."}<br><span class="ar">تُعرض جملة، والفرق تزايد عليها${pack().choices ? ` وتختار: ${pack().chooseAr || "بوب أم كلاسيكية؟"}` : "."}</span></p></li>
         <li><span class="n">2</span><p>The highest bid buys it. Then: <b>CHECK!</b><br><span class="ar">أعلى مزايدة تشتري الجملة، ثم نكشف.</span></p></li>`}
         ${pack().choices || d.mode === "all"
           ? `<li><span class="n">3</span><p>Right answer: win the bid as profit. Wrong answer: lose it.<br><span class="ar">الإجابة الصحيحة = ربح المبلغ، والخاطئة = خسارته.</span></p></li>`
@@ -1322,12 +1365,12 @@ function renderLot() {
   const { team, amount } = state.bid;
   const t = team != null ? state.teams[team] : null;
   const over = t && amount > t.money;
-  const choices = pack().choices;
+  const choices = pack().choices ? answerOptions(lot) : null;
   const pick = state.bid.pick;
   const canSell = t && amount > 0 && !over && (!choices || pick);
   return `
     <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> ${pack().question || "Is this sentence correct?"}</div>
-    <p class="announce">${sold ? `Sold to ${esc(t.name)} for ${money(amount)}!${choices ? ` They say ${choiceLabel(pick)}` : ""}` : "Auction starts! How much are you willing to pay?"}</p>
+    <p class="announce">${sold ? `Sold to ${esc(t.name)} for ${money(amount)}!${choices ? ` They say ${choiceLabel(pick, lot)}` : ""}` : "Auction starts! How much are you willing to pay?"}</p>
     <div class="lot">
       ${sold ? `<div class="stamp sold">SOLD</div>` : ""}
       <p class="sentence">${esc(lot.s)}</p>
@@ -1381,7 +1424,7 @@ function renderBoards() {
           ${t.money <= 0 ? `<span style="color:var(--loss);font-weight:700">Out of money</span>` : `
           <label class="money-in"><span>$</span><input id="board${i}" type="number" inputmode="numeric" min="0" step="50" data-board-amt="${i}" value="${b.amount || ""}" aria-label="${esc(t.name)} bid" /></label>
           <button type="button" class="chip allin" data-board-allin="${i}">ALL IN</button>
-          ${answerOptions().map((o) => `<button type="button" class="pickbtn sm" data-board-pick="${i}:${o.id}" aria-pressed="${b.pick === o.id}">${o.label}</button>`).join("")}
+          ${answerOptions(lot).map((o) => `<button type="button" class="pickbtn sm" data-board-pick="${i}:${o.id}" aria-pressed="${b.pick === o.id}">${o.label}</button>`).join("")}
           <span class="err" id="berr${i}">${b.amount > t.money ? `Only ${money(t.money)}` : ""}</span>`}
         </div>`;
       }).join("")}
@@ -1404,7 +1447,7 @@ function boardResults(r) {
     const t = state.teams[x.team];
     return `<div class="bres" style="--team:${t.color}">
       <b>${esc(t.name)}</b>
-      <span>${x.pick ? `said ${pickLabel(x.pick)} · bid ${money(x.amount)}` : "sat out"}</span>
+      <span>${x.pick ? `said ${pickLabel(x.pick, lots()[state.lot])} · bid ${money(x.amount)}` : "sat out"}</span>
       ${x.pick ? `<strong class="${x.delta > 0 ? "up" : "down"}">${x.delta > 0 ? "+" + money(x.delta) : "−" + money(-x.delta)}</strong>` : "<strong></strong>"}
     </div>`;
   }).join("")}</div>`;
@@ -1416,17 +1459,17 @@ function renderReveal() {
   const t = r.team != null ? state.teams[r.team] : null;
   const last = state.lot === lots().length - 1;
   if (pack().choices) return `
-    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check!</div>
+    <div class="eyebrow"><span class="serial">Lot ${String(state.lot + 1).padStart(2, "0")}</span> Check! ${lot.trap ? `<span class="trap">😈 TRAP CARD</span>` : ""}</div>
     <div class="lot ${r.all ? "glow-ok" : !t ? "" : r.delta > 0 ? "glow-ok" : "shake"}">
-      <div class="stamp answer">${choiceLabel(lot.answer)}</div>
-      <p class="sentence">${esc(lot.s)}</p>
+      <div class="stamp answer">${choiceLabel(lot.answer, lot)}</div>
+      <p class="sentence">${lot.options ? filled(lot) : esc(lot.s)}</p>
     </div>
     <div class="fix">
       <p class="why">${lot.why}</p>
       <p class="why ar">${esc(lot.ar)}</p>
     </div>
     ${r.all ? boardResults(r) : `<div class="result">
-      ${t ? `<span>${esc(t.name)} said ${choiceLabel(r.pick)} and paid ${money(Math.abs(r.delta))} →</span>
+      ${t ? `<span>${esc(t.name)} said ${choiceLabel(r.pick, lot)} and paid ${money(Math.abs(r.delta))} →</span>
              <strong class="${r.delta > 0 ? "up" : "down"}">${r.delta > 0 ? "+" + money(r.delta) + " profit" : "−" + money(-r.delta) + " lost"}</strong>`
           : `<span>Nobody bought this lot.</span>`}
     </div>`}

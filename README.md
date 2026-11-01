@@ -48,6 +48,8 @@
 المعلمة من شاشة البداية:
 
 - **Future Perfect**: Future Perfect · Future Perfect Continuous.
+- **Word Forms: Noun or Adjective?**: الاشتقاق (اسم أم صفة)، لكل جملة 4 خيارات A–D
+  مأخوذة من أوراق العمل.
 - **Reported Questions**: الأسئلة المنقولة (if/whether، ترتيب الجملة، إرجاع الزمن).
 - **Past Family · Level 5**: مجموعة جمل خامسة لأزمنة الماضي.
 - **Past Family · Level 4**: مجموعة جمل رابعة لأزمنة الماضي.
