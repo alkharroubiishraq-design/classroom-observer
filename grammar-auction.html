@@ -227,6 +227,7 @@
   .pickbtn:hover { transform: translateY(-2px); }
   .pickbtn[aria-pressed="true"] { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 22px rgba(255,201,51,.7); transform: scale(1.06); }
   .stamp.answer { background: var(--gold); color: var(--card-ink); box-shadow: 0 0 30px rgba(255,201,51,.8); }
+  .lot:has(.stamp.answer) { padding-top: clamp(48px, 6vw, 64px); }
 
   .seg.mode { display: flex; flex-wrap: wrap; }
   .seg.mode button { font: 400 14px var(--display); padding: 9px 12px; flex: 1 1 160px; }
@@ -310,7 +311,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Word Forms: Noun or Adjective?</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Word Forms · Level 2</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -1031,8 +1032,47 @@ const WORDS_FINAL = {
   ar: "very + صفة، وأحمد هو من يشعر ← disappointed · the + اسم ← decision",
 };
 
+/* ---------- Word forms · Level 2 (harder) ---------- */
+const WORDS2_LOTS = [
+  { s: "Some countries have very high ______ and it is difficult for young people to find a job.", options: ["employ", "employment", "unemployment", "employer"], answer: "unemployment", trap: true,
+    why: "Adjective + <b>noun</b>, and the meaning: people can't find a job → unemployment.", ar: "صفة + اسم، والمعنى: لا يجد الشباب عملًا ← unemployment." },
+  { s: "I haven't had any ______ yet.", options: ["pay", "payment", "payable", "paid"], answer: "payment", trap: true,
+    why: "<b>had any</b> + noun, not the past participle → payment.", ar: "بعد had any نضع اسمًا وليس تصريفًا ثالثًا ← payment." },
+  { s: "There is no ______ that the man was involved in the crime.", options: ["prove", "proven", "proves", "proof"], answer: "proof",
+    why: "<b>no</b> + noun → proof.", ar: "بعد no نضع اسمًا ← proof." },
+  { s: "______ between countries can help solve global problems.", options: ["Cooperation", "Cooperate", "Cooperative", "Cooperatively"], answer: "Cooperation",
+    why: "Blank at the <b>beginning</b> → a subject noun.", ar: "الفراغ في أول الجملة ← اسم فاعل: Cooperation." },
+  { s: "The magician's clever ______ fooled the whole audience.", options: ["artificial", "artificially", "artistic", "artifice"], answer: "artifice", trap: true,
+    why: "Adjective (clever) + <b>noun</b>. <b>artifice</b> is a hidden noun (= a clever trick).", ar: "صفة + اسم، وartifice اسم مخفي بمعنى خدعة ذكية." },
+  { s: "The significant ______ of the study will be discussed further later.", options: ["contradict", "contradictory", "contradiction", "contradictorily"], answer: "contradiction",
+    why: "<b>the</b> + adjective + noun → contradiction.", ar: "the + صفة + اسم ← contradiction." },
+  { s: "The ______ of wheat is growing increasingly in our area.", options: ["producible", "productive", "production", "productively"], answer: "production",
+    why: "<b>The ___ of</b> → a noun: production.", ar: "The ___ of يحتاج اسمًا ← production." },
+  { s: "He has a good ______ of the problem.", options: ["understand", "understood", "understandable", "understanding"], answer: "understanding", trap: true,
+    why: "<b>a good</b> + noun. Here <b>understanding</b> is a noun, even with -ing!", ar: "a good + اسم، وunderstanding هنا اسم رغم أنها تنتهي بـ ing!" },
+  { s: "It was a long, ______ journey across the desert.", options: ["tire", "tiredness", "tirelessly", "tiring"], answer: "tiring",
+    why: "Adjective, ___ + noun → adjective. The journey <b>causes</b> tiredness → tiring.", ar: "صفة، ___ + اسم ← صفة، والرحلة هي سبب التعب ← tiring." },
+  { s: "It was a ______ decision to leave early.", options: ["sense", "sensibly", "sensible", "sensibility"], answer: "sensible",
+    why: "<b>a</b> + adjective + noun (decision) → sensible.", ar: "a + صفة + اسم ← sensible." },
+  { s: "The new hospital is fully ______ with modern machines.", options: ["equip", "equipment", "equipped", "equipping"], answer: "equipped",
+    why: "Ignore <b>fully</b>: be + adverb + adjective → equipped.", ar: "تجاهل fully: be + ظرف + صفة ← equipped." },
+  { s: "The instructions were really ______ to follow.", options: ["simplicity", "simply", "simple", "simplify"], answer: "simple",
+    why: "Ignore <b>really</b>: were + adjective → simple.", ar: "تجاهل really: were + صفة ← simple." },
+  { s: "Everyone was ______ with the poor service in the restaurant.", options: ["disappointing", "disappointed", "disappoint", "disappointment"], answer: "disappointed",
+    why: "People <b>feel</b> it → -ed: disappointed.", ar: "الناس هم من يشعرون ← صفة تنتهي بـ ed: disappointed." },
+  { s: "My little brother feels ______ when the lights go off.", options: ["frightening", "frighten", "frightened", "fright"], answer: "frightened",
+    why: "feels + adjective, and he <b>feels</b> the fear → frightened.", ar: "feels + صفة، وهو من يشعر بالخوف ← frightened." },
+];
+const WORDS2_FINAL = {
+  html: 'The team\'s <span class="blank">______</span> <span class="hint">(prepare)</span> was so <span class="blank">______</span> <span class="hint">(impress)</span> that everyone felt <span class="blank">______</span> <span class="hint">(confidence)</span> before the match.',
+  answerHtml: 'The team\'s <span class="blank">preparation</span> was so <span class="blank">impressive</span> that everyone felt <span class="blank">confident</span> before the match.',
+  why: "<b>team's</b> + noun → preparation. <b>so</b> + adjective → impressive. <b>felt</b> + adjective → confident.",
+  ar: "team's + اسم ← preparation · so + صفة ← impressive · felt + صفة ← confident",
+};
+
 const PACKS = {
-  words: { grade: "Grade 11", name: "Word Forms: Noun or Adjective?", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
+  words: { grade: "Grade 11", name: "Word Forms · Level 1", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ مستوى 1", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
+  words2: { grade: "Grade 11", name: "Word Forms · Level 2", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: مستوى أصعب 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS2_LOTS, final: WORDS2_FINAL },
   repq: { name: "Reported Questions", tag: "Reported speech · Reported questions", ar: "الأسئلة المنقولة 🔥", lots: REPQ_LOTS, final: REPQ_FINAL },
   past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
@@ -1081,7 +1121,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "words", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "words2", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
