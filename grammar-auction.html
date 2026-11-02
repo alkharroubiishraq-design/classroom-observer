@@ -311,7 +311,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Word Forms · Level 3</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Word Forms · Level 4</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -1108,10 +1108,49 @@ const WORDS3_FINAL = {
   ar: "The ___ of ← اسم: organisation · was + صفة ← excellent · الزوار هم من يشعرون ← satisfied",
 };
 
+/* ---------- Word forms · Level 4 (correct or wrong) ---------- */
+const WORDS4_LOTS = [
+  { s: "Ahmad became famously after he won the gold medal.", ok: false, fix: "Ahmad became famous after he won the gold medal.", fixSig: ["famous"], sig: ["famously"],
+    why: "<b>became</b> is a linking verb → adjective: famous.", ar: "became فعل ربط ← صفة: famous." },
+  { s: "My brother is interested in politics and wants to become a politician.", ok: true, trap: true, sig: ["politics"],
+    why: "<b>-ics</b> = a subject → a noun: politics. Correct!", ar: "ics- تخصص ← اسم: politics. صحيحة!" },
+  { s: "Children's songs involve lots of repetition to help them learn.", ok: true, sig: ["repetition"],
+    why: "<b>lots of</b> + noun → repetition.", ar: "lots of + اسم ← repetition." },
+  { s: "The film was so enjoyment that we watched it twice.", ok: false, fix: "The film was so enjoyable that we watched it twice.", fixSig: ["enjoyable"], sig: ["enjoyment"],
+    why: "<b>so</b> + adjective → enjoyable.", ar: "so + صفة ← enjoyable." },
+  { s: "Rami is so determined that he never gives up.", ok: true, sig: ["determined"],
+    why: "<b>so</b> + adjective → determined.", ar: "so + صفة ← determined." },
+  { s: "Hannah's act of kind touched the hearts of everyone.", ok: false, fix: "Hannah's act of kindness touched the hearts of everyone.", fixSig: ["kindness"], sig: ["kind"],
+    why: "Preposition (<b>of</b>) + noun → kindness.", ar: "حرف الجر of + اسم ← kindness." },
+  { s: "The museum has a beautiful sculpture by a famous Jordanian artist.", ok: true, trap: true, sig: ["sculpture"],
+    why: "<b>-ture</b> is a noun ending: sculpture. Correct!", ar: "ture- نهاية اسم: sculpture. صحيحة!" },
+  { s: "My sister is so intelligence that she can speak four languages.", ok: false, fix: "My sister is so intelligent that she can speak four languages.", fixSig: ["intelligent"], sig: ["intelligence"],
+    why: "<b>so</b> + adjective → intelligent.", ar: "so + صفة ← intelligent." },
+  { s: "You cannot succeed in an exam without preparation.", ok: true, sig: ["preparation"],
+    why: "Preposition (<b>without</b>) + noun → preparation.", ar: "حرف الجر without + اسم ← preparation." },
+  { s: "The students were amazing by the results of the experiment.", ok: false, trap: true, fix: "The students were amazed by the results of the experiment.", fixSig: ["amazed"], sig: ["amazing"],
+    why: "The students <b>feel</b> it → -ed: amazed.", ar: "الطلاب هم من يشعرون ← amazed." },
+  { s: "Several adjustments were made to the school timetable.", ok: true, sig: ["adjustments"],
+    why: "<b>Several</b> + plural noun → adjustments.", ar: "Several + اسم جمع ← adjustments." },
+  { s: "Arabic is one of the most important languages in the world.", ok: true, sig: ["important"],
+    why: "<b>the most</b> + adjective → important.", ar: "the most + صفة ← important." },
+  { s: "Do you have any complain about the service in our hotel?", ok: false, trap: true, fix: "Do you have any complaints about the service in our hotel?", fixSig: ["complaints"], sig: ["complain"],
+    why: "<b>have any</b> + noun → complaints (complain is a verb).", ar: "have any + اسم ← complaints، وcomplain فعل." },
+  { s: "The teacher's explain helped the students understand the lesson.", ok: false, fix: "The teacher's explanation helped the students understand the lesson.", fixSig: ["explanation"], sig: ["explain"],
+    why: "Possession (<b>teacher's</b>) + noun → explanation.", ar: "الملكية teacher's + اسم ← explanation." },
+];
+const WORDS4_FINAL = {
+  html: 'Her <span class="blank">______</span> <span class="hint">(perform)</span> was so <span class="blank">______</span> <span class="hint">(fascinate)</span> that the whole audience felt <span class="blank">______</span> <span class="hint">(excite)</span>.',
+  answerHtml: 'Her <span class="blank">performance</span> was so <span class="blank">fascinating</span> that the whole audience felt <span class="blank">excited</span>.',
+  why: "<b>Her</b> + noun → performance. <b>so</b> + adjective, the performance <b>causes</b> it → fascinating. The audience <b>feels</b> it → excited.",
+  ar: "Her + اسم ← performance · so + صفة، والأداء هو السبب ← fascinating · الجمهور هو من يشعر ← excited",
+};
+
 const PACKS = {
   words: { grade: "Grade 11", name: "Word Forms · Level 1", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ مستوى 1", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
   words2: { grade: "Grade 11", name: "Word Forms · Level 2", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: مستوى أصعب 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS2_LOTS, final: WORDS2_FINAL },
   words3: { grade: "Grade 11", name: "Word Forms · Level 3", tag: "Word formation · Correct or wrong?", ar: "الاشتقاق: صح أم خطأ؟ 🔥", lots: WORDS3_LOTS, final: WORDS3_FINAL },
+  words4: { grade: "Grade 11", name: "Word Forms · Level 4", tag: "Word formation · Correct or wrong?", ar: "الاشتقاق: صح أم خطأ؟ 2 🔥", lots: WORDS4_LOTS, final: WORDS4_FINAL },
   repq: { name: "Reported Questions", tag: "Reported speech · Reported questions", ar: "الأسئلة المنقولة 🔥", lots: REPQ_LOTS, final: REPQ_FINAL },
   past5: { name: "Past Family · Level 5", tag: "Past Continuous · Past Perfect · Past Perfect Continuous", ar: "عائلة الماضي: جمل جديدة 5 🔥", lots: PAST5_LOTS, final: PAST5_FINAL },
   fperf: { name: "Future Perfect", tag: "Future Perfect · Future Perfect Continuous", ar: "المستقبل التام والتام المستمر 🔥", lots: FPERF_LOTS, final: FPERF_FINAL },
@@ -1160,7 +1199,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "words3", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "words4", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
