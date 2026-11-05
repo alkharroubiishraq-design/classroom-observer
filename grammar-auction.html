@@ -311,7 +311,7 @@
   </header>
   <section class="bank" id="bank" aria-label="Team balances"></section>
   <main class="stage" id="stage"></main>
-  <footer><span id="footTopic">Word Forms · Level 4</span> · <span id="footGrade">Grade 11</span> · <span class="ar">مزاد الجمل</span></footer>
+  <footer><span id="footTopic">Future Family · Circle</span> · <span id="footGrade">Grade 8</span> · <span class="ar">مزاد الجمل</span></footer>
 </div>
 
 <script>
@@ -1146,7 +1146,46 @@ const WORDS4_FINAL = {
   ar: "Her + اسم ← performance · so + صفة، والأداء هو السبب ← fascinating · الجمهور هو من يشعر ← excited",
 };
 
+/* ---------- Future Family · Circle the answer (A–D) ---------- */
+const FUTMC_LOTS = [
+  { s: "This time tomorrow, I ______ on the beach in Aqaba.", options: ["will lie", "will be lying", "will have lain", "lie"], answer: "will be lying",
+    why: "<b>This time tomorrow</b> = in progress at a future moment → Future Continuous.", ar: "This time tomorrow فعل مستمر في لحظة بالمستقبل ← مستقبل مستمر." },
+  { s: "By next June, we ______ all our final exams.", options: ["will finish", "will be finishing", "will have finished", "finish"], answer: "will have finished",
+    why: "<b>By</b> + future time, finished before then → Future Perfect.", ar: "By + وقت بالمستقبل وسينتهي قبله ← مستقبل تام." },
+  { s: "Don't worry, I ______ you with your homework later.", options: ["will help", "will be helping", "will have helped", "will have been helping"], answer: "will help",
+    why: "An offer / promise → Future Simple: will + base verb.", ar: "عرض مساعدة أو وعد ← مستقبل بسيط: will + الفعل." },
+  { s: "By 2030, my father ______ at the hospital for twenty years.", options: ["will work", "is working", "will be work", "will have been working"], answer: "will have been working",
+    why: "<b>By</b> + <b>for</b> + a period → Future Perfect Continuous.", ar: "By مع for ومدة زمنية ← مستقبل تام مستمر." },
+  { s: "At 8 p.m. tonight, we ______ the match on TV, so please don't call.", options: ["watch", "will be watching", "will have watched", "watched"], answer: "will be watching",
+    why: "In progress at <b>8 p.m. tonight</b> → Future Continuous.", ar: "فعل مستمر الساعة 8 الليلة ← مستقبل مستمر." },
+  { s: "By the end of this week, she ______ three novels.", options: ["will read", "will be reading", "will have read", "reads"], answer: "will have read",
+    why: "<b>By the end of this week</b> + a finished result → Future Perfect.", ar: "By the end of this week مع نتيجة مكتملة ← مستقبل تام." },
+  { s: "The phone is ringing. I ______ it!", options: ["will answer", "will be answering", "will have answered", "will have been answering"], answer: "will answer",
+    why: "A quick decision <b>now</b> → Future Simple.", ar: "قرار لحظي ← مستقبل بسيط." },
+  { s: "By 6 p.m., he ______ for ten hours, so he will be very tired.", options: ["will drive", "will have been driving", "will be drive", "drives"], answer: "will have been driving",
+    why: "<b>for ten hours</b> up to 6 p.m. → Future Perfect Continuous.", ar: "for ten hours حتى الساعة 6 ← مستقبل تام مستمر." },
+  { s: "______ the car tomorrow at 7 p.m.? I need it.", options: ["Will you use", "Will you be using", "Will you have used", "Will be you using"], answer: "Will you be using", trap: true,
+    why: "A polite question about plans → <b>Will you be</b> + -ing. Watch the word order!", ar: "سؤال مؤدب عن الخطط ← Will you be + ing. انتبه للترتيب!" },
+  { s: "By next year, I ______ Sara for ten years.", options: ["will know", "will be knowing", "will have known", "will have been knowing"], answer: "will have known", trap: true,
+    why: "<b>know</b> is a state verb: no -ing, so not continuous → will have known.", ar: "know فعل حالة لا يأتي مع ing ← will have known." },
+  { s: "Do you think robots ______ our homework one day?", options: ["will do", "will be done", "will have been doing", "will doing"], answer: "will do",
+    why: "A prediction → Future Simple: will + base verb.", ar: "توقع ← مستقبل بسيط: will + الفعل." },
+  { s: "By 10 p.m., the shop ______, so let's go now.", options: ["will close", "will be closing", "will have closed", "closes"], answer: "will have closed",
+    why: "Closed <b>before</b> 10 p.m. → Future Perfect.", ar: "سيغلق قبل الساعة 10 ← مستقبل تام." },
+  { s: "Next Friday at noon, Ahmad ______ in the final match.", options: ["will playing", "will be playing", "will have play", "will played"], answer: "will be playing", trap: true,
+    why: "Only one correct form: will + <b>be</b> + -ing.", ar: "شكل واحد صحيح فقط: will + be + ing." },
+  { s: "How long ______ English by the end of this year?", options: ["will you study", "will you be studying", "will you have been studying", "you will have studied"], answer: "will you have been studying", trap: true,
+    why: "<b>How long</b> + by + future time → Future Perfect Continuous question.", ar: "How long مع by ووقت بالمستقبل ← سؤال المستقبل التام المستمر." },
+];
+const FUTMC_FINAL = {
+  html: 'By 9 p.m., I <span class="blank">______</span> <span class="hint">(finish)</span> my homework. At 10, I <span class="blank">______</span> <span class="hint">(sleep)</span>, and I think tomorrow I <span class="blank">______</span> <span class="hint">(feel)</span> great!',
+  answerHtml: 'By 9 p.m., I <span class="blank">will have finished</span> my homework. At 10, I <span class="blank">will be sleeping</span>, and I think tomorrow I <span class="blank">will feel</span> great!',
+  why: "<b>By 9 p.m.</b> → will have finished. In progress <b>at 10</b> → will be sleeping. <b>I think</b> → will feel.",
+  ar: "By 9 p.m. ← will have finished · فعل مستمر الساعة 10 ← will be sleeping · I think توقع ← will feel",
+};
+
 const PACKS = {
+  futmc: { name: "Future Family · Circle", tag: "Future Simple · Continuous · Perfect · Perfect Continuous", ar: "عائلة المستقبل: ضع دائرة 🔥", question: "Circle the correct answer.", questionAr: "اسألي الصف أولًا: أي زمن؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: FUTMC_LOTS, final: FUTMC_FINAL },
   words: { grade: "Grade 11", name: "Word Forms · Level 1", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: اسم أم صفة؟ مستوى 1", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS_LOTS, final: WORDS_FINAL },
   words2: { grade: "Grade 11", name: "Word Forms · Level 2", tag: "Word formation · Nouns & Adjectives", ar: "الاشتقاق: مستوى أصعب 🔥", question: "Choose the right word: noun or adjective?", questionAr: "اسألي الصف أولًا: نحتاج اسمًا أم صفة؟ ولماذا؟", chooseEn: "A, B, C or D?", chooseAr: "A أو B أو C أو D؟", choices: [], lots: WORDS2_LOTS, final: WORDS2_FINAL },
   words3: { grade: "Grade 11", name: "Word Forms · Level 3", tag: "Word formation · Correct or wrong?", ar: "الاشتقاق: صح أم خطأ؟ 🔥", lots: WORDS3_LOTS, final: WORDS3_FINAL },
@@ -1199,7 +1238,7 @@ let flashes = {};
 let sound = true;
 let clockTimer = null, clockLeft = 0;
 let lastKey = null, shown = [];
-let setupDraft = { pack: "words4", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
+let setupDraft = { pack: "futmc", mode: "all", count: 4, names: DEFAULT_NAMES.slice(), start: 1000, shuffle: true };
 
 const $ = (id) => document.getElementById(id);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));

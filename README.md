@@ -63,6 +63,7 @@
   ويختار POP أو CLASSICAL، والإجابة الصحيحة تربح المبلغ.
 - **Mixed Tenses · Level 1** و **Level 2 (أصعب)**: Past Continuous · Past Perfect · Present Continuous ·
   Present Perfect · Present Perfect Continuous.
+- **Future Family · Circle**: ضع دائرة (A–D) على الزمن الصحيح من عائلة المستقبل الأربعة.
 - **Future Family**: Future Simple · Future Continuous · Future Perfect.
 - **Future · Level 1** و **Level 2 (أصعب)**: Future Simple vs Future Continuous.
 - **Modal Verbs + Passive**: modal + be + past participle.
